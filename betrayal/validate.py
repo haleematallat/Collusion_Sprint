@@ -67,11 +67,45 @@ def main():
     p.add_argument("--model", required=True)
     a = p.parse_args()
     slug = a.model.replace("/", "__")
-    res = check(load(ROOT / "data" / a.phase / slug / "behavior.jsonl"))
+    df = load(ROOT / "data" / a.phase / slug / "behavior.jsonl")
+    res = check_s2(df) if a.phase in ("pilot2", "main2") else check(df)
     out = ROOT / "results" / a.phase / slug
     out.mkdir(parents=True, exist_ok=True)
     (out / "validation.json").write_text(json.dumps(res, indent=1, default=float))
     print(json.dumps(res, indent=1, default=float))
+
+
+
+def check_s2(df):
+    """Study 2 checks on recorded trials: lotteries, settlement, logged prompts, record contents, providers."""
+    out = {}
+    acc = df["accept_draw"].astype(bool)
+    out["A_accept_rate"] = dict(rate=acc.mean(), n=len(df), p=stats.binomtest(int(acc.sum()), len(df), C.P_ACCEPT).pvalue)
+    for q in (C.Q_LOW, C.Q_HIGH):
+        g = df[(df["q_true"] == q) & ~df["auth"]]
+        e = g["exposure_draw"].astype(bool)
+        out[f"A_exposure_rate_q{round(q * 100)}"] = dict(rate=e.mean(), n=len(g), p=stats.binomtest(int(e.sum()), len(g), q).pvalue)
+    bad = 0
+    for r in df.itertuples():
+        cell = C.Cell(f"{r.cell_id}@F{r.F}", r.arm, r.q_true, r.F, True)
+        s = L.settle(r.action, cell, r.accept_draw, r.exposure_draw)
+        bad += any(not (getattr(r, k) == v or (pd.isna(getattr(r, k)) and v is None)) for k, v in s.items())
+    out["E_settlement_mismatches"] = bad
+    out["E_auth_penalties"] = int(df[df["auth"]]["penalty"].sum())
+    out["E_no_offer_score_changes"] = int(((df["action"] != "SEND_OFFER") & (df["score"] != C.BASE_SCORE)).sum())
+    scns = {s["id"]: s for s in S.scenarios(df["phase"].iloc[0])}
+    out["B_logged_prompt_mismatches"] = int(sum(
+        S.render_s2(scns[r.scenario_id], C.S2_CELL[r.cell_id], r.F)[1]["content"] != r.user_prompt for r in df.itertuples()))
+    rec = df[df["fmt"] == "record"]
+    out["B_record_report_counts_ok"] = bool(all(len(x) == C.S2_REPORTS[k] for x, k in zip(rec["reported_episodes"], rec["risk"])))
+    # the same scenario shows the identical record in R, R+summary, R+placebo (and R8 = AUTH_R8)
+    shared = rec[rec["pos"] == "random"].assign(key=lambda d: d["risk"]).groupby(["scenario_id", "key"])["reported_episodes"] \
+        .apply(lambda s: len({tuple(x) for x in s}))
+    out["B_records_shared_within_scenario"] = bool((shared == 1).all())
+    out["status_counts"] = dict(Counter(df["status"]))
+    out["providers"] = dict(Counter(df["provider"]))
+    out["F_by_risk"] = {k: sorted(set(v)) for k, v in df.groupby("risk")["F"]}
+    return out
 
 
 if __name__ == "__main__":

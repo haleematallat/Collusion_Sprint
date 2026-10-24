@@ -91,3 +91,19 @@ def plot_models(dfs, out):
     fig.tight_layout()
     fig.savefig(out / "fig_source_models.png", dpi=300, bbox_inches="tight")
     plt.close(fig)
+
+
+def plot_s2(dfs, out):
+    """Study 2: stated vs record (alone, + calibrated summary, + placebo) at low and high risk, per model."""
+    plt.style.use("seaborn-v0_8-whitegrid")
+    fig, ax = plt.subplots(1, len(dfs), figsize=(4.6 * len(dfs), 3.8), sharey=True)
+    series = [("stated rate", "S{}", "#8C8C8C"), ("record", "R{}", "#4C72B0"),
+              ("record + calibrated summary", "R{}_summary", "#55A868"), ("record + placebo", "R{}_placebo", "#C44E52")]
+    for a, (name, df) in zip(np.atleast_1d(ax), dfs.items()):
+        _bars(a, ["low risk\n(10%; 1 of 10)", "high risk\n(80%; 8 of 10)"],
+              [(lab, [pat.format(k) if pat[0] == "R" else pat.format(q) for k, q in ((1, 10), (8, 80))], {"color": col})
+               for lab, pat, col in series], df)
+        a.set_title(name, fontsize=10)
+    fig.tight_layout()
+    fig.savefig(out / "fig_s2_format.png", dpi=300, bbox_inches="tight")
+    plt.close(fig)
