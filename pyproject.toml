@@ -1,0 +1,23 @@
+[project]
+name = "betrayal-blindness"
+version = "0.1.0"
+description = "First-offer collusion experiment: partner reporting vs automated audit (Apart AI Collusion Sprint 2026)"
+requires-python = ">=3.11"
+dependencies = [
+    "poseidon-compute @ git+https://github.com/poseidon-research/collusion_hackathon@d585a7b3be50366cc2bdf5789bf8add5890b2abd#subdirectory=util",
+    "numpy>=1.26",
+    "pandas>=2.1",
+    "scipy>=1.11",
+    "statsmodels>=0.14",
+    "matplotlib>=3.8",
+]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
