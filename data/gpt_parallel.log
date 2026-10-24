@@ -8,3 +8,6 @@ key usage so far $1.2876; 5200 calls, estimate $1.4281 (measured per-call cost);
 350/5200  run spend $0.0759
 400/5200  run spend $0.0867
 450/5200  run spend $0.0974
+500/5200  run spend $0.1082
+550/5200  run spend $0.1188
+600/5200  run spend $0.1297
