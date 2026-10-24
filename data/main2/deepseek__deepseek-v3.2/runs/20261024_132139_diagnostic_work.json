@@ -1,0 +1,45 @@
+{
+ "args": {
+  "kind": "diagnostic_work",
+  "phase": "main2",
+  "model": "deepseek/deepseek-v3.2",
+  "cells": "",
+  "n": 100,
+  "reps": 1,
+  "temperature": 1.0,
+  "provider": "Baidu",
+  "concurrency": 24,
+  "max_usd": 8.0,
+  "mock": false
+ },
+ "cells": [
+  "S10",
+  "R1",
+  "R1_summary",
+  "S80",
+  "R8",
+  "R8_summary"
+ ],
+ "n_trials": 600,
+ "n_todo": 600,
+ "start_usage": 6.4010197,
+ "est_total": 0.1760518326,
+ "started": 1792847932.8635788,
+ "git": "f8b6e1b5e4aa7459649491a52d183592d4866267",
+ "config": {
+  "BASE_SCORE": 50,
+  "BONUS": 12,
+  "P_ACCEPT": 0.8,
+  "Q_LOW": 0.1,
+  "Q_HIGH": 0.8,
+  "F_LEVELS": [
+   0,
+   20
+  ],
+  "MASTER_SEED": 20261023
+ },
+ "status": "complete",
+ "finished": 1792848099.3875532,
+ "run_spend": 0.18003719999999995,
+ "end_usage": 6.582679144
+}

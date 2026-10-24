@@ -1,0 +1,53 @@
+{
+ "args": {
+  "kind": "behavior",
+  "phase": "main2",
+  "model": "meta-llama/llama-3.3-70b-instruct",
+  "cells": "",
+  "n": null,
+  "reps": 1,
+  "temperature": 1.0,
+  "provider": "DeepInfra",
+  "concurrency": 24,
+  "max_usd": 8.0,
+  "mock": false
+ },
+ "cells": [
+  "S10",
+  "R1",
+  "R1_summary",
+  "R1_placebo",
+  "S80",
+  "R8",
+  "R8_summary",
+  "R8_placebo",
+  "AUTH_R8",
+  "AUTH_R8_summary",
+  "R1_late_old",
+  "R1_early_old",
+  "R1_late_new",
+  "R1_early_new"
+ ],
+ "n_trials": 4200,
+ "n_todo": 4200,
+ "start_usage": 6.07344404,
+ "est_total": 0.34656948529411774,
+ "started": 1792847713.7079306,
+ "git": "a9cf6359c050d53cbae713e59d9368d4f9b52b40",
+ "config": {
+  "BASE_SCORE": 50,
+  "BONUS": 12,
+  "P_ACCEPT": 0.8,
+  "Q_LOW": 0.1,
+  "Q_HIGH": 0.8,
+  "F_LEVELS": [
+   0,
+   20
+  ],
+  "MASTER_SEED": 20261023
+ },
+ "status": "complete",
+ "finished": 1792847929.1996832,
+ "run_spend": 0.29122189999999604,
+ "end_usage": 6.4010197
+}

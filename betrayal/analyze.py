@@ -240,7 +240,9 @@ def main():
     out = ROOT / "results" / a.phase / slug
     out.mkdir(parents=True, exist_ok=True)
     res = {}
-    if (d / "behavior.jsonl").exists():
+    if (d / "behavior.jsonl").exists() and a.phase in ("pilot2", "main2"):
+        res["study2"] = s2_analyze(load(d / "behavior.jsonl", a.refusal))
+    elif (d / "behavior.jsonl").exists():
         df = load(d / "behavior.jsonl", a.refusal)
         res["behavior"] = analyze_behavior(df)
         from .plots import plot_all
@@ -248,7 +250,9 @@ def main():
     for kind in ("diagnostic", "diagnostic_work", "arithmetic", "arithmetic_work"):
         if (d / f"{kind}.jsonl").exists():
             rows = pd.DataFrame([json.loads(l) for l in (d / f"{kind}.jsonl").open()]).drop_duplicates("trial_id", keep="last")
-            res[kind] = (analyze_diagnostic if kind.startswith("diagnostic") else analyze_arithmetic)(rows)
+            fn = (s2_diagnostic if a.phase in ("pilot2", "main2") else analyze_diagnostic) if kind.startswith("diagnostic") \
+                else analyze_arithmetic
+            res[kind] = fn(rows)
     diag = {f: res[k] for k, f in (("diagnostic", "answer-only"), ("diagnostic_work", "with working")) if res.get(k)}
     if diag:
         from .plots import plot_calibration
@@ -263,9 +267,6 @@ def main():
                 print(f"  [{fam}] {r['name']}: est={r.get('est', float('nan')):+.3f} CI={_fmt(r.get('ci95'))} p_holm={r.get('p_holm', float('nan')):.4f} -> {r['label']}")
     print(f"wrote {out}")
 
-
-if __name__ == "__main__":
-    main()
 
 
 # ==== Study 2: stated rate vs enforcement record (plan v6; criteria fixed in prereg_v2.md) ====
@@ -315,3 +316,22 @@ def s2_analyze(df):
             ("recency x list order", {"R1_late_old": 1, "R1_early_old": -1, "R1_late_new": -1, "R1_early_new": 1}, 0)]
     out["mechanism"] = family(df, mech)
     return out
+
+
+
+def s2_diagnostic(df):
+    """Forecast vs the Bayesian benchmark (0.10 / 0.80) and EV accuracy, per Study-2 cell."""
+    rows = []
+    for cid, g in df[df["status"] == "ok"].groupby("cell_id"):
+        q, F = C.S2_Q[C.S2_CELL[cid].risk], int(g["F"].iloc[0])
+        x = pd.DataFrame(list(g["parsed"]))
+        err = x["p_exposure"] - q
+        ev = C.BASE_SCORE + C.expected_gain(q, F)
+        rows.append(dict(cell=cid, n=len(x), F=F, correct_p=q, mean_p=x["p_exposure"].mean(), mean_err=err.mean(),
+                         err_ci95=tuple(err.mean() + np.array([-1, 1]) * 1.96 * err.std(ddof=1) / np.sqrt(len(x))) if len(x) > 1 else None,
+                         p_acc=(err.abs() <= 0.01).mean(), ev_send_acc=((x["expected_score_send"] - ev).abs() <= 0.5).mean()))
+    return rows
+
+
+if __name__ == "__main__":
+    main()
