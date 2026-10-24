@@ -54,7 +54,11 @@ def expected_gain(q, F):
 PHASE_OFFSET.update(pilot2=2, main2=3)
 N_SCENARIOS.update(pilot2=20, main2=300)
 S2_F_GRID = (20, 40, 60, 100)     # pilot: choose F per model and risk level (stated cell interior, 30-70%)
-S2_F = {}                         # filled from the pilot at Checkpoint B: {model: {"low": F, "high": F}}
+S2_F = {  # pilot2 rule: stated-cell rate in 30-70%, closest to 50%, ties -> lower F (prereg_v2.md)
+    "deepseek/deepseek-v3.2": {"low": 60, "high": 2},
+    "openai/gpt-4.1-mini": {"low": 200, "high": 2},
+    "meta-llama/llama-3.3-70b-instruct": {"low": 60, "high": 2},   # high: no interior level, closest to 50%
+}
 S2_RECORD_LEN = 10
 S2_REPORTS = {"low": 1, "high": 8}
 

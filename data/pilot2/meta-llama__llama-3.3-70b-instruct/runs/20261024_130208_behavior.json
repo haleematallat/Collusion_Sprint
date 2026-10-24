@@ -1,0 +1,42 @@
+{
+ "args": {
+  "kind": "behavior",
+  "phase": "pilot2",
+  "model": "meta-llama/llama-3.3-70b-instruct",
+  "cells": "S80@F2,S80@F5,S80@F10",
+  "n": null,
+  "reps": 1,
+  "temperature": 1.0,
+  "provider": "DeepInfra",
+  "concurrency": 12,
+  "max_usd": 8.0,
+  "mock": false
+ },
+ "cells": [
+  "S80@F2",
+  "S80@F5",
+  "S80@F10"
+ ],
+ "n_trials": 60,
+ "n_todo": 60,
+ "start_usage": 4.27720082,
+ "est_total": 0.005068398214285713,
+ "started": 1792846920.9895215,
+ "git": "870daf0bb3819acff4e17b9a68038dafde2a43e6",
+ "config": {
+  "BASE_SCORE": 50,
+  "BONUS": 12,
+  "P_ACCEPT": 0.8,
+  "Q_LOW": 0.1,
+  "Q_HIGH": 0.8,
+  "F_LEVELS": [
+   0,
+   20
+  ],
+  "MASTER_SEED": 20261023
+ },
+ "status": "complete",
+ "finished": 1792846927.676011,
+ "run_spend": 0.0033870000000000003,
+ "end_usage": 4.281393456
+}
