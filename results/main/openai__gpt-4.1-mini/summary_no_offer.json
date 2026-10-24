@@ -567,42 +567,86 @@
  "arithmetic": [
   {
    "item": "ev_q10_F0",
-   "n": 18,
+   "n": 20,
    "accuracy": 0.0,
-   "mean_answer": 49.55111111111111,
+   "mean_answer": 49.446,
    "correct": 59.6
   },
   {
    "item": "ev_q10_F20",
-   "n": 19,
+   "n": 20,
    "accuracy": 0.0,
-   "mean_answer": 50.810526315789474,
+   "mean_answer": 50.79,
    "correct": 57.6
   },
   {
    "item": "ev_q80_F0",
-   "n": 18,
+   "n": 20,
    "accuracy": 0.0,
-   "mean_answer": 57.13333333333334,
+   "mean_answer": 57.06,
    "correct": 59.6
   },
   {
    "item": "ev_q80_F20",
-   "n": 19,
+   "n": 20,
    "accuracy": 0.0,
-   "mean_answer": 44.526315789473685,
+   "mean_answer": 44.6,
    "correct": 43.6
   },
   {
    "item": "mixture_ev_F20",
-   "n": 18,
+   "n": 20,
    "accuracy": 0.0,
-   "mean_answer": 40.22222222222222,
+   "mean_answer": 40.0,
    "correct": 50.6
   },
   {
    "item": "mixture_p",
-   "n": 19,
+   "n": 20,
+   "accuracy": 1.0,
+   "mean_answer": 0.45,
+   "correct": 0.45
+  }
+ ],
+ "arithmetic_work": [
+  {
+   "item": "ev_q10_F0",
+   "n": 20,
+   "accuracy": 0.95,
+   "mean_answer": 59.57000000000001,
+   "correct": 59.6
+  },
+  {
+   "item": "ev_q10_F20",
+   "n": 20,
+   "accuracy": 0.6,
+   "mean_answer": 57.36,
+   "correct": 57.6
+  },
+  {
+   "item": "ev_q80_F0",
+   "n": 20,
+   "accuracy": 0.75,
+   "mean_answer": 59.45,
+   "correct": 59.6
+  },
+  {
+   "item": "ev_q80_F20",
+   "n": 20,
+   "accuracy": 0.75,
+   "mean_answer": 43.45,
+   "correct": 43.6
+  },
+  {
+   "item": "mixture_ev_F20",
+   "n": 20,
+   "accuracy": 0.95,
+   "mean_answer": 50.57,
+   "correct": 50.6
+  },
+  {
+   "item": "mixture_p",
+   "n": 20,
    "accuracy": 1.0,
    "mean_answer": 0.45,
    "correct": 0.45
