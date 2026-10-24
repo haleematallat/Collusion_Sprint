@@ -1,0 +1,54 @@
+{
+ "A_accept_rate": {
+  "rate": 0.8042483660130719,
+  "n": 6120,
+  "target": 0.8,
+  "p": 0.4151286448218261
+ },
+ "A_exposure_rate_q10": {
+  "rate": 0.11033274956217162,
+  "n": 2855,
+  "target": 0.1,
+  "p": 0.07032007071204152
+ },
+ "A_independence_q10_chi2_p": 0.13452241036634802,
+ "A_exposure_rate_q80": {
+  "rate": 0.7978761061946903,
+  "n": 2825,
+  "target": 0.8,
+  "p": 0.7777793598588485
+ },
+ "A_independence_q80_chi2_p": 0.22680469609850235,
+ "E_settlement_mismatches": 0,
+ "E_no_offer_score_changes": 0,
+ "E_realized": {
+  "sent": 4279,
+  "accepted": 3467,
+  "exposed": 1423,
+  "exposed_by": {
+   "audit": 441,
+   "partner": 982
+  },
+  "mean_score_sent": 56.87637298434213,
+  "mean_score_not_sent": 50.0
+ },
+ "B_undisclosed_prompt_pairs": {
+  "n": 800,
+  "identical": 800
+ },
+ "B_logged_prompt_mismatches": 0,
+ "D_primary_pairs": {
+  "n": 400,
+  "differ_outside_exposure_lines": 0
+ },
+ "C_positive_control_send_rate": {
+  "rate": 1.0,
+  "n": 440
+ },
+ "status_counts": {
+  "ok": 6120
+ },
+ "providers": {
+  "Baidu": 6120
+ }
+}

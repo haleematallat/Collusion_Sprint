@@ -131,6 +131,19 @@ def cell_table(df):
     return pd.DataFrame(rows)
 
 
+def icc(df):
+    """One-way ANOVA ICC(1) of y within (scenario, cell) clusters that have 2 reps (k = 2)."""
+    g = df.dropna(subset=["y"]).groupby(["scenario_id", "cell_id"])["y"]
+    y = g.filter(lambda s: len(s) == 2).groupby([df["scenario_id"], df["cell_id"]])
+    m, n = y.mean(), y.ngroups
+    if n < 2:
+        return dict(n_clusters=n)
+    msb = 2 * ((m - m.mean()) ** 2).sum() / (n - 1)
+    msw = y.var(ddof=1).sum() / n
+    return dict(n_clusters=n, icc=(msb - msw) / (msb + msw) if msb + msw > 0 else float("nan"),
+                rep_agreement=float((y.nunique() == 1).mean()))
+
+
 def analyze_behavior(df):
     name, wts, sign = PRIMARY
     prim = contrast(per_scenario(df, wts))
@@ -148,7 +161,8 @@ def analyze_behavior(df):
                                           magnitude_heterogeneity=bool(abs(diff) >= HETEROGENEITY))
     else:
         prim["wording_consistency"] = "insufficient data"
-    return dict(primary=prim, generalization=family(df, GENERALIZATION), secondary=family(df, SECONDARY),
+    prim["rep0_only"] = contrast(per_scenario(df[df["rep"] == 0], wts))  # sensitivity: drop the 40 rep-2 replicates
+    return dict(primary=prim, icc=icc(df), generalization=family(df, GENERALIZATION), secondary=family(df, SECONDARY),
                 descriptive=family(df, DESCRIPTIVE, adjust=False), cells=cell_table(df).to_dict("records"))
 
 

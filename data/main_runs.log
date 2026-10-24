@@ -119,3 +119,31 @@ complete; wrote /home/user/Collusion_Sprint/data/main/deepseek__deepseek-v3.2/be
 key usage so far $0.8052; 400 calls, estimate $0.0673 (measured per-call cost); cap $8.00
 50/400  run spend $0.0073
 100/400  run spend $0.0147
+150/400  run spend $0.0220
+200/400  run spend $0.0294
+250/400  run spend $0.0369
+300/400  run spend $0.0442
+350/400  run spend $0.0516
+400/400  run spend $0.0590
+complete; wrote /home/user/Collusion_Sprint/data/main/deepseek__deepseek-v3.2/behavior.jsonl
+key usage so far $0.8537; 5200 calls, estimate $4.6468 (worst-case per-call cost); cap $8.00
+50/5200  run spend $0.0100
+100/5200  run spend $0.0195
+150/5200  run spend $0.0288
+200/5200  run spend $0.0387
+250/5200  run spend $0.0480
+300/5200  run spend $0.0569
+350/5200  run spend $0.0664
+400/5200  run spend $0.0752
+450/5200  run spend $0.0851
+500/5200  run spend $0.0942
+550/5200  run spend $0.1028
+600/5200  run spend $0.1115
+650/5200  run spend $0.1199
+700/5200  run spend $0.1288
+750/5200  run spend $0.1376
+800/5200  run spend $0.1457
+850/5200  run spend $0.1544
+900/5200  run spend $0.1630
+950/5200  run spend $0.1710
+1000/5200  run spend $0.1792

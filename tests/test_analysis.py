@@ -51,3 +51,12 @@ def test_refusal_coding(tmp_path):
     p.write_text('{"action": null, "status": "REFUSAL"}\n{"action": "SEND_OFFER", "status": "ok"}\n{"action": null, "status": "PARSE_FAIL"}\n')
     assert A.load(p, "no_offer")["y"].tolist()[:2] == [0.0, 1.0]
     assert A.load(p, "exclude")["y"].isna().tolist() == [True, False, True]
+
+
+def test_icc():
+    # identical reps -> perfect agreement; independent reps with no scenario effect -> ICC ~ 0
+    same = A.simulate({"c": 0.5}, n=300, scen_sd=0.0, reps=1, seed=4)
+    same = pd.concat([same, same.assign(rep=1)])
+    assert A.icc(same)["rep_agreement"] == 1.0
+    ind = A.simulate({"c": 0.5}, n=2000, scen_sd=0.0, reps=2, seed=5)
+    assert abs(A.icc(ind)["icc"]) < 0.06

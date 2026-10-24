@@ -17,7 +17,14 @@ def _code(r):
 
 
 def scenarios(phase, n=None):
-    n = C.N_SCENARIOS[phase] if n is None else n
+    """The phase's scenarios; n takes the first n. Assignments are always balanced over the full phase,
+    so a subset (e.g. rep 2 on scenarios 0-39) gets exactly the same wording and order as the full run."""
+    full = C.N_SCENARIOS[phase]
+    assert n is None or n <= full, n
+    return _scenarios(phase, full)[:n]
+
+
+def _scenarios(phase, n):
     off = C.PHASE_OFFSET[phase]
     w = np.random.default_rng([C.MASTER_SEED, off, 0]).permutation(np.arange(n) % 2) + 1  # balanced wording
     send_first = np.zeros(n, bool)  # action order balanced within each wording, so independent of it

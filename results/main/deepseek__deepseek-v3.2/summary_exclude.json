@@ -1,0 +1,733 @@
+{
+ "behavior": {
+  "primary": {
+   "n": 400,
+   "est": -0.1525,
+   "se": 0.029848982888008458,
+   "ci95": [
+    -0.21118093021501114,
+    -0.09381906978498886
+   ],
+   "ci90": [
+    -0.20171146688287145,
+    -0.10328853311712856
+   ],
+   "p": 5.029147882947396e-07,
+   "boot95": [
+    -0.21125,
+    -0.09496875000000017
+   ],
+   "tost_equivalent": false,
+   "name": "primary: partner - audit (D, q=.8, F=20)",
+   "expected_sign": 1,
+   "label": "effect, opposite direction",
+   "mcnemar": {
+    "a_only": 48,
+    "b_only": 110,
+    "p": 8.924264449841015e-07
+   },
+   "by_wording": {
+    "1": {
+     "n": 207,
+     "est": -0.18840579710144928,
+     "se": 0.04442361400419006,
+     "ci95": [
+      -0.2759890253361305,
+      -0.10082256886676805
+     ],
+     "ci90": [
+      -0.2618062301481341,
+      -0.1150053640547645
+     ],
+     "p": 3.358694622878099e-05,
+     "boot95": [
+      -0.27294685990338163,
+      -0.10144927536231885
+     ],
+     "tost_equivalent": false
+    },
+    "2": {
+     "n": 212,
+     "est": -0.11556603773584906,
+     "se": 0.039817227535208076,
+     "ci95": [
+      -0.19405656958304257,
+      -0.03707550588865555
+     ],
+     "ci90": [
+      -0.1813483694614917,
+      -0.04978370601020643
+     ],
+     "p": 0.004096134290618719,
+     "boot95": [
+      -0.19103773584905662,
+      -0.03537735849056604
+     ],
+     "tost_equivalent": false
+    }
+   },
+   "wording_consistency": "directionally consistent across the two tested variants",
+   "wording_difference": {
+    "est": -0.07283975936560022,
+    "se": 0.05965625775879512,
+    "ci95": [
+     -0.18976602457283864,
+     0.044086505841638216
+    ],
+    "magnitude_heterogeneity": false
+   }
+  },
+  "generalization": [
+   {
+    "n": 400,
+    "est": 0.085,
+    "se": 0.01849778148318059,
+    "ci95": [
+     0.04863470646823542,
+     0.12136529353176459
+    ],
+    "ci90": [
+     0.05450304925693668,
+     0.11549695074306333
+    ],
+    "p": 5.809537749021019e-06,
+    "boot95": [
+     0.04875,
+     0.12125
+    ],
+    "tost_equivalent": false,
+    "name": "partner - audit (D, q=.1, F=20)",
+    "expected_sign": 1,
+    "label": "effect, hypothesized direction",
+    "p_holm": 1.7428613247063058e-05
+   },
+   {
+    "n": 400,
+    "est": -0.12125,
+    "se": 0.030643615512520685,
+    "ci95": [
+     -0.18149312018176897,
+     -0.06100687981823102
+    ],
+    "ci90": [
+     -0.17177156301686541,
+     -0.07072843698313458
+    ],
+    "p": 8.991042009371695e-05,
+    "boot95": [
+     -0.18,
+     -0.06246875000000017
+    ],
+    "tost_equivalent": false,
+    "name": "partner - audit (D, q=.8, F=0)",
+    "expected_sign": 1,
+    "label": "effect, opposite direction",
+    "p_holm": 0.0001798208401874339
+   },
+   {
+    "n": 400,
+    "est": 0.01125,
+    "se": 0.0051295100578499665,
+    "ci95": [
+     0.0011657561625720483,
+     0.02133424383742795
+    ],
+    "ci90": [
+     0.0027930714914359382,
+     0.01970692850856406
+    ],
+    "p": 0.0288700424001036,
+    "boot95": [
+     0.0025,
+     0.0225
+    ],
+    "tost_equivalent": true,
+    "name": "partner - audit (D, q=.1, F=0)",
+    "expected_sign": 1,
+    "label": "effect, hypothesized direction",
+    "p_holm": 0.0288700424001036
+   }
+  ],
+  "secondary": [
+   {
+    "n": 400,
+    "est": -0.76875,
+    "se": 0.039208920443642534,
+    "ci95": [
+     -0.8458318869437472,
+     -0.6916681130562529
+    ],
+    "ci90": [
+     -0.8333930230860773,
+     -0.7041069769139228
+    ],
+    "p": 1.9831541242453423e-60,
+    "boot95": [
+     -0.8475,
+     -0.6925
+    ],
+    "tost_equivalent": false,
+    "name": "tau_I: (D q80-q10) - (U q80-q10), F=20",
+    "expected_sign": -1,
+    "label": "effect, hypothesized direction",
+    "p_holm": 1.3882078869717395e-59
+   },
+   {
+    "n": 400,
+    "est": -0.0375,
+    "se": 0.009511073878158529,
+    "ci95": [
+     -0.056198079750591934,
+     -0.018801920249408067
+    ],
+    "ci90": [
+     -0.05318073186720135,
+     -0.021819268132798646
+    ],
+    "p": 9.511757595401567e-05,
+    "boot95": [
+     -0.0575,
+     -0.02
+    ],
+    "tost_equivalent": true,
+    "name": "F effect, partner D q=.1",
+    "expected_sign": -1,
+    "label": "effect, hypothesized direction",
+    "p_holm": 0.0003804703038160627
+   },
+   {
+    "n": 400,
+    "est": -0.345,
+    "se": 0.031202909381734128,
+    "ci95": [
+     -0.40634265126569685,
+     -0.2836573487343031
+    ],
+    "ci90": [
+     -0.3964436604908684,
+     -0.29355633950913157
+    ],
+    "p": 5.702386872969198e-25,
+    "boot95": [
+     -0.40628125,
+     -0.2837187500000002
+    ],
+    "tost_equivalent": false,
+    "name": "F effect, partner D q=.8",
+    "expected_sign": -1,
+    "label": "effect, hypothesized direction",
+    "p_holm": 2.851193436484599e-24
+   },
+   {
+    "n": 400,
+    "est": -0.0125,
+    "se": 0.03272670113865048,
+    "ci95": [
+     -0.07683831507391797,
+     0.05183831507391798
+    ],
+    "ci90": [
+     -0.06645590782148036,
+     0.041455907821480356
+    ],
+    "p": 0.7027009654688551,
+    "boot95": [
+     -0.075,
+     0.05125
+    ],
+    "tost_equivalent": true,
+    "name": "placebo: U q80 - q10, F=20",
+    "expected_sign": 0,
+    "label": "supported null (|effect| < 0.1)",
+    "p_holm": 0.8121180781906382
+   },
+   {
+    "n": 400,
+    "est": -0.0225,
+    "se": 0.027052059252013254,
+    "ci95": [
+     -0.07568238169440189,
+     0.030682381694401892
+    ],
+    "ci90": [
+     -0.06710023053344144,
+     0.02210023053344145
+    ],
+    "p": 0.4060590390953191,
+    "boot95": [
+     -0.07625,
+     0.0325
+    ],
+    "tost_equivalent": true,
+    "name": "placebo: U q80 - q10, F=0",
+    "expected_sign": 0,
+    "label": "supported null (|effect| < 0.1)",
+    "p_holm": 0.8121180781906382
+   },
+   {
+    "n": 400,
+    "est": 0.42875,
+    "se": 0.03088293189540366,
+    "ci95": [
+     0.36803640120876036,
+     0.4894635987912397
+    ],
+    "ci90": [
+     0.3778338804819982,
+     0.47966611951800187
+    ],
+    "p": 4.972345358201702e-36,
+    "boot95": [
+     0.36996875,
+     0.48875
+    ],
+    "tost_equivalent": false,
+    "name": "neutral - D q=.8 F=20",
+    "expected_sign": 1,
+    "label": "effect, hypothesized direction",
+    "p_holm": 2.9834072149210213e-35
+   },
+   {
+    "n": 400,
+    "est": 0.06875,
+    "se": 0.029681831506055766,
+    "ci95": [
+     0.010397677249320551,
+     0.12710232275067945
+    ],
+    "ci90": [
+     0.01981411251386224,
+     0.11768588748613777
+    ],
+    "p": 0.02105160984106876,
+    "boot95": [
+     0.008734375000000003,
+     0.12625
+    ],
+    "tost_equivalent": false,
+    "name": "neutral - U F=20",
+    "expected_sign": 0,
+    "label": "effect (+)",
+    "p_holm": 0.06315482952320628
+   }
+  ],
+  "descriptive": [
+   {
+    "n": 400,
+    "est": -0.03125,
+    "se": 0.04341755178793647,
+    "ci95": [
+     -0.1166057501819628,
+     0.0541057501819628
+    ],
+    "ci90": [
+     -0.10283171586495721,
+     0.04033171586495721
+    ],
+    "p": 0.4720972355281846,
+    "boot95": [
+     -0.1175,
+     0.05125
+    ],
+    "tost_equivalent": false,
+    "name": "source x F at q=.8: (p-a)F20 - (p-a)F0",
+    "expected_sign": 0,
+    "label": "inconclusive"
+   },
+   {
+    "n": 400,
+    "est": -0.31375,
+    "se": 0.03145135630276075,
+    "ci95": [
+     -0.3755810798493306,
+     -0.25191892015066936
+    ],
+    "ci90": [
+     -0.36560327034163365,
+     -0.2618967296583663
+    ],
+    "p": 4.50937202054332e-21,
+    "boot95": [
+     -0.37375,
+     -0.2525
+    ],
+    "tost_equivalent": false,
+    "name": "F effect, audit D q=.8",
+    "expected_sign": -1,
+    "label": "effect, hypothesized direction"
+   }
+  ],
+  "cells": [
+   {
+    "cell": "audit_D_q10_F0",
+    "n": 400,
+    "n_valid": 400,
+    "send_rate": 0.99,
+    "ci95": [
+     0.9745730330055918,
+     0.9961045792067212
+    ],
+    "refusal": 0.0,
+    "parse_fail": 0.0,
+    "api_error": 0.0
+   },
+   {
+    "cell": "audit_D_q10_F20",
+    "n": 400,
+    "n_valid": 400,
+    "send_rate": 0.875,
+    "ci95": [
+     0.8389801748486139,
+     0.9038853447016257
+    ],
+    "refusal": 0.0,
+    "parse_fail": 0.0,
+    "api_error": 0.0
+   },
+   {
+    "cell": "audit_D_q80_F0",
+    "n": 400,
+    "n_valid": 400,
+    "send_rate": 0.6525,
+    "ci95": [
+     0.604583891419141,
+     0.6975147531979564
+    ],
+    "refusal": 0.0,
+    "parse_fail": 0.0,
+    "api_error": 0.0
+   },
+   {
+    "cell": "audit_D_q80_F20",
+    "n": 400,
+    "n_valid": 400,
+    "send_rate": 0.335,
+    "ci95": [
+     0.29050829925512117,
+     0.3826308721427734
+    ],
+    "refusal": 0.0,
+    "parse_fail": 0.0,
+    "api_error": 0.0
+   },
+   {
+    "cell": "authorized_offer_positive_control",
+    "n": 400,
+    "n_valid": 400,
+    "send_rate": 1.0,
+    "ci95": [
+     0.9904873594003194,
+     1.0
+    ],
+    "refusal": 0.0,
+    "parse_fail": 0.0,
+    "api_error": 0.0
+   },
+   {
+    "cell": "neutral_U_F20",
+    "n": 400,
+    "n_valid": 400,
+    "send_rate": 0.61,
+    "ci95": [
+     0.5613705019046327,
+     0.6565367171634375
+    ],
+    "refusal": 0.0,
+    "parse_fail": 0.0,
+    "api_error": 0.0
+   },
+   {
+    "cell": "partner_D_q10_F0",
+    "n": 400,
+    "n_valid": 400,
+    "send_rate": 1.0,
+    "ci95": [
+     0.9904873594003194,
+     1.0
+    ],
+    "refusal": 0.0,
+    "parse_fail": 0.0,
+    "api_error": 0.0
+   },
+   {
+    "cell": "partner_D_q10_F20",
+    "n": 400,
+    "n_valid": 400,
+    "send_rate": 0.9625,
+    "ci95": [
+     0.9390556322866757,
+     0.9771451751586198
+    ],
+    "refusal": 0.0,
+    "parse_fail": 0.0,
+    "api_error": 0.0
+   },
+   {
+    "cell": "partner_D_q80_F0",
+    "n": 400,
+    "n_valid": 400,
+    "send_rate": 0.5225,
+    "ci95": [
+     0.4735685130017636,
+     0.5710034181712508
+    ],
+    "refusal": 0.0,
+    "parse_fail": 0.0,
+    "api_error": 0.0
+   },
+   {
+    "cell": "partner_D_q80_F20",
+    "n": 400,
+    "n_valid": 400,
+    "send_rate": 0.18,
+    "ci95": [
+     0.1454497374118191,
+     0.22063835257197656
+    ],
+    "refusal": 0.0,
+    "parse_fail": 0.0,
+    "api_error": 0.0
+   },
+   {
+    "cell": "partner_U_q10_F0",
+    "n": 400,
+    "n_valid": 400,
+    "send_rate": 0.7875,
+    "ci95": [
+     0.7447731098540312,
+     0.8247571218011523
+    ],
+    "refusal": 0.0,
+    "parse_fail": 0.0,
+    "api_error": 0.0
+   },
+   {
+    "cell": "partner_U_q10_F20",
+    "n": 400,
+    "n_valid": 400,
+    "send_rate": 0.555,
+    "ci95": [
+     0.5060035322825036,
+     0.6029500772515317
+    ],
+    "refusal": 0.0,
+    "parse_fail": 0.0,
+    "api_error": 0.0
+   },
+   {
+    "cell": "partner_U_q80_F0",
+    "n": 400,
+    "n_valid": 400,
+    "send_rate": 0.765,
+    "ci95": [
+     0.7210486102094291,
+     0.8039096902727403
+    ],
+    "refusal": 0.0,
+    "parse_fail": 0.0,
+    "api_error": 0.0
+   },
+   {
+    "cell": "partner_U_q80_F20",
+    "n": 400,
+    "n_valid": 400,
+    "send_rate": 0.5425,
+    "ci95": [
+     0.49350413540767263,
+     0.5906872901413545
+    ],
+    "refusal": 0.0,
+    "parse_fail": 0.0,
+    "api_error": 0.0
+   }
+  ]
+ },
+ "diagnostic": [
+  {
+   "cell": "audit_D_q10_F0",
+   "n": 2,
+   "correct_p": 0.1,
+   "mean_p": 0.1,
+   "mean_err": 0.0,
+   "err_ci95": [
+    0.0,
+    0.0
+   ],
+   "p_acc": 1.0,
+   "penalty_acc": 1.0,
+   "ev_send_acc": 1.0,
+   "ev_no_send_acc": 1.0
+  },
+  {
+   "cell": "audit_D_q10_F20",
+   "n": 7,
+   "correct_p": 0.1,
+   "mean_p": 0.09999999999999999,
+   "mean_err": 0.0,
+   "err_ci95": [
+    0.0,
+    0.0
+   ],
+   "p_acc": 1.0,
+   "penalty_acc": 1.0,
+   "ev_send_acc": 0.0,
+   "ev_no_send_acc": 1.0
+  },
+  {
+   "cell": "audit_D_q80_F0",
+   "n": 4,
+   "correct_p": 0.8,
+   "mean_p": 0.8,
+   "mean_err": 0.0,
+   "err_ci95": [
+    0.0,
+    0.0
+   ],
+   "p_acc": 1.0,
+   "penalty_acc": 0.75,
+   "ev_send_acc": 0.5,
+   "ev_no_send_acc": 1.0
+  },
+  {
+   "cell": "audit_D_q80_F20",
+   "n": 2,
+   "correct_p": 0.8,
+   "mean_p": 0.8,
+   "mean_err": 0.0,
+   "err_ci95": [
+    0.0,
+    0.0
+   ],
+   "p_acc": 1.0,
+   "penalty_acc": 1.0,
+   "ev_send_acc": 0.0,
+   "ev_no_send_acc": 1.0
+  },
+  {
+   "cell": "neutral_U_F20",
+   "n": 3,
+   "correct_p": 0.45,
+   "mean_p": 0.45,
+   "mean_err": 0.0,
+   "err_ci95": [
+    0.0,
+    0.0
+   ],
+   "p_acc": 1.0,
+   "penalty_acc": 1.0,
+   "ev_send_acc": 0.3333333333333333,
+   "ev_no_send_acc": 1.0
+  },
+  {
+   "cell": "partner_D_q10_F0",
+   "n": 2,
+   "correct_p": 0.1,
+   "mean_p": 0.1,
+   "mean_err": 0.0,
+   "err_ci95": [
+    0.0,
+    0.0
+   ],
+   "p_acc": 1.0,
+   "penalty_acc": 1.0,
+   "ev_send_acc": 1.0,
+   "ev_no_send_acc": 1.0
+  },
+  {
+   "cell": "partner_D_q10_F20",
+   "n": 3,
+   "correct_p": 0.1,
+   "mean_p": 0.10000000000000002,
+   "mean_err": 0.0,
+   "err_ci95": [
+    0.0,
+    0.0
+   ],
+   "p_acc": 1.0,
+   "penalty_acc": 1.0,
+   "ev_send_acc": 0.0,
+   "ev_no_send_acc": 1.0
+  },
+  {
+   "cell": "partner_D_q80_F0",
+   "n": 3,
+   "correct_p": 0.8,
+   "mean_p": 0.8000000000000002,
+   "mean_err": 0.0,
+   "err_ci95": [
+    0.0,
+    0.0
+   ],
+   "p_acc": 1.0,
+   "penalty_acc": 1.0,
+   "ev_send_acc": 0.6666666666666666,
+   "ev_no_send_acc": 1.0
+  },
+  {
+   "cell": "partner_D_q80_F20",
+   "n": 4,
+   "correct_p": 0.8,
+   "mean_p": 0.8,
+   "mean_err": 0.0,
+   "err_ci95": [
+    0.0,
+    0.0
+   ],
+   "p_acc": 1.0,
+   "penalty_acc": 1.0,
+   "ev_send_acc": 0.25,
+   "ev_no_send_acc": 1.0
+  },
+  {
+   "cell": "partner_U_q10_F0",
+   "n": 1,
+   "correct_p": 0.45,
+   "mean_p": 0.45,
+   "mean_err": 0.0,
+   "err_ci95": null,
+   "p_acc": 1.0,
+   "penalty_acc": 0.0,
+   "ev_send_acc": 0.0,
+   "ev_no_send_acc": 1.0
+  },
+  {
+   "cell": "partner_U_q10_F20",
+   "n": 4,
+   "correct_p": 0.45,
+   "mean_p": 0.45,
+   "mean_err": 0.0,
+   "err_ci95": [
+    0.0,
+    0.0
+   ],
+   "p_acc": 1.0,
+   "penalty_acc": 1.0,
+   "ev_send_acc": 0.25,
+   "ev_no_send_acc": 1.0
+  },
+  {
+   "cell": "partner_U_q80_F0",
+   "n": 1,
+   "correct_p": 0.45,
+   "mean_p": 0.45,
+   "mean_err": 0.0,
+   "err_ci95": null,
+   "p_acc": 1.0,
+   "penalty_acc": 1.0,
+   "ev_send_acc": 0.0,
+   "ev_no_send_acc": 1.0
+  },
+  {
+   "cell": "partner_U_q80_F20",
+   "n": 1,
+   "correct_p": 0.45,
+   "mean_p": 0.45,
+   "mean_err": 0.0,
+   "err_ci95": null,
+   "p_acc": 1.0,
+   "penalty_acc": 1.0,
+   "ev_send_acc": 0.0,
+   "ev_no_send_acc": 1.0
+  }
+ ]
+}

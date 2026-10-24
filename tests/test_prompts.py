@@ -93,3 +93,9 @@ def test_answer_only_formats_unchanged_by_work_variant():
     d, dw = txt(s, "partner_D_q80_F20", "diagnostic"), txt(s, "partner_D_q80_F20", "diagnostic_work")
     assert d.endswith(S.T["diagnostic_format"]) and dw.endswith(S.T["diagnostic_format_work"])
     assert d[: -len(S.T["diagnostic_format"])] == dw[: -len(S.T["diagnostic_format_work"])]
+
+
+def test_subset_matches_full_run():
+    # regression: rep 2 on scenarios 0-39 once got a different wording/order assignment than rep 1
+    full = S.scenarios("main")
+    assert S.scenarios("main", 40) == full[:40]
