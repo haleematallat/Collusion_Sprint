@@ -1,0 +1,58 @@
+{
+ "A_accept_rate": {
+  "rate": 0.81,
+  "n": 100,
+  "target": 0.8,
+  "p": 0.9006997851911747
+ },
+ "A_exposure_rate_q10": {
+  "rate": 0.1,
+  "n": 20,
+  "target": 0.1,
+  "p": 1.0
+ },
+ "A_independence_q10_chi2_p": 0.8707940072579602,
+ "A_exposure_rate_q80": {
+  "rate": 0.6833333333333333,
+  "n": 60,
+  "target": 0.8,
+  "p": 0.03417462078910188
+ },
+ "A_independence_q80_chi2_p": 0.5788562782617561,
+ "E_settlement_mismatches": 0,
+ "E_no_offer_score_changes": 0,
+ "E_realized": {
+  "sent": 56,
+  "accepted": 43,
+  "exposed": 15,
+  "exposed_by": {
+   "partner": 13,
+   "audit": 2
+  },
+  "mean_score_sent": 54.57142857142857,
+  "mean_score_not_sent": 50.0
+ },
+ "B_undisclosed_prompt_pairs": {
+  "n": 20,
+  "identical": 20
+ },
+ "B_logged_prompt_mismatches": 0,
+ "D_primary_pairs": {
+  "n": 20,
+  "differ_outside_exposure_lines": 0
+ },
+ "C_positive_control_send_rate": {
+  "rate": 1.0,
+  "n": 20
+ },
+ "status_counts": {
+  "ok": 100
+ },
+ "providers": {
+  "DeepInfra": 35,
+  "Baidu": 45,
+  "Venice": 15,
+  "SiliconFlow": 3,
+  "AtlasCloud": 2
+ }
+}
