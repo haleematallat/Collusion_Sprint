@@ -235,6 +235,10 @@ def main():
         if (d / f"{kind}.jsonl").exists():
             rows = pd.DataFrame([json.loads(l) for l in (d / f"{kind}.jsonl").open()]).drop_duplicates("trial_id", keep="last")
             res[kind] = (analyze_diagnostic if kind.startswith("diagnostic") else analyze_arithmetic)(rows)
+    diag = {f: res[k] for k, f in (("diagnostic", "answer-only"), ("diagnostic_work", "with working")) if res.get(k)}
+    if diag:
+        from .plots import plot_calibration
+        plot_calibration(diag, out)
     (out / f"summary_{a.refusal}.json").write_text(json.dumps(_jsonable(res), indent=1, default=str))
     b = res.get("behavior")
     if b:

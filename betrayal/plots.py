@@ -55,3 +55,24 @@ def plot_all(df, res, out):
     fig.tight_layout()
     fig.savefig(out / "fig_factorial.png", dpi=300, bbox_inches="tight")
     plt.close(fig)
+
+
+def plot_calibration(diag, out):
+    """diag: {"answer-only": rows, "with working": rows} from analyze_diagnostic."""
+    plt.style.use("seaborn-v0_8-whitegrid")
+    fig, ax = plt.subplots(figsize=(6.5, 3.6))
+    cells = [r["cell"] for r in next(iter(diag.values()))]
+    x = np.arange(len(cells))
+    for k, (fmt, rows) in enumerate(diag.items()):
+        r = {d["cell"]: d for d in rows}
+        m = np.array([r[c]["mean_p"] if c in r else np.nan for c in cells])
+        e = np.array([(r[c]["err_ci95"][1] - r[c]["err_ci95"][0]) / 2 if c in r and r[c]["err_ci95"] else 0 for c in cells])
+        ax.errorbar(x + (k - 0.5) * 0.25, m, yerr=e, fmt="o", capsize=3, label=fmt)
+    ax.scatter(x, [next(iter(diag.values()))[i]["correct_p"] for i in range(len(cells))], marker="_", s=300, c="k", label="correct")
+    ax.set_xticks(x, [c.replace("_", " ") for c in cells], rotation=60, ha="right", fontsize=7)
+    ax.set_ylabel("forecast P(deduction applied)")
+    ax.set_ylim(0, 1)
+    ax.legend(frameon=False, fontsize=8)
+    fig.tight_layout()
+    fig.savefig(out / "fig_calibration.png", dpi=300, bbox_inches="tight")
+    plt.close(fig)
