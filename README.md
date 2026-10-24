@@ -10,6 +10,16 @@ Execution plan: [`docs/plan.md`](docs/plan.md). The preregistration (`prereg.md`
 is the authoritative design. Prompt text: [`prompts/templates.toml`](prompts/templates.toml); every rendered
 variant: [`docs/prompt_review.md`](docs/prompt_review.md).
 
+## Results
+
+Report draft: [`report/report.md`](report/report.md). Headline (preregistered primary test, DeepSeek-V3.2,
+400 paired scenarios): at disclosed q = 80%, F = 20, agents offered **less** when the partner could report than
+under an equivalent automated audit (18.0% vs 33.5%; Δ = −0.16 [−0.22, −0.10]), the opposite of the
+hypothesized betrayal blindness. Not replicated in GPT-4.1-mini (at floor in that cell), which instead
+shows the reverse asymmetry at q = 80%, F = 0 (+0.19 [+0.14, +0.25]).
+
+To regenerate all results: `./main_runs.sh` (resumable), then `analyze` / `validate` for each model.
+
 ## Reproduce
 
 ```bash
