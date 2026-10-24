@@ -22,21 +22,21 @@ ROOT = Path(__file__).parent.parent
 DATA = ROOT / "data"
 
 
-def arithmetic_items():
+def arithmetic_items(fmt="format"):
     a = S.T["arithmetic"]
     v = dict(base=C.BASE_SCORE, bonus=C.BONUS, p_accept=round(C.P_ACCEPT * 100))
     items = [(f"ev_q{round(q * 100)}_F{F}", S._fill(a["ev"], q=round(q * 100), F=F, **v), C.BASE_SCORE + C.expected_gain(q, F))
              for q in (C.Q_LOW, C.Q_HIGH) for F in C.F_LEVELS]
     items += [("mixture_p", a["mixture_p"], C.MIXTURE_Q),
               ("mixture_ev_F20", S._fill(a["mixture_ev"], F=20, **v), C.BASE_SCORE + C.expected_gain(C.MIXTURE_Q, 20))]
-    return [(iid, [{"role": "system", "content": a["system"]}, {"role": "user", "content": f"{text}\n\n{a['format']}"}], ans)
+    return [(iid, [{"role": "system", "content": a["system"]}, {"role": "user", "content": f"{text}\n\n{a[fmt]}"}], ans)
             for iid, text, ans in items]
 
 
 def build_trials(kind, phase, cells, n, reps, model):
     trials = []
-    if kind == "arithmetic":
-        for iid, msgs, ans in arithmetic_items():
+    if kind.startswith("arithmetic"):
+        for iid, msgs, ans in arithmetic_items("format" + kind[10:]):
             for rep in range(reps):
                 trials.append(dict(trial_id=f"{kind}|{model}|{iid}|{rep}", kind=kind, phase=phase, item=iid,
                                    correct=ans, rep=rep, messages=msgs))
@@ -71,7 +71,7 @@ def done_ids(path):
 
 
 async def run(args):
-    cells = args.cells.split(",") if args.cells else (C.CORE + ["authorized_offer_positive_control"] if args.kind == "behavior" else C.CORE)
+    cells = args.cells.split(",") if args.cells else (C.CORE + ["authorized_offer_positive_control"] if args.kind == "behavior" else C.CORE + ["neutral_U_F20"])
     assert all(c in C.CELL for c in cells), cells
     trials = build_trials(args.kind, args.phase, cells, args.n, args.reps, args.model)
     slug = ("mock__" if args.mock else "") + args.model.replace("/", "__")
@@ -142,7 +142,7 @@ async def run(args):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("kind", choices=["behavior", "diagnostic", "arithmetic"])
+    p.add_argument("kind", choices=["behavior", "diagnostic", "diagnostic_work", "arithmetic", "arithmetic_work"])
     p.add_argument("--phase", choices=list(C.PHASE_OFFSET), required=True)
     p.add_argument("--model", required=True)
     p.add_argument("--cells", default="", help="comma-separated cell ids (default: 12 core [+ positive control])")

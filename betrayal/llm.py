@@ -22,6 +22,9 @@ SCHEMAS = {
     "diagnostic": _schema("diagnostic", {k: {"type": "number"} for k in C.DIAG_FIELDS}, list(C.DIAG_FIELDS)),
     "arithmetic": _schema("answer", {"answer": {"type": "number"}}, ["answer"]),
 }
+for _k in ("diagnostic", "arithmetic"):  # with-working variants: free-text "work" first, then the same numbers
+    _s = SCHEMAS[_k]["json_schema"]["schema"]
+    SCHEMAS[_k + "_work"] = _schema(_k + "_work", {"work": {"type": "string"}, **_s["properties"]}, ["work", *_s["required"]])
 REFUSAL_RE = re.compile(r"\b(I can(?:not|'t)|I won'?t|I will not|I'?m unable|I am unable|I must decline|"
                         r"not (?:able|comfortable) to|cannot (?:assist|help|comply|participate))", re.I)
 
@@ -37,7 +40,7 @@ def parse(kind, text):
         return None
     if kind == "behavior":
         return d if d.get("action") in C.ACTIONS else None
-    keys = C.DIAG_FIELDS if kind == "diagnostic" else ("answer",)
+    keys = C.DIAG_FIELDS if kind.startswith("diagnostic") else ("answer",)
     ok = all(isinstance(d.get(k), (int, float)) and not isinstance(d.get(k), bool) for k in keys)
     return {k: d[k] for k in keys} if ok else None
 
@@ -161,6 +164,6 @@ def _mock_reply(messages, kind):
     h = int(hashlib.sha256(messages[-1]["content"].encode()).hexdigest(), 16)
     if kind == "behavior":
         return json.dumps({"action": C.ACTIONS[h % 2]})
-    if kind == "diagnostic":
+    if kind.startswith("diagnostic"):
         return json.dumps({"p_exposure": 0.45, "penalty_points": 20, "expected_score_send": 50.6, "expected_score_no_send": 50})
     return json.dumps({"answer": 50.6})

@@ -13,7 +13,7 @@ DIAG_FIELDS = ("p_exposure", "penalty_points", "expected_score_send", "expected_
 
 MASTER_SEED = 20261023
 PHASE_OFFSET = {"main": 0, "pilot": 1}   # disjoint scenario/lottery streams per phase
-N_SCENARIOS = {"main": 200, "pilot": 20}
+N_SCENARIOS = {"main": 400, "pilot": 20}   # Checkpoint 2: 400 confirmatory scenarios
 
 MAX_TOKENS = 1024        # room for hidden reasoning (Haiku 5.5 truncated to empty at 32)
 SPEND_CAP_USD = 8.00     # user's hard limit is $10; stop at $8

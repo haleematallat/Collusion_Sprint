@@ -15,7 +15,7 @@ def txt(s, cid, kind="behavior"):
 def test_fully_substituted_and_no_internal_ids():
     for s in ALL:
         for c in C.CELLS:
-            for kind in ("behavior", "diagnostic"):
+            for kind in ("behavior", "diagnostic", "diagnostic_work"):
                 m = S.render(s, c, kind)
                 body = m[0]["content"] + m[1]["content"]
                 assert "$" not in body
@@ -26,7 +26,7 @@ def test_fully_substituted_and_no_internal_ids():
 def test_undisclosed_prompts_identical_across_hidden_type():
     for s in ALL:
         for F in C.F_LEVELS:
-            for kind in ("behavior", "diagnostic"):
+            for kind in ("behavior", "diagnostic", "diagnostic_work"):
                 assert txt(s, f"partner_U_q10_F{F}", kind) == txt(s, f"partner_U_q80_F{F}", kind)
         flipped = dict(s, hidden_q=C.Q_LOW if s["hidden_q"] == C.Q_HIGH else C.Q_HIGH)
         assert txt(s, "neutral_U_F20") == txt(flipped, "neutral_U_F20")
@@ -86,3 +86,10 @@ def test_wording_balanced_and_deterministic():
         sc = S.scenarios(phase)
         cells = Counter((s["w"], s["send_first"]) for s in sc)
         assert set(cells.values()) == {len(sc) // 4} and len(cells) == 4, cells
+
+
+def test_answer_only_formats_unchanged_by_work_variant():
+    s = S.scenarios("main", 1)[0]
+    d, dw = txt(s, "partner_D_q80_F20", "diagnostic"), txt(s, "partner_D_q80_F20", "diagnostic_work")
+    assert d.endswith(S.T["diagnostic_format"]) and dw.endswith(S.T["diagnostic_format_work"])
+    assert d[: -len(S.T["diagnostic_format"])] == dw[: -len(S.T["diagnostic_format_work"])]

@@ -48,7 +48,7 @@ def _fill(text, **kw):
 
 
 def render(scn, cell, kind="behavior"):
-    """Return the chat messages for one (scenario, cell). kind: behavior | diagnostic."""
+    """Return the chat messages for one (scenario, cell). kind: behavior | diagnostic | diagnostic_work."""
     v = dict(scn, base=C.BASE_SCORE, bonus=C.BONUS, p_accept=round(C.P_ACCEPT * 100), F=cell.F)
     if cell.arm == "positive":
         rules, exposure = T["rules_authorized"], T["exposure"]["positive"]["block"]
@@ -66,8 +66,8 @@ def render(scn, cell, kind="behavior"):
     if kind == "behavior":
         ending = _fill(T["decision"], id_1=ids[0], id_2=ids[1],
                        option_1=_fill(T[f"option_{ids[0]}"], **v), option_2=_fill(T[f"option_{ids[1]}"], **v))
-    elif kind == "diagnostic":
-        ending = _fill(T["diagnostic"], **v)
+    elif kind in ("diagnostic", "diagnostic_work"):
+        ending = _fill(T["diagnostic"], format=T["diagnostic_format" + kind[10:]], **v)
     else:
         raise ValueError(kind)
     user = _fill(T["base"], rules=_fill(rules, **v), exposure=_fill(exposure, **v), ending=ending, **v)

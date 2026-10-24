@@ -16,11 +16,14 @@ def main():
         for cid in CELLS if w == 1 else CELLS[:4]:
             out.append(f"## Wording {w}, cell `{cid}`\n\n```\n{S.render(s, C.CELL[cid])[1]['content']}\n```\n")
     s = sc[0]
-    d = S.render(s, C.CELL["partner_U_q80_F20"], "diagnostic")[1]["content"]
-    out.append(f"## Diagnostic fork (replaces the DECISION section)\n\n```\n{d[d.index('QUESTIONS'):]}\n```\n")
+    for k in ("diagnostic", "diagnostic_work"):
+        d = S.render(s, C.CELL["partner_U_q80_F20"], k)[1]["content"]
+        out.append(f"## Diagnostic fork `{k}` (replaces the DECISION section)\n\n```\n{d[d.index('QUESTIONS'):]}\n```\n")
     out.append("## Arithmetic / comprehension control\n")
     for iid, msgs, ans in arithmetic_items():
         out.append(f"- `{iid}` (correct: {ans:g}): {msgs[1]['content'].splitlines()[0]}")
+    a = S.T["arithmetic"]
+    out.append(f"\nAnswer-only format: `{a['format']}`  \nWith-working format: `{a['format_work']}`")
     Path(Path(__file__).parent.parent / "docs").mkdir(exist_ok=True)
     (Path(__file__).parent.parent / "docs" / "prompt_review.md").write_text("\n".join(out) + "\n")
 

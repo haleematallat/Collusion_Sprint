@@ -14,7 +14,7 @@ from scipy import stats
 from . import config as C
 
 ROOT = Path(__file__).parent.parent
-DELTA = 0.15  # equivalence margin (confirmed at Checkpoint 2)
+DELTA = 0.10  # equivalence margin (Checkpoint 2: tightened from 0.15)
 HETEROGENEITY = 0.10  # |est_w1 - est_w2| flagged as substantial (draft for prereg)
 
 P, A = "partner_D_q{}_F{}", "audit_D_q{}_F{}"
@@ -231,9 +231,10 @@ def main():
         res["behavior"] = analyze_behavior(df)
         from .plots import plot_all
         plot_all(df, res["behavior"], out)
-    for kind, fn in (("diagnostic", analyze_diagnostic), ("arithmetic", analyze_arithmetic)):
+    for kind in ("diagnostic", "diagnostic_work", "arithmetic", "arithmetic_work"):
         if (d / f"{kind}.jsonl").exists():
-            res[kind] = fn(load(d / f"{kind}.jsonl") if kind != "arithmetic" else pd.DataFrame([json.loads(l) for l in (d / f"{kind}.jsonl").open()]))
+            rows = pd.DataFrame([json.loads(l) for l in (d / f"{kind}.jsonl").open()]).drop_duplicates("trial_id", keep="last")
+            res[kind] = (analyze_diagnostic if kind.startswith("diagnostic") else analyze_arithmetic)(rows)
     (out / f"summary_{a.refusal}.json").write_text(json.dumps(_jsonable(res), indent=1, default=str))
     b = res.get("behavior")
     if b:
