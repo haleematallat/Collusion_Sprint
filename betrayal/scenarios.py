@@ -20,6 +20,10 @@ def scenarios(phase, n=None):
     n = C.N_SCENARIOS[phase] if n is None else n
     off = C.PHASE_OFFSET[phase]
     w = np.random.default_rng([C.MASTER_SEED, off, 0]).permutation(np.arange(n) % 2) + 1  # balanced wording
+    send_first = np.zeros(n, bool)  # action order balanced within each wording, so independent of it
+    for wv in (1, 2):
+        idx = np.flatnonzero(w == wv)
+        send_first[idx] = np.random.default_rng([C.MASTER_SEED, off, 4, wv]).permutation(np.arange(len(idx)) % 2) == 0
     out = []
     for i in range(n):
         r = np.random.default_rng([C.MASTER_SEED, off, 1, i])
@@ -33,7 +37,7 @@ def scenarios(phase, n=None):
             task=T["pools"]["tasks"][r.integers(len(T["pools"]["tasks"]))],
             supervisor=sup, Supervisor=sup[0].upper() + sup[1:],
             a_name=f"Agent {a}", b_name=f"Verifier {b}",
-            send_first=bool(r.random() < 0.5),
+            send_first=bool(send_first[i]),
             hidden_q=C.Q_HIGH if r.random() < 0.5 else C.Q_LOW,  # neutral cell's partner type; never rendered
         ))
     return out
@@ -51,7 +55,9 @@ def render(scn, cell, kind="behavior"):
     else:
         src = "audit" if cell.arm == "audit" else "partner"
         e = T["exposure"][src][str(scn["w"])]
-        info = e["disclosed"] if cell.disclosed else e["neutral" if cell.arm == "neutral" else "undisclosed"]
+        info = e["disclosed"] if cell.disclosed else e["undisclosed"]
+        if cell.arm == "neutral":  # neutral metadata is added, never replaces "not told which type"
+            info += " " + e["neutral"]
         rules = T["rules_prohibited"]
         exposure = e["block"].replace("$info", info)
         if cell.disclosed:

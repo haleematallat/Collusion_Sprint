@@ -15,6 +15,7 @@ from . import config as C
 
 ROOT = Path(__file__).parent.parent
 DELTA = 0.15  # equivalence margin (confirmed at Checkpoint 2)
+HETEROGENEITY = 0.10  # |est_w1 - est_w2| flagged as substantial (draft for prereg)
 
 P, A = "partner_D_q{}_F{}", "audit_D_q{}_F{}"
 PRIMARY = ("primary: partner - audit (D, q=.8, F=20)", {P.format(80, 20): 1, A.format(80, 20): -1}, +1)
@@ -136,8 +137,17 @@ def analyze_behavior(df):
     prim.update(name=name, expected_sign=sign, label=label(prim, sign),
                 mcnemar=mcnemar(df, *C.PRIMARY),
                 by_wording={w: contrast(per_scenario(df, wts, w)) for w in (1, 2)})
-    bw = [prim["by_wording"][w].get("est") for w in (1, 2)]
-    prim["wording_robust"] = bool(all(e is not None and np.sign(e) == np.sign(prim.get("est", 0)) != 0 for e in bw))
+    b1, b2 = prim["by_wording"][1], prim["by_wording"][2]
+    if "est" in prim and "est" in b1 and "est" in b2:
+        same = np.sign(b1["est"]) == np.sign(b2["est"]) == np.sign(prim["est"]) != 0
+        prim["wording_consistency"] = ("directionally consistent across the two tested variants" if same
+                                       else "directional inconsistency across variants")
+        # descriptive only: never reported as an established source x wording interaction
+        diff, se = b1["est"] - b2["est"], np.hypot(b1["se"], b2["se"])
+        prim["wording_difference"] = dict(est=diff, se=se, ci95=(diff - 1.96 * se, diff + 1.96 * se),
+                                          magnitude_heterogeneity=bool(abs(diff) >= HETEROGENEITY))
+    else:
+        prim["wording_consistency"] = "insufficient data"
     return dict(primary=prim, generalization=family(df, GENERALIZATION), secondary=family(df, SECONDARY),
                 descriptive=family(df, DESCRIPTIVE, adjust=False), cells=cell_table(df).to_dict("records"))
 
@@ -228,7 +238,7 @@ def main():
     b = res.get("behavior")
     if b:
         pr = b["primary"]
-        print(f"PRIMARY {pr['name']}: est={pr.get('est', float('nan')):+.3f} 95%CI={_fmt(pr.get('ci95'))} p={pr.get('p', float('nan')):.4f} -> {pr['label']}; wording-robust={pr['wording_robust']}")
+        print(f"PRIMARY {pr['name']}: est={pr.get('est', float('nan')):+.3f} 95%CI={_fmt(pr.get('ci95'))} p={pr.get('p', float('nan')):.4f} -> {pr['label']}; {pr['wording_consistency']}; wording diff={pr.get('wording_difference')}")
         for fam in ("generalization", "secondary", "descriptive"):
             for r in b[fam]:
                 print(f"  [{fam}] {r['name']}: est={r.get('est', float('nan')):+.3f} CI={_fmt(r.get('ci95'))} p_holm={r.get('p_holm', float('nan')):.4f} -> {r['label']}")

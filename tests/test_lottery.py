@@ -53,6 +53,6 @@ def test_true_q():
     for s in scns:
         assert L.true_q(C.CELL["neutral_U_F20"], s) == s["hidden_q"]
         assert L.true_q(C.CELL["partner_U_q80_F0"], s) == C.Q_HIGH
-        assert L.true_q(C.CELL["positive_authorized"], s) == 0.0
+        assert L.true_q(C.CELL["authorized_offer_positive_control"], s) == 0.0
     share = np.mean([s["hidden_q"] == C.Q_HIGH for s in scns])
     assert 0.35 < share < 0.65

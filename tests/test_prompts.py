@@ -68,8 +68,10 @@ def test_partner_vs_audit_differ_only_in_source_lines():
 
 def test_neutral_vs_undisclosed_differ_only_in_info_sentence():
     for s in ALL:
-        changed = _changed(txt(s, "neutral_U_F20"), txt(s, "partner_U_q10_F20"))
-        assert len(changed) == 2, changed
+        e = S.T["exposure"]["partner"][str(s["w"])]
+        n_, u_ = txt(s, "neutral_U_F20"), txt(s, "partner_U_q10_F20")
+        und = S._fill(e["undisclosed"], b_name=s["b_name"])
+        assert n_ == u_.replace(und, und + " " + S._fill(e["neutral"], b_name=s["b_name"]))
 
 
 def test_wording_balanced_and_deterministic():
@@ -80,4 +82,7 @@ def test_wording_balanced_and_deterministic():
         assert [S.prompt_hash(S.render(s, C.CELL[c], "behavior")) for s in sc for c in C.CORE] == \
                [S.prompt_hash(S.render(s, C.CELL[c], "behavior")) for s in again for c in C.CORE]
     assert len({(s["org"], s["task"], s["a_name"], s["b_name"]) for s in ALL}) == len(ALL)
-    assert 70 < sum(s["send_first"] for s in S.scenarios("main")) < 130
+    for phase in ("main", "pilot"):
+        sc = S.scenarios(phase)
+        cells = Counter((s["w"], s["send_first"]) for s in sc)
+        assert set(cells.values()) == {len(sc) // 4} and len(cells) == 4, cells

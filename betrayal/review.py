@@ -4,7 +4,7 @@ from pathlib import Path
 from . import config as C, scenarios as S
 from .run import arithmetic_items
 
-CELLS = ["partner_D_q80_F20", "audit_D_q80_F20", "partner_U_q80_F20", "neutral_U_F20", "partner_D_q10_F0", "positive_authorized"]
+CELLS = ["partner_D_q80_F20", "audit_D_q80_F20", "partner_U_q80_F20", "neutral_U_F20", "partner_D_q10_F0", "authorized_offer_positive_control"]
 
 
 def main():

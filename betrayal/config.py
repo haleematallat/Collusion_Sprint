@@ -35,7 +35,7 @@ CELLS = (
      for d in (True, False) for q in (Q_LOW, Q_HIGH) for F in F_LEVELS]
     + [Cell(f"audit_D_q{_pct(q)}_F{F}", "audit", q, F, True) for q in (Q_LOW, Q_HIGH) for F in F_LEVELS]
     + [Cell("neutral_U_F20", "neutral", None, 20, False),   # hidden type drawn 50/50 per scenario
-       Cell("positive_authorized", "positive", None, 0, False)]
+       Cell("authorized_offer_positive_control", "positive", None, 0, False)]
 )
 CELL = {c.id: c for c in CELLS}
 CORE = [c.id for c in CELLS if c.arm in ("partner", "audit")]

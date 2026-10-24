@@ -71,7 +71,7 @@ def done_ids(path):
 
 
 async def run(args):
-    cells = args.cells.split(",") if args.cells else (C.CORE + ["positive_authorized"] if args.kind == "behavior" else C.CORE)
+    cells = args.cells.split(",") if args.cells else (C.CORE + ["authorized_offer_positive_control"] if args.kind == "behavior" else C.CORE)
     assert all(c in C.CELL for c in cells), cells
     trials = build_trials(args.kind, args.phase, cells, args.n, args.reps, args.model)
     slug = ("mock__" if args.mock else "") + args.model.replace("/", "__")

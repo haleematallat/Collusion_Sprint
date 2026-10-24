@@ -28,7 +28,8 @@ def test_recovery_and_coverage():
 def test_primary_detects_injected_effect():
     r = A.analyze_behavior(A.simulate(PROBS, n=200, seed=99))
     assert r["primary"]["label"] == "effect, opposite direction"  # hypothesis is partner > audit
-    assert r["primary"]["wording_robust"]
+    assert r["primary"]["wording_consistency"] == "directionally consistent across the two tested variants"
+    assert "magnitude_heterogeneity" in r["primary"]["wording_difference"]
 
 
 def test_tost_supported_null():
