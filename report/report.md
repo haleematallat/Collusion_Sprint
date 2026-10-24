@@ -1,436 +1,358 @@
-# Betrayal Blindness? The Source of Exposure Shifts LLM Agents' First Collusion Offers, in Model-Specific Directions
+# Same Risk, Different Collusion: Equivalent Enforcement Information Shifts LLM Agents' Willingness to Initiate Collusion, in Model-Specific Directions
 
 **[Author names and affiliations — to be filled in by the team]**
 
-Apart AI Collusion Research Sprint, October 2026 · Track 1.1 (conditions for collusion), secondary 1.5 (low-cost interventions)
-Code, data, preregistration: `github.com/haleematallat/collusion_sprint` (branch `claude/funny-volta-kb1gxn`; preregistration commit `f957093`)
+Apart AI Collusion Research Sprint, October 2026 · Track 1.1 (conditions for collusion), secondary 1.5 (low-cost interventions) and 3.4 (response to monitoring)
+Code, data, preregistrations: `github.com/haleematallat/collusion_sprint` (branch `claude/funny-volta-kb1gxn`; Study 1 preregistration commit `f957093`, Study 2 `a0eab95`)
 
 ## Abstract
 
-LLM agents readily accept offers of unauthorized coordination, but proposing collusion to an unfamiliar
-agent who might report it is less studied. We ran a preregistered, single-turn
-experiment in which an agent bound by a no-coordination rule could privately propose a mutual-approval
-arrangement to an unfamiliar verifier. Each of 400 scenarios was rendered in 14 matched conditions. We
-randomized the exposure probability (10% or 80%), the penalty (0 or 20 points), whether the partner's type
-was disclosed, and the source of exposure: the partner reporting, or an automated audit detecting, at
-identical probability, penalty and benefit. The lotteries were executed and scored. Both models proposed
-the prohibited arrangement almost always at low risk (88–100%) and far less often at high, costly risk (0–34%). DeepSeek-V3.2
-forecast risk accurately, including a calibrated 45% for hidden partner types, which contradicts an
-optimistic-partner explanation. The preregistered primary
-test found the opposite of "betrayal blindness": DeepSeek offered *less* when the partner could report than
-under an equivalent audit (18.0% vs 33.5%; Δ = −0.16, 95% CI [−0.22, −0.10]), and both wordings gave the
-same sign. GPT-4.1-mini did not replicate this, because it was at the floor in that cell. In the matched
-cell where it had room, it showed the reverse asymmetry (+0.19 [+0.14, +0.25]). At matched incentives, then,
-the source of exposure shifts first-offer behavior by up to 16–19 percentage points, in directions that
-differ by model. Evaluations that treat peer reporting and automated auditing as interchangeable deterrents can
-misestimate when collusion begins.
+Oversight of multi-agent AI systems relies on deterrence: agents that expect to be reported should hesitate to
+propose collusion. We test whether that deterrence depends on *what* agents are told or only on *how* they are told
+it. In two preregistered single-turn experiments (24,320 decisions; DeepSeek-V3.2, GPT-4.1-mini, Llama-3.3-70B),
+an agent under a no-coordination rule may privately propose a mutual-approval deal to an unfamiliar verifier.
+Payoff and exposure lotteries are executed and scored. We hold the decision-relevant risk fixed and vary only its
+presentation: exposure from a reporting partner versus an automated audit (Study 1), and an explicitly stated
+reporting probability versus a 10-episode record of the verifier's reports with the same Bayesian posterior
+(Study 2). Equivalent information moved initiation by up to 38 percentage points (GPT-4.1-mini: 78% under a stated
+10% risk vs 40% given 1 report in 10). The direction differed across models and risk levels, so our preregistered
+same-sign criteria were not met. One report in episode 10 instead of episode 1 cut offers by 23–71 points in all
+three models, although the verifier's tendency was stated to be fixed. DeepSeek stated the correct probability in
+95–100% of diagnostic answers, so these are weighting effects, not misunderstandings. A truthful calibrated summary
+corrected the format gap in GPT-4.1-mini but backfired in Llama, raising offers to 98% against 37% under the same
+stated number. Deterrence measured under one presentation does not transfer to another, and low-cost information
+fixes must be validated per model.
 
 ## 1. Introduction
 
-A collusive arrangement between AI agents has to start with someone proposing it. Unless the partner is
-already trusted, that first proposal is a gamble. An unfamiliar agent may decline, and it may also report the
-proposal to whoever oversees the system. Prior work shows that LLM agents frequently *accept* offers of
-unauthorized coordination (Zeng & Rudzicz, 2026). It also shows that LLM agents sometimes whistleblow on
-misconduct (Agrawal et al., 2025; Paglieri et al., 2026). Much less is known about the strategic step in
-between: when does an agent *initiate* coordination with a stranger who might report it?
+Collusion between AI agents has to start somewhere: one agent proposes coordination that oversight prohibits.
+Proposing to an unfamiliar agent risks exposure, because the recipient may report it or an audit may catch it.
+Designers can tune two things to deter that first move:
+- **the enforcement itself:** how likely exposure is and what it costs;
+- **the enforcement information:** how the risk is communicated to agents.
 
-We study this first-offer decision in a controlled, single-turn environment. Agent A works under a rule
-prohibiting unauthorized coordination. It may privately propose a mutual-approval arrangement to an
-unfamiliar verifier agent B. We independently randomize four things:
-- the probability that the proposal is exposed (q = 10% or 80%),
-- the penalty if it is exposed (F = 0 or 20 points),
-- whether A is told the exposure probability,
-- and the **source** of exposure: B reports it, or an automated audit detects it, at identical probability
-  and penalty.
+The second is rarely studied. Deterrence evaluations, including Scheurer et al. (2023), Zeng & Rudzicz (2026) and
+Okamoto et al. (2026), typically describe risk once, in one format, and report how models respond.
 
-B's acceptance (80%) and its reporting or the audit's detection are programmed, independent lotteries. They
-are actually executed and settled against A's score.
+We ask whether that response is a stable property of the model or an artifact of presentation. Our design gives
+the agent a fixed, scored decision whose decision-relevant content is held constant. We then vary only the form of
+the enforcement information:
+1. **Study 1, source.** The same exposure probability and penalty, produced either by the partner reporting or
+   by an automated audit.
+2. **Study 2, format.** The same reporting risk, given either as a stated probability ("this verifier is the type
+   that reports 10% of proposals") or as a 10-episode record of what the verifier did. The record's Bayesian
+   posterior equals the stated rate (§3).
+   - We also test a truthful calibrated summary as a low-cost fix.
+   - We test whether *when* the last report occurred matters.
 
-Our preregistered primary question asks whether agents discount exposure risk that comes from a peer relative
-to the same risk from an impersonal audit. We call this hypothesized failure *betrayal blindness*.
-
-We find no general betrayal blindness. Our primary model shows the reverse at high risk, and the replication
-model is uninformative in the primary cell. The source of exposure is nevertheless far from irrelevant.
+**Findings.** Presentation moves collusion initiation by amounts comparable to the incentives themselves, even when
+the model's stated beliefs are correct. The direction of the shift depends on the model.
 
 **Contributions.**
-1. **A reproducible first-offer environment.** It has programmed, independently randomized acceptance and
-   exposure lotteries, exact settlement, byte-level leakage checks, and a partner/audit pair matched
-   sentence by sentence.
-2. **A preregistered causal estimate of the exposure-source effect.** With 400 paired scenarios on two
-   models, the effect is large and significant in one model and model-specific in direction across the
-   matched cells.
-3. **Evidence that initiation is dominated by stated incentives, not by the rule.**
-   - Agents propose prohibited coordination almost always when it pays.
-   - They forecast hidden-partner risk accurately (no optimistic partner beliefs).
-   - They are deterred by exposure even when it costs nothing.
-4. **Practical findings for low-cost deterrence (track 1.5).** Disclosing that a partner is high-risk is a
-   strong deterrent. Disclosing that a partner is low-risk *increases* initiation. A supposedly neutral
-   sentence about the partner shifted GPT-4.1-mini's offers by 14 points.
+1. **Two preregistered, validated experiments** in a reproducible environment. Lotteries are executed, settlement
+   is exact, prompts are byte-level minimal pairs, and a Bayesian benchmark gives a known right answer in every
+   cell.
+2. **Evidence that LLM deterrence is not presentation-invariant.** The source effect reaches up to 19 points, the
+   format effect up to 38, and the recency effect up to 71. All are model-specific in direction, while beliefs are
+   correct.
+3. **A tested low-cost intervention with a cautionary result.** Calibrated summaries close most of the format gap in
+   one model, are ineffective or harmful in the others, and never harm authorized cooperation.
 
 ## 2. Related work
 
-**Collusion and secret coordination between LLM agents.**
-- LLM pricing agents reach supracompetitive outcomes without explicit instruction (Fish et al., 2024).
-- Agents offered secret tools for unfair cooperation accept them at high rates. Adoption is highly sensitive
-  to framing such as "unfair" labels, ethical warnings and observability (Zeng & Rudzicz, 2026).
-- Steganographic channels make covert collusion hard to monitor (Motwani et al., 2024).
-- Our setting is deliberately overt and single-turn. It isolates the initiation decision rather than
-  sustained coordination.
+**LLM collusion.**
+- LLM agents reach supracompetitive pricing without instruction (Fish et al., 2024).
+- They accept secret unfair tools at high rates, and observability and ethics cues sharply change adoption
+  (Zeng & Rudzicz, 2026).
+- Two agents verifying each other's work drift into joint protocol violations in 94% of trajectories. Peer
+  behaviour causally shifts acceptance: a violating scripted peer raises acceptance from 13.6% to 41.2%. That
+  environment has no monitor, audit or penalty (Shi, Zhang & Yang, 2026).
+- We study the deterrence side these works leave open.
 
-**Reporting and enforcement.**
-- Lee (2026) imports the leniency and whistleblower-reward institutions of Bigoni et al. (2012) into an LLM
-  Bertrand duopoly. Reporting there responds strongly to incentives, but prices barely move: "detection is
-  not deterrence".
-- In Lee's design, communication is mandatory and the reporter is a co-conspirator seeking leniency. No agent
-  ever decides whether to approach an unfamiliar partner.
-- In an autonomous research swarm, Paglieri et al. (2026) observed exploiters, converts and whistleblowers.
-  Peer reports did not stop the exploit, and some agents read the prompt's threats as a bluff.
-- Agrawal et al. (2025) show that LLM whistleblowing varies strongly by model family and with prompt
-  nudges. An unfamiliar AI partner's reporting propensity is therefore genuinely uncertain.
+**Enforcement.**
+- In an LLM leniency experiment, reporting responds to rewards while prices barely move: "detection is not
+  deterrence" (Lee, 2026).
+- In an autonomous research swarm, agents that saw peers' exploits go unpunished concluded that "the prompt, with
+  its threats, now appears to be a bluff", and whistleblowing failed to halt the exploit (Paglieri et al., 2026).
+- Reporting propensity varies widely across model families (Agrawal et al., 2025). That makes a partner's
+  reporting risk genuinely uncertain, and records of past behaviour a natural source of evidence about it.
 
-**Responses to detection risk.**
-- GPT-4 acting as a trading agent was less likely to act on insider information when the stated risk of
-  being caught was very high (Scheurer et al., 2023).
-- Models behave differently under cues of monitoring (Greenblatt et al., 2024) and often recognize
-  evaluation contexts (Needham et al., 2025).
-- We add a matched comparison of *who* does the detecting, holding the detection probability, penalty and
-  benefit fixed. We also separate disclosed from hidden partner types against a known benchmark.
+**Responses to detection risk and to presentation.**
+- GPT-4 traded on insider information less often when the stated risk of being caught was very high (Scheurer et
+  al., 2023).
+- Models act differently under monitoring cues (Greenblatt et al., 2024), and their outputs are sensitive to prompt
+  format (Sclar et al., 2024).
+- In decisions from experience, LLMs underweight rare events and show strong recency, reacting mainly on the trial
+  after a rare outcome (Horowitz & Plonsky, 2025). That work has no described-probability condition, no agents and
+  no oversight.
+- **Gap:** we found no work comparing *equivalent* enforcement information across presentations, for collusion or
+  for any other misbehaviour.
 
-## 3. Methods
+## 3. Methods (shared environment)
 
-**Environment.**
-- Each trial is one chat call. A is told:
-  - its job (a verification pipeline in one of 8 domains);
-  - the supervisor's rule against arranging mutual approval without independent review;
-  - its current score (50) and that its objective is to maximize its score;
-  - the offer's consequences: +12 if B accepts (probability 80%), and an independent exposure event costing
-    F points.
-- A answers with strict JSON `{"action": "SEND_OFFER" | "NO_OFFER"}`. No rationale is requested. Option
-  order is counterbalanced.
-- After the decision, the task system draws B's acceptance and the exposure event from independent seeded
-  lotteries. It settles the score only if A sent the offer.
-- All prompts are in `prompts/templates.toml`, and every rendered variant is in `docs/prompt_review.md`.
+**Decision.** Each trial is one chat call.
+- Agent A has a verification job, a supervisor rule against arranging mutual approval without independent review,
+  50 points, and the instruction to maximize its score.
+- A may privately propose a mutual-approval deal to verifier B, gaining 12 points if B accepts (probability 80%).
+- An independent exposure event costs F points with probability q.
+- A answers with strict JSON `{"action": "SEND_OFFER" | "NO_OFFER"}`, with no rationale requested. Option order is
+  counterbalanced.
+- The task system then draws acceptance and exposure from seeded, independent lotteries and settles the score, but
+  only if A sent the offer.
 
-**Cells.** Every one of 400 independently generated scenarios is rendered in all of the following cells:
-- **Partner arm, 8 cells:** q ∈ {10%, 80%} × F ∈ {0, 20} × risk {disclosed, undisclosed}.
-  - All partner cells state that verifier agents come in two equally common types, reporting with
-    probability 10% or 80%.
-  - Disclosed cells add which type B is. Undisclosed cells say A has not been told, so the correct forecast
-    is 45%.
-- **Audit arm, 4 cells:** disclosed q × F. The same sentences, but exposure comes from an automated audit
-  "at one of two equally common settings", and B "never reports proposals".
-- **Neutral control:** the undisclosed F = 20 cell, plus a non-informative note that B "was assigned to this
-  batch by the scheduler".
-- **Authorized-offer positive control:** the supervisor has authorized the arrangement and there is no
-  exposure.
+**Design and inference.**
+- Every scenario is rendered in every cell. Scenarios vary organization, task, supervisor and agent names, and use
+  two wording families.
+- Contrasts are within-scenario paired differences with scenario-clustered 95% t-intervals, Holm-corrected within
+  preregistered families. Equivalence uses TOST at ±0.10.
+- Temperature is 1.0. Each model is pinned to one OpenRouter provider with no fallbacks: DeepSeek-V3.2 on Baidu,
+  GPT-4.1-mini on OpenAI, Llama-3.3-70B on DeepInfra.
+- Pilots used separate scenarios and were excluded from all analyses. Claude Haiku 5.5 was excluded because it
+  declined even authorized offers.
 
-Scenarios vary the organization, task, supervisor title and agent identifiers. Each scenario is assigned one
-of two semantically matched wordings per source; the assignment is balanced, with 200 scenarios each. Partner
-and audit cells of a scenario share the wording index and the option order.
+**Study 1 (source).**
+- 400 scenarios × 14 cells: q ∈ {10%, 80%} × F ∈ {0, 20} × disclosed or hidden (a 50/50 mixture) × partner reports
+  or automated audit detects.
+- The partner and audit cells differ only in the exposure sentences, which are byte-level checked.
+- Primary contrast: partner − audit at disclosed q = 80%, F = 20.
 
-**Models and sampling.**
-- **Primary model:** DeepSeek-V3.2, pinned through OpenRouter to the Baidu provider (fp8) with no
-  fallbacks.
-- **Preregistered replication:** GPT-4.1-mini, pinned to OpenAI.
-- Temperature 1.0, max 1,024 output tokens, and a strict JSON schema.
-- **Model selection:** a 20-scenario pilot was excluded from all analyses. Claude Haiku 5.5 was dropped
-  because it failed the positive control (0% SEND even when the offer was authorized). In the pilot,
-  Llama-3.3-70B and GPT-4.1-mini were near the floor in the primary cell.
-
-**Diagnostics** (DeepSeek only).
-- Separate calls, made from the identical pre-decision state and never shown to the behavioral call, ask for
-  four values: the probability that the deduction applies, its size, and the expected score with and without
-  sending.
-- They are run in two formats: answer-only JSON, and JSON with a free-text "work" field before the numbers.
-- A separate permitted arithmetic task, with no coordination framing, poses the same expected-value
-  calculations and the 50/50 mixture probability.
-
-**Preregistered analysis** (`prereg.md`, committed before any confirmatory call).
-- **Primary estimand:** Δ_src = P(SEND | partner, disclosed, q = 80%, F = 20) − P(SEND | audit, same).
-  - It is estimated as the mean of within-scenario differences, with a scenario-clustered (paired) 95%
-    t-interval.
-  - The test is two-sided at α = 0.05. An exact McNemar test and a 2,000-resample scenario bootstrap serve as
-    checks.
-- **Equivalence:** TOST at ±0.10.
-- **Generalization:** the same contrast in the other three matched cells, Holm-corrected.
-- **Secondary family (Holm over 7):**
-  - τ_I, the disclosure × risk difference-in-differences at F = 20
-  - the penalty effects at each disclosed q
-  - two placebo contrasts between hidden types
-  - two neutral-control contrasts
-- **Refusals** are coded as NO_OFFER in the primary analysis, with an exclusion sensitivity analysis.
-- **Wording robustness** is descriptive. A result is "directionally consistent" if both within-wording
-  estimates share the pooled sign, and a gap of 0.10 or more between them is flagged as heterogeneity.
-- **Replication** requires GPT-4.1-mini's Δ_src to have the same sign as DeepSeek's and p < 0.05.
-
-**Validation.** `pytest` (22 tests) and `betrayal/validate.py`, the latter run on the recorded data, check:
-- lottery rates and independence (10⁶ simulated draws, and on the data);
-- exact settlement, with NO_OFFER never changing the score;
-- byte-identical prompts across hidden types;
-- that partner and audit prompts differ only in the exposure lines;
-- that logged prompts equal the code's rendering;
-- nominal CI coverage of the analysis code on simulated data with injected effects;
-- the $8 spend guard.
+**Study 2 (format).**
+- 300 scenarios × 14 cells. Every cell states the 50/50 mixture of 10% and 80% reporting types, that "B's reporting
+  tendency is fixed and does not change over time", and that B received this proposal from 10 previous agents.
+- **Stated cells** (S10, S80) add B's type and "outcomes not shown".
+- **Record cells** add a 10-line log. R1 has 1 report in 10, giving E[q] = 0.100; R8 has 8 in 10, giving
+  E[q] = 0.800. The posterior under the stated mixture equals the stated rate.
+- **Correction:** the record plus a calibrated summary ("…the probability that B reports your proposal is about
+  10% [80%]"), against a length-matched placebo (±5 characters).
+- **Collateral check:** authorized offers (no penalty), shown with the R8 record, with and without the summary.
+- **Mechanism:** a single report in episode 1 or episode 10, with the log listed oldest-first or most-recent-first.
+  This separates temporal recency from the report's position in the prompt.
+- The penalty F was chosen per model and risk level on the pilot, using a preregistered rule (stated-cell rate in
+  30–70%, closest to 50%, ties to the lower F):
+  - low risk: F = 60 (DeepSeek, Llama) and F = 200 (GPT);
+  - high risk: F = 2 for all models (Llama's pilot rate was 25%, flagged as below the target range).
+- Comparisons are therefore within model and risk level.
+- DeepSeek also answered diagnostic forks, with working allowed, in six cells (100 scenarios each).
 
 ## 4. Results
 
-All 6,120 DeepSeek and 5,600 GPT-4.1-mini behavioral trials returned a valid action. There were no
-refusals, parse failures or unresolved API errors, so the refusal-exclusion sensitivity analysis is identical
-to the primary analysis. Every trial was served by the pinned provider.
+All 24,320 behavioral trials (Study 1: 11,720; Study 2: 12,600) and 11,480 diagnostic and arithmetic calls
+returned valid output. There were zero refusals, parse failures or unresolved API errors.
 
-**Validity checks** (Appendix B) all pass on the recorded data:
-- Acceptance draws came out at 80.4% for both models.
-- Exposure draws came out at 11.0% and 79.8%, against targets of 10% and 80%. Acceptance and
-  exposure were independent (χ² p > 0.13). The draws are seeded identically for both models.
-- Settlement had 0 mismatches, and NO_OFFER never changed a score.
-- All 800 of 800 undisclosed prompt pairs were byte-identical, and all 400 primary pairs differed only in the
-  exposure lines.
-- The authorized-offer positive control was chosen 100% of the time by both models.
+### 4.1 Study 1: the source of exposure (summary)
 
-**Agents respond strongly to stated risk and penalty** (Figure 1, Table 1).
-- Both models proposed the prohibited arrangement in almost every low-risk scenario: 88–100% at
-  q = 10%, F = 20, across both arms.
-- They rarely proposed it when exposure was likely and costly: 18.0% (DeepSeek) and 0.5% (GPT-4.1-mini) at
-  q = 80%, F = 20.
-- Disclosing the partner's type had a very large effect. τ_I was −0.78 [−0.86, −0.70] for DeepSeek and
-  −1.01 [−1.07, −0.96] for GPT-4.1-mini.
-- At q = 80%, raising the penalty from 0 to 20 reduced offers by 0.36 [0.30, 0.42] for DeepSeek and 0.39
-  [0.34, 0.44] for GPT-4.1-mini.
-- Exposure deterred even when it cost nothing. At q = 80%, F = 0, partner-arm offers fell to 52% and 40%
-  respectively (audit arm: 65% and 21%), from about 100% at q = 10%, F = 0. So a substantial part of deterrence is not explained by the scored penalty
-  and may reflect rule compliance or aversion to being reported.
-- With the type hidden (correct forecast 45%; expected gain +0.6 at F = 20), offer rates were intermediate:
-  54–63%.
-- The two hidden-type placebo contrasts were supported nulls for both models (all |est| ≤ 0.02, with 90% CIs
-  inside ±0.10). This is the behavioral confirmation that the hidden type did not leak.
+**Incentives drive behaviour; the rule does little.**
+- Offers ran at 88–100% when q = 10%.
+- At q = 80%, raising F from 0 to 20 cut offers by 36–39 points.
+- Exposure deterred even when it cost nothing: at q = 80%, F = 0, partner-arm offers were 52% (DeepSeek) and 40%
+  (GPT-4.1-mini), against about 100% at q = 10%.
 
-**Primary test: partner vs audit at disclosed q = 80%, F = 20.**
-- **DeepSeek-V3.2 offered *less* when the partner might report than when an automated audit might detect
-  the proposal:** 18.0% [14.5, 22.1] vs 33.5% [29.1, 38.3].
-  - Δ_src = −0.159, 95% CI [−0.217, −0.100], p = 1.6×10⁻⁷.
-  - McNemar: 48 vs 110 discordant scenarios, p = 9×10⁻⁷. Bootstrap CI [−0.219, −0.101].
-  - Using first runs only (dropping the 40 repeat scenarios): −0.155 [−0.215, −0.095].
-  - The effect is directionally consistent across the two tested wordings: −0.195 [−0.282, −0.108] and −0.122
-    [−0.201, −0.044]. The difference between wordings, −0.07 [−0.19, +0.04], is below the heterogeneity flag.
-  - This is a significant effect in the direction opposite to the hypothesized betrayal blindness.
-- **GPT-4.1-mini did not replicate it** under the preregistered rule. Both arms are at the floor (0.5% vs
-  0.0%), giving Δ_src = +0.005 [−0.002, +0.012].
-  - TOST formally classifies this as equivalence within ±0.10, but the floor makes the cell uninformative
-    about how the model weighs the two sources.
+**Source effect (primary).**
+- DeepSeek offered **less** when the partner might report than when an audit might detect the proposal: 18.0% vs
+  33.5%, Δ = −0.159 [−0.217, −0.100], p = 1.6×10⁻⁷. The sign was the same in both wordings.
+- GPT-4.1-mini was at the floor in that cell (0.5% vs 0%).
+- In the one matched cell where GPT-4.1-mini had room (q = 80%, F = 0), it showed the reverse: **+0.193
+  [+0.138, +0.247]**.
 
-**Source effects in the other matched cells are model-specific** (generalization family, Holm-corrected).
-- DeepSeek shows a crossover:
-  - At low risk, partner exposure deters *less* than audit exposure: q = 10%, F = 20: +0.089 [+0.052, +0.125].
-  - At high risk, it deters *more*: q = 80%, F = 0: −0.115 [−0.176, −0.054].
-- GPT-4.1-mini shows the betrayal-blindness pattern in the one cell where it has room. At q = 80%, F = 0,
-  partner 39.8% vs audit 20.5%: **+0.193 [+0.138, +0.247]**.
-  - It shows a small effect in the same direction at q = 10%, F = 20: +0.018 [+0.005, +0.030].
-- Across the four matched cells the source of exposure therefore moved initiation by up to 16 points
-  (DeepSeek) and 19 points (GPT-4.1-mini) at identical probability, penalty and benefit. **The sign of that shift differed between the two models.**
+**Beliefs and arithmetic.**
+- DeepSeek's forecasts were calibrated: 45% for the hidden mixture, and identical for partner and audit.
+- With working allowed, both models computed expected values correctly. Answer-only, they failed.
+- The source effect is therefore not a belief error.
 
-**The "neutral" partner note was not neutral.** Adding "B was assigned to this batch by the scheduler" to the
-undisclosed F = 20 cell changed offers by +0.064 [+0.006, +0.123] for DeepSeek (p_Holm = 0.09). For
-GPT-4.1-mini the change was −0.136 [−0.190, −0.082] (p_Holm < 10⁻⁵).
+### 4.2 Study 2: stated rate vs enforcement record
 
-**Realized consequences.** In DeepSeek's primary cell, the 72 partner-arm offers and 134 audit-arm offers
-ended with mean scores of 43.3 and 43.4, against 50 for not offering. The executed lotteries made initiation
-costly, as stated. The model never observed these outcomes.
+| P(SEND_OFFER), n = 300 per cell | DeepSeek-V3.2 | GPT-4.1-mini | Llama-3.3-70B |
+|---|---|---|---|
+| Low risk: stated 10% (S10) | 0.593 | 0.783 | 0.370 |
+| Low risk: record 1/10 (R1) | 0.560 | **0.403** | **0.553** |
+| R1 + calibrated summary | 0.680 | 0.610 | **0.980** |
+| R1 + placebo | 0.527 | 0.343 | 0.397 |
+| High risk: stated 80% (S80) | 0.543 | 0.367 | 0.153 |
+| High risk: record 8/10 (R8) | **0.400** | **0.693** | 0.167 |
+| R8 + calibrated summary | 0.333 | 0.363 | 0.003 |
+| R8 + placebo | 0.450 | 0.613 | 0.193 |
+| Authorized, R8 record / + summary | 0.997 / 1.000 | 1.000 / 1.000 | 0.997 / 1.000 |
+| Recency: report in episode 1 → 10 (pooled) | −0.233 | −0.300 | −0.708 |
 
-| Cell (disclosed unless U) | DeepSeek-V3.2 | GPT-4.1-mini |
-|---|---|---|
-| Partner q=10% F=0 / Audit | 1.000 / 0.990 | 1.000 / 1.000 |
-| Partner q=10% F=20 / Audit | 0.963 / 0.875 | 1.000 / 0.983 |
-| Partner q=80% F=0 / Audit | 0.522 / 0.652 | 0.398 / 0.205 |
-| **Partner q=80% F=20 / Audit** | **0.180 / 0.335** | **0.005 / 0.000** |
-| Undisclosed F=0 (q=10% / q=80% hidden) | 0.787 / 0.765 | 0.963 / 0.963 |
-| Undisclosed F=20 (q=10% / q=80% hidden) | 0.555 / 0.542 | 0.615 / 0.632 |
-| Neutral note, undisclosed F=20 | 0.610 | 0.487 |
-| Authorized-offer positive control | 1.000 | 1.000 |
+*Table 1. Study 2 offer rates. Bold marks the format gaps discussed. Wilson CIs are in
+`results/main2/*/summary_no_offer.json`.*
 
-*Table 1. P(SEND_OFFER), n = 400 scenarios per cell (first runs). Wilson 95% CIs are in
-`results/main/*/summary_no_offer.json`.*
+**Format gap (primary, record minus stated, Holm over two risk levels).**
+- **DeepSeek:**
+  - Low risk: −0.033 [−0.112, +0.045], a supported equivalence.
+  - High risk: **−0.143 [−0.220, −0.066]**. The record deters more.
+- **GPT-4.1-mini:**
+  - Low risk: **−0.380 [−0.444, −0.316]**. The record deters far more: 1 report in 10 cuts offers from 78% to 40%.
+  - High risk: **+0.327 [+0.246, +0.407]**. The record deters far *less*: 8 reports in 10 leave 69% offering,
+    against 37% for a stated 80%.
+- **Llama:**
+  - Low risk: **+0.183 [+0.115, +0.251]**. The record deters less.
+  - High risk: +0.013 [−0.042, +0.069], a supported equivalence.
+- **Verdict against the preregistered criterion** (|Δ| ≥ 0.10, CI excluding 0, same sign in ≥2 of 3 models):
+  - Every model shows a consequential gap at one or both risk levels, but the signs disagree.
+  - The criterion is **not met**. The gaps are large and model-specific in direction.
 
-![Figure 1](../results/main/fig_source_models.png)
-*Figure 1. Offer rate when the partner may report (blue) or an automated audit may detect (orange) the
-proposal, at identical disclosed probability q and penalty F. Error bars are 95% Wilson intervals; n = 400
-scenarios per bar.*
+**Beliefs are correct, so the gap is in weighting.** DeepSeek's diagnostic forks returned the Bayesian answer in
+every cell:
+- The mean forecast was 0.100–0.111 for S10, R1 and R1+summary, and 0.800–0.801 for S80, R8 and R8+summary.
+- 95–100% of forecasts were within ±0.01, and 92–99% of expected-score computations were correct.
+- Yet its behaviour differed between S80 and R8 by 14 points.
 
-**Risk comprehension** (DeepSeek diagnostics: 5,200 forks per format; Figure 2).
-- **Forecasts were calibrated in both formats.** The mean forecast probability that the deduction applies was
-  0.450 in every undisclosed cell and in the neutral cell, where the correct value is 0.45. In disclosed cells
-  it was 0.10 and 0.80. 97–100% of forecasts were within ±0.01 of the correct value.
-- **Partner and audit cells received identical forecasts:** 0.800 vs 0.800 at q = 80%, F = 20. So the source
-  effect is not explained by the model perceiving a different exposure probability.
-- **The penalty was stated correctly** in 96–100% of answers.
-- **Expected scores depended on format.** Answer-only, the expected score of sending was computed correctly
-  in only 1–10% of the F = 20 cells. With a working field it was correct in 93–99% of every cell.
-- **The permitted arithmetic control showed the same split.**
-  - Both models answered the 50/50 mixture probability correctly in 100% of trials in both formats.
-  - Answer-only, they got 0–5% of the expected-value items right.
-  - With working, DeepSeek got 100% of every item, and GPT-4.1-mini 60–95%.
-- **So answer-only failures reflect one-shot calculation, not misunderstanding.** Yet at q = 80%, F = 20,
-  where sending loses 6.4 points on average (an expected 43.6 vs 50), DeepSeek still proposed the prohibited
-  arrangement 18–34% of the time.
-- Because the behavioral call is action-only, we do not claim that the diagnostic computations reflect the
-  computations underlying the decision.
+**Calibrated summary (preregistered correction test).**
+- **GPT-4.1-mini: it works.**
+  - Low risk: difference-in-differences vs placebo **+0.267 [+0.204, +0.329]**, closing 54% of the gap.
+  - High risk: **−0.250 [−0.321, −0.179]**, closing 99%: 36.3% vs the stated 36.7%.
+  - Both wordings point the same way.
+- **DeepSeek, high risk: wrong direction.** The summary moved behaviour *away* from the stated cell: −0.117
+  [−0.194, −0.040], ending 21 points below it.
+- **Llama, low risk: it backfired.**
+  - The summary raised offers to **98.0%**, against 37.0% when the same 10% was stated directly.
+  - The difference-in-differences vs placebo is +0.583 [+0.527, +0.639].
+  - The same number, embedded as a summary of evidence, produced the opposite of the stated-rate behaviour.
+- **At levels with no gap, the summary still shifted behaviour:** DeepSeek low +0.153; Llama high −0.190, which
+  is an over-correction.
+- **Verdict:** the preregistered criterion requires success in ≥2 of 3 models. The summary works in one, so it
+  **does not count as a working correction.**
+- **No collateral damage:** authorized cooperation stayed at 99.7–100% with and without the summary (95% CIs within
+  ±0.01 in every model, so TOST-equivalent).
 
-![Figure 2](../results/main/deepseek__deepseek-v3.2/fig_calibration.png)
-*Figure 2. DeepSeek-V3.2's forecast probability that the deduction applies, by cell and diagnostic format;
-black bars mark the correct value. 95% CIs are narrower than the markers.*
+**Recency (secondary).**
+- Moving the single report from episode 1 to episode 10 reduced offers in every model:
+  - DeepSeek **−0.233 [−0.291, −0.175]**
+  - GPT-4.1-mini **−0.300 [−0.345, −0.255]**
+  - Llama **−0.708 [−0.741, −0.675]**: from 93% to 2% when the log is listed most-recent-first.
+- This happened even though B's tendency was stated to be fixed, which makes the order of events normatively
+  irrelevant.
+- The effect holds with the log listed oldest-first, where the late report appears *last* (−0.21, −0.23, −0.51), and
+  most-recent-first, where it appears *first* (−0.25, −0.37, −0.91).
+- So it is temporal recency, not just position in the prompt. Listing order amplifies it (interaction: GPT +0.14,
+  Llama +0.40).
+
+![Figure 1](../results/main2/fig_s2_format.png)
+*Figure 1. Study 2: offer rates under a stated rate (grey), the statistically equivalent record (blue), the record
+plus a calibrated summary (green), and the record plus a length-matched placebo (red). Error bars are 95% Wilson
+intervals; n = 300 scenarios per bar.*
+
+![Figure 2](../results/main/fig_source_models.png)
+*Figure 2. Study 1: offer rates when the partner may report (blue) or an audit may detect (orange) at identical
+q and F.*
 
 ## 5. Discussion
 
-**What the evidence supports.** The three competing explanations in our proposal fare as follows.
+**What the evidence supports.** Across two preregistered studies and three models, decision-equivalent changes to
+enforcement information shifted collusion initiation by amounts as large as changes to the incentives themselves:
+- source of exposure: up to 19 points;
+- stated rate vs record: up to 38 points;
+- timing of a single report: 23–71 points;
+- giving the same probability as a summary of a record rather than stating it directly: up to 61 points.
 
-- **H1, optimistic partner beliefs: not supported.**
-  - DeepSeek's forecasts about the unfamiliar partner were calibrated: 45% when the type was hidden. They were
-    identical for partner and audit sources.
-  - We did not run diagnostics on GPT-4.1-mini, so H1 is untested for it.
-- **H2, weak deterrence: not supported in its strong form.**
-  - Raising the penalty from 0 to 20 at q = 80% cut offers by 36–39 points in both models, and the
-    preregistered effects are far from the ±0.10 margin.
-  - Deterrence is incomplete, though. With correct comprehension available, DeepSeek still initiated
-    prohibited coordination in 18% (partner) and 34% (audit) of scenarios where doing so was score-negative.
-- **H3, incentive sensitivity, describes the bulk of the behavior, with two departures from expected-score
-  maximization.**
-  - Exposure deterred even at zero penalty: offers fell from about 100% to 20–65% as q rose with F = 0.
-  - The rule itself barely constrained behavior when proposing paid: offers ran at 88–100% at low risk
-    with F = 20.
+These effects occurred while DeepSeek stated the correct probabilities and expected values, so they reflect how
+information is weighted in the decision, not misunderstanding. They are not consistent in direction across models.
 
-**Exposure source.** Our preregistered primary result goes against betrayal blindness. DeepSeek-V3.2 was
-*more* deterred by a peer that might report than by an audit with the same probability and penalty, and
-both wordings gave the same sign. The matched cells add three complications:
-- DeepSeek's asymmetry reverses at low risk: a 10%-reporting peer deterred *less* than a 10%-detecting audit.
-- GPT-4.1-mini, in the one cell with room on both sides, discounted peer risk relative to audit risk by
-  19 points.
-- No single direction holds across models and risk levels.
+**Exploratory pattern (not preregistered).**
+- At high risk the penalty was only 2 points, so offering gained about +8 in expectation. Even so, models offered
+  only 15–54% of the time in the stated cell.
+- Together with Study 1's deterrence at zero penalty, this suggests models treat *the probability of being
+  reported* as a cost in itself, largely independent of the stated penalty.
+- That would explain why changing how the probability is presented has such leverage.
 
-The robust conclusion is that the source of exposure *matters*, by up to 16–19 points at matched numbers. We
-cannot attribute this to interpersonal trust. The two arms necessarily differ in framing, and plausible
-contributors are:
-- the reassurance in "B never reports";
-- the perceived authority or reliability of a monitoring system;
-- social or norm-based reactions to being reported by a peer.
+**Why it matters for oversight (theory of change).**
+1. **Deterrence evaluations are not presentation-invariant.** A model's measured willingness to initiate collusion
+   under "a 10% audit rate" does not predict its behaviour when the same oversight is shown as an audit log, or
+   when reports come from peers. Rankings of models can reverse; GPT-4.1-mini and Llama move in opposite
+   directions at low risk. Evaluations should test several equivalent presentations and report the spread.
+2. **Exposing enforcement history is a high-leverage design choice.** Recent enforcement deters strongly, and
+   order effects persist even when agents are told the enforcer's behaviour is stable. Designers deciding whether
+   agents can see audit outcomes, and how those outcomes are ordered, control a large share of deterrence. The
+   effect can work in either direction: GPT-4.1-mini's 8-in-10 record deterred *less* than the stated 80%.
+3. **Truthful summaries are not a safe universal fix (track 1.5).** The calibrated summary worked for GPT-4.1-mini
+   and caused no collateral harm, but it pushed Llama to 98% initiation. Information-based anti-collusion measures
+   need per-model validation before deployment.
 
-Our two wordings per source limit, but do not exclude, wording explanations. The non-neutral "neutral" note
-shows how sensitive these models are to incidental partner information.
-
-**Implications for oversight and evaluation.**
-1. Deterrence evaluations that use one enforcement mechanism, say "an overseer may detect collusion", may
-   not transfer to peer-reporting regimes, and vice versa. The transfer error is model-specific, so each
-   source should be tested.
-2. Partner-specific risk information is a strong, cheap lever. Disclosing a high reporting rate cut
-   initiation from 54% to 18% (DeepSeek) and from 63% to 0.5% (GPT-4.1-mini), compared with the hidden-type
-   condition. Disclosing a low rate raised initiation to 96–100%. Information about reporting propensity
-   therefore cuts both ways.
-3. Explicit prohibitions provide little protection once a coordination opportunity pays. The prospect of
-   exposure, not the rule alone, is what deters.
-
-**Evidence level** (reviewer's rubric):
-- Functional setup: met. Valid lottery and scoring, no leakage, 0 parse failures, positive controls, complete
-  logs.
-- Interpretable experiment: met. Matched comparisons and precise effects. The DeepSeek primary effect is
-  stable across scenarios and wordings; GPT-4.1-mini is saturated in several cells.
-- Scientific contribution: met. A defensible, preregistered estimate of how risk information, consequences
-  and exposure source affect initiation.
-- Prize-contending: not met. The primary asymmetry was not replicated across models in direction.
+**Evidence level, judged honestly.**
+- Execution: preregistered, validated, 24,320 scored decisions, zero failures.
+- Primary hypotheses: the original betrayal-blindness hypothesis was not supported (Study 1). The consistent-sign
+  format and correction criteria were not met (Study 2).
+- The robust, decision-relevant result is non-invariance: large, model-specific presentation effects with correct
+  beliefs, and strong temporal recency in every model.
 
 ## References
 
 - Agrawal, K., Xiao, F., Bergman, G., & Cooper Stickland, A. (2025). Why do language model agents whistleblow? arXiv:2511.17085.
 - Bigoni, M., Fridolfsson, S.-O., Le Coq, C., & Spagnolo, G. (2012). Fines, leniency, and rewards in antitrust. *RAND Journal of Economics*, 43(2), 368–390.
-- Bowyer, S., Aitchison, L., & Ivanova, D. (2025). Position: Don't use the CLT in LLM evals with fewer than a few hundred datapoints. ICML 2025. arXiv:2503.01747.
 - Fish, S., Gonczarowski, Y. A., & Shorrer, R. I. (2024). Algorithmic collusion by large language models. arXiv:2404.00806.
 - Greenblatt, R., et al. (2024). Alignment faking in large language models. arXiv:2412.14093.
+- Horowitz, M., & Plonsky, O. (2025). LLMs in decisions from experience. arXiv:2503.10248.
 - Lee, J. Y. (2026). LLM leniency and reward experiment. SSRN 7426061.
 - Miller, E. (2024). Adding error bars to evals: A statistical approach to language model evaluations. arXiv:2411.00640.
-- Motwani, S. R., et al. (2024). Secret collusion among AI agents: Multi-agent deception via steganography. NeurIPS 2024. arXiv:2402.07510.
-- Needham, J., et al. (2025). Large language models often know when they are being evaluated. arXiv:2505.23836.
+- Okamoto, Erol, & Erol (2026). Why do AI agents break rules? arXiv:2608.12323 (AIES 2026).
 - Paglieri, D., Cross, L., Genewein, T., Leibo, J. Z., Tomasev, N., & Vezhnevets, A. S. (2026). A case study on emergent cheating and whistleblowing in autonomous research swarms. arXiv:2609.04170.
 - Scheurer, J., Balesni, M., & Hobbhahn, M. (2023). Large language models can strategically deceive their users when put under pressure. arXiv:2311.07590.
+- Sclar, M., Choi, Y., Tsvetkov, Y., & Suhr, A. (2024). Quantifying language models' sensitivity to spurious features in prompt design. ICLR 2024. arXiv:2310.11324.
+- Shi, Zhang, & Yang (2026). Emergent collusion in long-horizon LLM agent interaction. arXiv:2609.24967.
 - Zeng, X., & Rudzicz, F. (2026). Voluntary collusion with secret tools in competing LLM agents. arXiv:2605.27593.
 
 ## Appendix A. Limitations and Dual-Use / Ethical Considerations
 
 **What the results do and do not establish.**
-- **Single turn.** A never observes acceptance, reports or penalties. Results describe *first-offer behavior
-  under stated, and subsequently enforced, simulated consequences*. The executed lotteries validate the
-  simulator and score realized outcomes; they do not make deterrence more psychologically credible.
-- **Programmed partner.** B's acceptance and reporting are controlled lotteries, not an autonomous LLM's
-  choices. This was needed to manipulate q independently of acceptance, and it limits generalization to
-  natural whistleblowing.
-- **Two models, one environment, two wordings per source.**
-  - The primary model was selected after a pilot, partly for having room to vary in the primary cell. The
-    pilot data are excluded, and the selection is documented.
-  - DeepSeek ran on one fp8 provider. Other quantizations or providers may behave differently.
-  - GPT-4.1-mini was at the floor or ceiling in several cells, so those contrasts are uninformative.
-- **Framing.** The partner and audit arms necessarily use different words. A source effect is not proof of
-  trust or distrust in peers. The "neutral" control shifted behavior, so incidental partner information is
-  itself a confound to manage.
-- **Diagnostics.** Diagnostics are separate calls, and a different response format from the action-only
-  decision. They show what the model can state, not which computation produced a decision. No mediation is
-  claimed. GPT-4.1-mini has no diagnostics.
-- **Scores.** Simulated scores need not carry the incentive force of real deployment stakes. The prompt
-  instructs score maximization, which the proposal specified, and this likely raises initiation relative to
-  an unstated objective.
-- **Process deviations, disclosed in Appendix C.** A subset-assignment bug in the rep-2 replicates was fixed
-  and rerun, and the replication model ran concurrently with the primary model's diagnostics.
+- **Single turn.** Records are *described* in a single prompt, not experienced across episodes, and the agent never
+  observes outcomes. The results concern how enforcement information is presented. They do not show learning from
+  experience.
+- **Programmed partner.** Acceptance and reporting are executed lotteries, not autonomous LLM choices.
+- **Instructed objective.** Agents were told to maximize their score, which likely raises initiation.
+- **Penalties differ by model.** F was chosen per model to keep stated cells interior, so comparisons across models
+  concern only signs.
+- **Llama at high risk.** The stated cell sat at 15%, below the targeted 30–70% range.
+- **Diagnostics are DeepSeek-only.** They show what the model can state, not the computation behind its choice.
+- **Hypothesis outcomes.** The preregistered consistent-sign criteria were not met, and the betrayal-blindness
+  hypothesis was not supported. The high-risk penalty pattern in §5 is exploratory.
+- **Scope.** Three mid-sized models, one environment, two wordings per manipulation. Framing explanations within a
+  presentation, such as the authority conveyed by an audit, cannot be excluded.
 
-**Dual-use.**
-- The findings identify conditions under which agents are more willing to initiate prohibited coordination:
-  a low-risk peer, an undisclosed partner type, and deterrence routed through a particular source. Someone
-  designing a system to elicit collusion could in principle use this.
-- We judge the uplift low. These are coarse, model-specific behavioral tendencies in a toy environment,
-  and they mainly inform defenders: test multiple enforcement sources and do not rely on prohibitions.
-- The released code is an evaluation harness with simulated misconduct and no real-world coordination
-  capability.
+**Dual-use.** Knowing that the presentation of enforcement shifts initiation could in principle help someone design
+a pipeline that makes collusion more likely: hiding recent reports, or showing records rather than rates to models
+that discount records. The effects are model-specific and environment-bound, so we judge the uplift low. The
+practical message is defensive: test oversight communications across equivalent presentations, and validate
+information-based fixes per model. The code is an evaluation harness with simulated misconduct.
 
-**Ethics.** No human subjects were involved. Models were accessed through OpenRouter under their providers'
-terms. Total inference cost was $4.20.
+**Ethics.** No human subjects. Models were accessed through OpenRouter under their providers' terms. Total
+inference cost was $6.58.
 
-## Appendix B. Validation report
+## Appendix B. Validation
 
-The table below is generated by `python -m betrayal.validate` on the recorded confirmatory data. Raw output is
-in `results/main/*/validation.json`. Unit tests (`uv run pytest`, 22 tests) additionally cover:
-- lottery rates and independence over 10⁶ draws;
-- exhaustive settlement cases;
-- prompt leakage, matching and determinism;
-- a subset-assignment regression test;
-- 95% CI coverage of 0.92–0.98 for the primary contrast and τ_I on 300 simulated datasets with injected
-  effects;
-- TOST and Holm;
-- refusal coding;
-- the spend guard stopping before the cap.
+Unit tests (`uv run pytest`, 30 tests) and the data-level validators (`python -m betrayal.validate`;
+`results/*/*/validation.json`) cover:
+- lottery rates and independence over 10⁶ draws and on the recorded data;
+- exact settlement, with NO_OFFER never changing a score and authorized offers never penalized;
+- byte-identical prompts across hidden types (Study 1);
+- the matching structure of each Study 2 cell:
+  - stated vs record cells share all context;
+  - summary and placebo differ by one line;
+  - late vs early is a two-line swap;
+  - list orders are permutations;
+- logged prompts equal the code's rendering;
+- report counts and positions shared within scenario;
+- CI coverage of the analysis code on simulated data with injected effects;
+- the $8 spend guard.
 
-| Check | DeepSeek-V3.2 | GPT-4.1-mini |
+| Check (recorded data) | Study 1 (DS / GPT) | Study 2 (DS / GPT / Llama) |
 |---|---|---|
-| Behavioral trials, valid / total | 6,120 / 6,120 | 5,600 / 5,600 |
-| Acceptance draw rate (target 0.80) | 0.804 (p = 0.42) | 0.804 (p = 0.45) |
-| Exposure draw rate, q = 0.10 / 0.80 | 0.110 / 0.798 | 0.110 / 0.798 |
-| Accept ⟂ exposure, χ² p (q = 0.10 / 0.80) | 0.13 / 0.23 | 0.26 / 0.36 |
-| Settlement mismatches recomputed from logs | 0 | 0 |
-| NO_OFFER trials with a changed score | 0 | 0 |
-| Undisclosed prompt pairs identical across hidden type | 800 / 800 | 800 / 800 |
-| Logged prompts ≠ code rendering | 0 | 0 |
-| Primary pairs differing outside exposure lines | 0 / 400 | 0 / 400 |
-| Authorized-offer positive control, SEND rate | 1.000 | 1.000 |
-| Provider (pinned) | Baidu, all trials | OpenAI, all trials |
+| Valid trials | 6,120 / 5,600 | 4,200 / 4,200 / 4,200 |
+| Settlement mismatches | 0 / 0 | 0 / 0 / 0 |
+| Logged prompt ≠ renderer | 0 / 0 | 0 / 0 / 0 |
+| Penalties on authorized offers | — | 0 / 0 / 0 |
+| Provider (pinned) | Baidu / OpenAI | Baidu / OpenAI / DeepInfra |
 
-Lottery draws are seeded per (scenario, cell, rep) and do not depend on the model. Both models therefore
-faced identical realized lotteries (common random numbers), which is why their draw rates are nearly equal.
+## Appendix C. Deviations
 
-## Appendix C. Deviations from the original proposal
-
-All of these were agreed before confirmatory data collection, except the last two, which are operational.
-- Scenarios are blocked (every scenario is rendered in every cell) rather than randomized across cells.
-- The primary estimand is the partner-versus-audit contrast rather than τ_I.
-- N is 400 scenarios.
-- The behavioral response is action-only.
-- Diagnostics run in two formats.
-- The equivalence margin is ±0.10.
-- The replication model gets no diagnostics.
-- **Rep-2 bug:** a subset-assignment bug gave the 40 rep-2 replicates a different wording and order than
-  their first run. The 520 affected trials are kept in `behavior_rep2_subset_bug.jsonl` and excluded, and
-  rep 2 was rerun after the fix. First-run data were unaffected.
-- **Run order:** the GPT-4.1-mini replication ran concurrently with the DeepSeek diagnostics rather than
-  after them, to save time.
+All of these were agreed before confirmatory data were collected, unless noted.
+- **Study 1:**
+  - scenarios rendered in every cell rather than randomized across cells;
+  - primary analysis partner vs audit;
+  - N = 400 scenarios, action-only responses, two diagnostic formats, equivalence margin ±0.10.
+  - **After data collection:** a subset-assignment bug in the 40 repeat scenarios was fixed and those runs were
+    redone; the affected trials are archived. The replication model also ran concurrently with the primary
+    model's diagnostics.
+- **Study 2:**
+  - the pilot penalty grid was extended to reach interior rates (approved before the main run);
+  - Llama was pinned to DeepInfra.

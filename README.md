@@ -12,13 +12,16 @@ variant: [`docs/prompt_review.md`](docs/prompt_review.md).
 
 ## Results
 
-Report draft: [`report/report.md`](report/report.md). Headline (preregistered primary test, DeepSeek-V3.2,
-400 paired scenarios): at disclosed q = 80%, F = 20, agents offered **less** when the partner could report than
-under an equivalent automated audit (18.0% vs 33.5%; Δ = −0.16 [−0.22, −0.10]), the opposite of the
-hypothesized betrayal blindness. Not replicated in GPT-4.1-mini (at floor in that cell), which instead
-shows the reverse asymmetry at q = 80%, F = 0 (+0.19 [+0.14, +0.25]).
+Report: [`report/report.md`](report/report.md). Two preregistered studies (24,320 scored decisions; DeepSeek-V3.2,
+GPT-4.1-mini, Llama-3.3-70B) hold the decision-relevant enforcement risk fixed and vary only its presentation.
+- **Study 1 (source; `prereg.md`):** partner reporting vs an equivalent automated audit shifts initiation by up to
+  19 pp, in model-specific directions (DeepSeek more deterred by peers, −0.16; GPT-4.1-mini less, +0.19).
+- **Study 2 (format; `prereg_v2.md`):** a stated reporting probability vs a statistically equivalent 10-episode
+  record shifts initiation by up to 38 pp (GPT-4.1-mini: 78% vs 40%), again model-specific in sign, while DeepSeek's
+  stated beliefs are correct. One report in episode 10 instead of episode 1 cuts offers by 23–71 pp in every model.
+  A calibrated summary fixes the gap in GPT-4.1-mini but backfires in Llama (98% vs 37% stated).
 
-To regenerate all results: `./main_runs.sh` (resumable), then `analyze` / `validate` for each model.
+Reproduce Study 2: `./main2_runs.sh`, then `analyze` / `validate` with `--phase main2`.
 
 ## Reproduce
 
