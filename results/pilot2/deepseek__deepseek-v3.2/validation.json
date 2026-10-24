@@ -1,0 +1,46 @@
+{
+ "A_accept_rate": {
+  "rate": 0.7833333333333333,
+  "n": 240,
+  "p": 0.5186561628876549
+ },
+ "A_exposure_rate_q10": {
+  "rate": 0.05,
+  "n": 80,
+  "p": 0.1884101789119047
+ },
+ "A_exposure_rate_q80": {
+  "rate": 0.7,
+  "n": 140,
+  "p": 0.005665428427746288
+ },
+ "E_settlement_mismatches": 0,
+ "E_auth_penalties": 0,
+ "E_no_offer_score_changes": 0,
+ "B_logged_prompt_mismatches": 0,
+ "B_record_report_counts_ok": true,
+ "B_records_shared_within_scenario": true,
+ "status_counts": {
+  "ok": 240
+ },
+ "providers": {
+  "Baidu": 240
+ },
+ "F_by_risk": {
+  "high": [
+   2,
+   5,
+   10,
+   20,
+   40,
+   60,
+   100
+  ],
+  "low": [
+   20,
+   40,
+   60,
+   100
+  ]
+ }
+}
