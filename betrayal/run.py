@@ -64,6 +64,13 @@ def price(model):
     raise SystemExit(f"{model} not in the OpenRouter catalog")
 
 
+def observed_cost(slug, kind):
+    """Mean measured cost per call for this model and kind from earlier runs, or None."""
+    costs = [r["usage"][-1]["cost"] for p in DATA.glob(f"*/{slug}/{kind}.jsonl") for r in map(json.loads, p.open())
+             if r.get("usage")]
+    return float(np.mean(costs)) if costs else None
+
+
 def done_ids(path):
     if not path.exists():
         return set()
@@ -86,9 +93,12 @@ async def run(args):
         use_openrouter_key()
         p_in, p_out = price(args.model)
         per_call = max(len(t["messages"][0]["content"]) + len(t["messages"][1]["content"]) for t in trials) / 3 * p_in + C.MAX_TOKENS * p_out
-        est_total = per_call * len(todo) * 1.3  # 30% for parse retries and tokenizer slack
+        # projection uses measured cost when available; the per-call guard (Spend.check) stays worst-case
+        measured = observed_cost(slug, args.kind)
+        est_total = (measured or per_call) * len(todo) * 1.3  # 30% for parse retries and tokenizer slack
         start_usage = key_usage()
-        print(f"key usage so far ${start_usage:.4f}; {len(todo)} calls, worst-case estimate ${est_total:.4f}; cap ${args.max_usd:.2f}")
+        print(f"key usage so far ${start_usage:.4f}; {len(todo)} calls, estimate ${est_total:.4f} "
+              f"({'measured' if measured else 'worst-case'} per-call cost); cap ${args.max_usd:.2f}")
         if start_usage + est_total > args.max_usd:
             raise SystemExit("estimate exceeds the spend cap; not starting")
     else:
