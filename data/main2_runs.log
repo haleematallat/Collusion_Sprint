@@ -89,3 +89,9 @@ key usage so far $4.8304; 4200 calls, estimate $1.1888 (measured per-call cost);
 100/4200  run spend $0.0293
 150/4200  run spend $0.0440
 200/4200  run spend $0.0588
+250/4200  run spend $0.0733
+300/4200  run spend $0.0877
+350/4200  run spend $0.1022
+400/4200  run spend $0.1167
+450/4200  run spend $0.1313
+500/4200  run spend $0.1456
