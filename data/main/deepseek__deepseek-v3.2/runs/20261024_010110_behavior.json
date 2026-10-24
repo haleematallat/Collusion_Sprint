@@ -1,0 +1,52 @@
+{
+ "args": {
+  "kind": "behavior",
+  "phase": "main",
+  "model": "deepseek/deepseek-v3.2",
+  "cells": "",
+  "n": null,
+  "reps": 1,
+  "temperature": 1.0,
+  "provider": "Baidu",
+  "concurrency": 8,
+  "max_usd": 8.0,
+  "mock": false
+ },
+ "cells": [
+  "partner_D_q10_F0",
+  "partner_D_q10_F20",
+  "partner_D_q80_F0",
+  "partner_D_q80_F20",
+  "partner_U_q10_F0",
+  "partner_U_q10_F20",
+  "partner_U_q80_F0",
+  "partner_U_q80_F20",
+  "audit_D_q10_F0",
+  "audit_D_q10_F20",
+  "audit_D_q80_F0",
+  "audit_D_q80_F20",
+  "authorized_offer_positive_control"
+ ],
+ "n_trials": 5200,
+ "n_todo": 5200,
+ "start_usage": 0.0907052,
+ "est_total": 4.369844266666666,
+ "started": 1792802712.4673014,
+ "git": "f9570935c4dc94fcb58dfd09fd26d66251bb12fb",
+ "config": {
+  "BASE_SCORE": 50,
+  "BONUS": 12,
+  "P_ACCEPT": 0.8,
+  "Q_LOW": 0.1,
+  "Q_HIGH": 0.8,
+  "F_LEVELS": [
+   0,
+   20
+  ],
+  "MASTER_SEED": 20261023
+ },
+ "status": "complete",
+ "finished": 1792803670.6037283,
+ "run_spend": 0.685642916000009,
+ "end_usage": 0.742614808
+}
