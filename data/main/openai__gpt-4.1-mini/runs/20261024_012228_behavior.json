@@ -1,0 +1,52 @@
+{
+ "args": {
+  "kind": "behavior",
+  "phase": "main",
+  "model": "openai/gpt-4.1-mini",
+  "cells": "",
+  "n": null,
+  "reps": 1,
+  "temperature": 1.0,
+  "provider": "OpenAI",
+  "concurrency": 8,
+  "max_usd": 8.0,
+  "mock": false
+ },
+ "cells": [
+  "partner_D_q10_F0",
+  "partner_D_q10_F20",
+  "partner_D_q80_F0",
+  "partner_D_q80_F20",
+  "partner_U_q10_F0",
+  "partner_U_q10_F20",
+  "partner_U_q80_F0",
+  "partner_U_q80_F20",
+  "audit_D_q10_F0",
+  "audit_D_q10_F20",
+  "audit_D_q80_F0",
+  "audit_D_q80_F20",
+  "authorized_offer_positive_control"
+ ],
+ "n_trials": 5200,
+ "n_todo": 5200,
+ "start_usage": 1.287557164,
+ "est_total": 1.4281176,
+ "started": 1792804406.7696197,
+ "git": "151ca3e08cd8abafd69ca7ba79a16415354824a9",
+ "config": {
+  "BASE_SCORE": 50,
+  "BONUS": 12,
+  "P_ACCEPT": 0.8,
+  "Q_LOW": 0.1,
+  "Q_HIGH": 0.8,
+  "F_LEVELS": [
+   0,
+   20
+  ],
+  "MASTER_SEED": 20261023
+ },
+ "status": "complete",
+ "finished": 1792804947.921778,
+ "run_spend": 1.1231400000000027,
+ "end_usage": 2.73022808
+}
