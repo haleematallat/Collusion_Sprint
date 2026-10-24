@@ -41,6 +41,8 @@ def build_trials(kind, phase, cells, n, reps, model):
                 trials.append(dict(trial_id=f"{kind}|{model}|{iid}|{rep}", kind=kind, phase=phase, item=iid,
                                    correct=ans, rep=rep, messages=msgs))
         return trials
+    if phase in S2_PHASES:
+        return build_s2_trials(kind, phase, cells, n, reps, model)
     cell_idx = {c.id: i for i, c in enumerate(C.CELLS)}
     for scn in S.scenarios(phase, n):
         for cid in cells:
@@ -52,6 +54,37 @@ def build_trials(kind, phase, cells, n, reps, model):
                     scenario_id=scn["id"], scenario_idx=scn["idx"], w=scn["w"], send_first=scn["send_first"],
                     cell_id=cid, arm=cell.arm, q_true=L.true_q(cell, scn), F=cell.F, disclosed=cell.disclosed,
                     rep=rep, cell_idx=cell_idx[cid], prompt_hash=S.prompt_hash(msgs), messages=msgs, _scn=scn))
+    return trials
+
+
+S2_PHASES = ("pilot2", "main2")
+S2_DIAG_CELLS = ["S10", "R1", "R1_summary", "S80", "R8", "R8_summary"]
+
+
+def s2_cell(cid, model):
+    """'R1@F60' -> (S2Cell, 60); without '@F' the penalty comes from the pilot-chosen C.S2_F[model]."""
+    base, _, f = cid.partition("@F")
+    cell = C.S2_CELL[base]
+    return cell, int(f) if f else C.S2_F[model][cell.risk]
+
+
+def build_s2_trials(kind, phase, cells, n, reps, model):
+    trials = []
+    for scn in S.scenarios(phase, n):
+        for cid in cells:
+            cell, F = s2_cell(cid, model)
+            msgs = S.render_s2(scn, cell, F, kind)
+            q = C.S2_Q[cell.risk]
+            # Study-1 Cell for the shared lottery/settlement code: authorized offers are never penalized
+            settle_cell = C.Cell(f"{cell.id}@F{F}", "positive" if cell.auth else "partner", q, F, True)
+            for rep in range(reps):
+                trials.append(dict(
+                    trial_id=f"{kind}|{model}|{scn['id']}|{cell.id}@F{F}|{rep}", kind=kind, phase=phase,
+                    scenario_id=scn["id"], scenario_idx=scn["idx"], w=scn["w"], send_first=scn["send_first"],
+                    cell_id=cell.id, F=F, risk=cell.risk, fmt=cell.fmt, extra=cell.extra, auth=cell.auth,
+                    pos=cell.pos, order=cell.order, reported_episodes=sorted(S.report_positions(scn, cell)) if cell.fmt == "record" else [],
+                    arm=settle_cell.arm, q_true=q, rep=rep, cell_idx=100 + C.S2_CELLS.index(cell),
+                    prompt_hash=S.prompt_hash(msgs), messages=msgs, _scn=scn, _cell=settle_cell))
     return trials
 
 
@@ -78,8 +111,13 @@ def done_ids(path):
 
 
 async def run(args):
-    cells = args.cells.split(",") if args.cells else (C.CORE + ["authorized_offer_positive_control"] if args.kind == "behavior" else C.CORE + ["neutral_U_F20"])
-    assert all(c in C.CELL for c in cells), cells
+    if args.phase in S2_PHASES:
+        cells = args.cells.split(",") if args.cells else (
+            [c.id for c in C.S2_CELLS] if args.kind == "behavior" else S2_DIAG_CELLS)
+        assert all(s2_cell(c, args.model) for c in cells), cells
+    else:
+        cells = args.cells.split(",") if args.cells else (C.CORE + ["authorized_offer_positive_control"] if args.kind == "behavior" else C.CORE + ["neutral_U_F20"])
+        assert all(c in C.CELL for c in cells), cells
     trials = build_trials(args.kind, args.phase, cells, args.n, args.reps, args.model)
     slug = ("mock__" if args.mock else "") + args.model.replace("/", "__")
     out = DATA / args.phase / slug / f"{args.kind}.jsonl"
@@ -119,13 +157,13 @@ async def run(args):
             raise
         except Exception as e:  # recorded and retried on the next invocation (done_ids skips API_ERROR)
             res = dict(status="API_ERROR", parsed=None, error=f"{type(e).__name__}: {e}"[:500])
-        rec = {k: v for k, v in t.items() if k not in ("messages", "_scn")}
+        rec = {k: v for k, v in t.items() if k not in ("messages", "_scn", "_cell")}
         rec["user_prompt"] = t["messages"][1]["content"]
         rec.update(res, ts=time.time(), model=args.model)
         if t["kind"] == "behavior":
             action = res["parsed"]["action"] if res["status"] == "ok" else None
             acc, exp = L.draws(t["_scn"], t["cell_idx"], t["rep"], t["q_true"])
-            rec.update(action=action, accept_draw=acc, exposure_draw=exp, **L.settle(action, C.CELL[t["cell_id"]], acc, exp))
+            rec.update(action=action, accept_draw=acc, exposure_draw=exp, **L.settle(action, t.get("_cell") or C.CELL[t["cell_id"]], acc, exp))
         f.write(json.dumps(rec) + "\n")
         f.flush()
 

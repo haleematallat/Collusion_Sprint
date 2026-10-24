@@ -83,3 +83,52 @@ def render(scn, cell, kind="behavior"):
 
 def prompt_hash(messages):
     return hashlib.sha256(repr(messages).encode()).hexdigest()[:16]
+
+
+# ==== Study 2: stated rate vs enforcement record ====
+def report_positions(scn, cell):
+    """Episodes (1 = oldest, 10 = most recent) in which B reported. Seeded per scenario, so related cells
+    (R, R+summary, R+placebo; R8 and AUTH_R8) show the identical record."""
+    n, k = C.S2_RECORD_LEN, C.S2_REPORTS[cell.risk]
+    if cell.pos == "late":
+        return {n}
+    if cell.pos == "early":
+        return {1}
+    r = np.random.default_rng([C.MASTER_SEED, C.PHASE_OFFSET[scn["phase"]], 5, scn["idx"], k])
+    return set((r.permutation(n)[:k] + 1).tolist())
+
+
+def _record_info(scn, cell, e, rec, v):
+    info = [_fill(T["record"]["stationarity"], **v), _fill(rec["previous"], **v)]
+    if cell.fmt == "stated":
+        info += [_fill(rec["stated_outcomes"], **v), _fill(e["disclosed"], **v)]
+        return " ".join(info)
+    reported = report_positions(scn, cell)
+    n = C.S2_RECORD_LEN
+    episodes = range(1, n + 1) if cell.order == "old" else range(n, 0, -1)
+    lines = [_fill(rec["line_reported" if k in reported else "line_not_reported"], k=k,
+                   recent=rec["recent_tag"] if k == n else "", **v) for k in episodes]
+    head = " ".join(info + [rec["log_header_" + cell.order]])
+    tail = [_fill(rec[cell.extra], **v)] if cell.extra != "none" else []
+    return "\n".join([head] + ["  " + l for l in lines + tail])
+
+
+def render_s2(scn, cell, F, kind="behavior"):
+    """Study-2 prompt: the Study-1 partner block with the record/stated context in the $info slot."""
+    v = dict(scn, base=C.BASE_SCORE, bonus=C.BONUS, p_accept=round(C.P_ACCEPT * 100), F=F,
+             q=round(C.S2_Q[cell.risk] * 100))
+    e = T["exposure"]["partner"][str(scn["w"])]
+    info = _record_info(scn, cell, e, T["record"][str(scn["w"])], v)
+    rules = T["rules_authorized" if cell.auth else "rules_prohibited"]
+    block = T["record"][str(scn["w"])]["auth_block"] if cell.auth else e["block"]
+    exposure = _fill(block.replace("$info", info.replace("$", "$$")), **v)
+    ids = list(C.ACTIONS) if scn["send_first"] else list(C.ACTIONS[::-1])
+    if kind == "behavior":
+        ending = _fill(T["decision"], id_1=ids[0], id_2=ids[1],
+                       option_1=_fill(T[f"option_{ids[0]}"], **v), option_2=_fill(T[f"option_{ids[1]}"], **v))
+    elif kind in ("diagnostic", "diagnostic_work"):
+        ending = _fill(T["diagnostic"], format=T["diagnostic_format" + kind[10:]], **v)
+    else:
+        raise ValueError(kind)
+    user = _fill(T["base"], rules=_fill(rules, **v), exposure=exposure.replace("$", "$$"), ending=ending, **v)
+    return [{"role": "system", "content": T["system"]}, {"role": "user", "content": user}]

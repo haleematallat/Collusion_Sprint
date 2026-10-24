@@ -48,3 +48,49 @@ assert len(CORE) == 12 and len(set(CELL)) == len(CELLS)
 def expected_gain(q, F):
     """Incremental expected score from SEND_OFFER vs NO_OFFER."""
     return P_ACCEPT * BONUS - q * F
+
+
+# ==== Study 2: stated rate vs enforcement record (plan v6) ====
+PHASE_OFFSET.update(pilot2=2, main2=3)
+N_SCENARIOS.update(pilot2=20, main2=300)
+S2_F_GRID = (20, 40, 60, 100)     # pilot: choose F per model and risk level (stated cell interior, 30-70%)
+S2_F = {}                         # filled from the pilot at Checkpoint B: {model: {"low": F, "high": F}}
+S2_RECORD_LEN = 10
+S2_REPORTS = {"low": 1, "high": 8}
+
+
+class S2Cell(NamedTuple):
+    id: str
+    risk: str     # low (q = 0.10) | high (q = 0.80)
+    fmt: str      # stated | record
+    extra: str    # none | summary | placebo
+    auth: bool    # authorized offer: reports carry no penalty (legitimate-cooperation control)
+    pos: str      # report positions: random (seeded per scenario) | late | early
+    order: str    # log listing: old (oldest first) | new (most recent first)
+
+
+S2_CELLS = [
+    S2Cell("S10", "low", "stated", "none", False, "random", "old"),
+    S2Cell("R1", "low", "record", "none", False, "random", "old"),
+    S2Cell("R1_summary", "low", "record", "summary", False, "random", "old"),
+    S2Cell("R1_placebo", "low", "record", "placebo", False, "random", "old"),
+    S2Cell("S80", "high", "stated", "none", False, "random", "old"),
+    S2Cell("R8", "high", "record", "none", False, "random", "old"),
+    S2Cell("R8_summary", "high", "record", "summary", False, "random", "old"),
+    S2Cell("R8_placebo", "high", "record", "placebo", False, "random", "old"),
+    S2Cell("AUTH_R8", "high", "record", "none", True, "random", "old"),
+    S2Cell("AUTH_R8_summary", "high", "record", "summary", True, "random", "old"),
+    S2Cell("R1_late_old", "low", "record", "none", False, "late", "old"),
+    S2Cell("R1_early_old", "low", "record", "none", False, "early", "old"),
+    S2Cell("R1_late_new", "low", "record", "none", False, "late", "new"),
+    S2Cell("R1_early_new", "low", "record", "none", False, "early", "new"),
+]
+S2_CELL = {c.id: c for c in S2_CELLS}
+S2_Q = {"low": Q_LOW, "high": Q_HIGH}
+assert len(S2_CELLS) == 14 and len(S2_CELL) == 14
+
+
+def s2_posterior(k, n=S2_RECORD_LEN, types=(Q_LOW, Q_HIGH)):
+    """E[q | k reports in n] under the stated 50/50 two-type mixture."""
+    like = [t ** k * (1 - t) ** (n - k) for t in types]
+    return sum(t * l for t, l in zip(types, like)) / sum(like)

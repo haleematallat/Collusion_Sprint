@@ -266,3 +266,52 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# ==== Study 2: stated rate vs enforcement record (plan v6; criteria fixed in prereg_v2.md) ====
+S2_PAIRS = {"low": ("R1", "S10"), "high": ("R8", "S80")}
+CONSEQUENTIAL = 0.10   # minimum consequential format gap
+
+
+def _c(df, wts, w=None):
+    return contrast(per_scenario(df, wts, w))
+
+
+def s2_analyze(df):
+    out = {"cells": cell_table(df).to_dict("records")}
+    prim = []
+    for risk, (R, S) in S2_PAIRS.items():
+        r = _c(df, {R: 1, S: -1})
+        r.update(name=f"format gap {risk}: {R} - {S}", risk=risk)
+        if "est" in r:
+            r["consequential"] = bool(abs(r["est"]) >= CONSEQUENTIAL and (r["ci95"][0] > 0 or r["ci95"][1] < 0))
+            r["equivalent"] = r["tost_equivalent"]
+        prim.append(r)
+    ok = [r for r in prim if "p" in r]
+    for r, ph in zip(ok, holm(np.array([r["p"] for r in ok]))):
+        r["p_holm"] = ph
+    out["primary"] = prim
+
+    corr = []
+    for risk, (R, S) in S2_PAIRS.items():
+        gap, did = _c(df, {R: 1, S: -1}), _c(df, {f"{R}_summary": 1, f"{R}_placebo": -1})
+        after = _c(df, {f"{R}_summary": 1, S: -1})
+        r = dict(risk=risk, gap=gap, did_vs_placebo=did, summary_minus_stated=after,
+                 by_wording={w: _c(df, {f"{R}_summary": 1, f"{R}_placebo": -1}, w) for w in (1, 2)})
+        if all("est" in x for x in (gap, did, after)):
+            toward = -np.sign(gap["est"])   # correction should move SEND toward the stated cell
+            sig = did["ci95"][0] > 0 or did["ci95"][1] < 0
+            r["works"] = bool(sig and np.sign(did["est"]) == toward)
+            r["closure"] = 1 - abs(after["est"]) / abs(gap["est"]) if gap["est"] else float("nan")
+            r["overcorrects"] = bool(np.sign(after["est"]) == -np.sign(gap["est"]) and abs(after["est"]) >= CONSEQUENTIAL)
+            r["robust_both_wordings"] = bool(all(np.sign(r["by_wording"][w].get("est", 0)) == toward for w in (1, 2)))
+        corr.append(r)
+    out["correction"] = corr
+    coll = _c(df, {"AUTH_R8_summary": 1, "AUTH_R8": -1})
+    out["collateral"] = dict(coll, no_collateral=coll.get("tost_equivalent"))
+
+    mech = [("recency (late - early), pooled over list order",
+             {"R1_late_old": .5, "R1_late_new": .5, "R1_early_old": -.5, "R1_early_new": -.5}, 0),
+            ("recency x list order", {"R1_late_old": 1, "R1_early_old": -1, "R1_late_new": -1, "R1_early_new": 1}, 0)]
+    out["mechanism"] = family(df, mech)
+    return out
