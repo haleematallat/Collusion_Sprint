@@ -106,3 +106,14 @@ key usage so far $0.0907; 5200 calls, worst-case estimate $4.3698; cap $8.00
 complete; wrote /home/user/Collusion_Sprint/data/main/deepseek__deepseek-v3.2/behavior.jsonl
 key usage so far $0.7426; 520 calls, estimate $0.0890 (measured per-call cost); cap $8.00
 50/520  run spend $0.0055
+100/520  run spend $0.0111
+150/520  run spend $0.0168
+200/520  run spend $0.0225
+250/520  run spend $0.0277
+300/520  run spend $0.0329
+350/520  run spend $0.0379
+400/520  run spend $0.0437
+450/520  run spend $0.0487
+500/520  run spend $0.0536
+complete; wrote /home/user/Collusion_Sprint/data/main/deepseek__deepseek-v3.2/behavior.jsonl
+key usage so far $0.8052; 400 calls, estimate $0.0673 (measured per-call cost); cap $8.00
