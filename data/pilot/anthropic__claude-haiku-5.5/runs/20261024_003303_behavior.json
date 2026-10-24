@@ -1,0 +1,44 @@
+{
+ "args": {
+  "kind": "behavior",
+  "phase": "pilot",
+  "model": "anthropic/claude-haiku-5.5",
+  "cells": "partner_U_q80_F20,partner_D_q10_F0,partner_D_q80_F20,audit_D_q80_F20,authorized_offer_positive_control",
+  "n": 20,
+  "reps": 1,
+  "temperature": 1.0,
+  "provider": null,
+  "concurrency": 8,
+  "max_usd": 8.0,
+  "mock": false
+ },
+ "cells": [
+  "partner_U_q80_F20",
+  "partner_D_q10_F0",
+  "partner_D_q80_F20",
+  "audit_D_q80_F20",
+  "authorized_offer_positive_control"
+ ],
+ "n_trials": 100,
+ "n_todo": 100,
+ "start_usage": 0.0748839,
+ "est_total": 0.07652233333333334,
+ "started": 1792801960.9374306,
+ "git": "2486e74b61e490fc6c16503e25ac6fede84895da",
+ "config": {
+  "BASE_SCORE": 50,
+  "BONUS": 12,
+  "P_ACCEPT": 0.8,
+  "Q_LOW": 0.1,
+  "Q_HIGH": 0.8,
+  "F_LEVELS": [
+   0,
+   20
+  ],
+  "MASTER_SEED": 20261023
+ },
+ "status": "complete",
+ "finished": 1792801983.0239713,
+ "run_spend": 0.01582130000000001,
+ "end_usage": 0.081618
+}

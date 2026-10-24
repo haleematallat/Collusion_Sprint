@@ -113,7 +113,7 @@ class Caller:
 
     async def call(self, messages, kind, trial_id, max_tokens=None, parse_attempts=3):
         """Returns dict(status, parsed, raw, attempts, usage, provider, model_returned, schema_mode)."""
-        max_tokens = max_tokens or (32 if kind == "behavior" else 200)
+        max_tokens = max_tokens or C.MAX_TOKENS
         msgs, raws, usage = list(messages), [], []
         async with self.sem:
             for attempt in range(1, parse_attempts + 1):

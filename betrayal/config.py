@@ -15,6 +15,7 @@ MASTER_SEED = 20261023
 PHASE_OFFSET = {"main": 0, "pilot": 1}   # disjoint scenario/lottery streams per phase
 N_SCENARIOS = {"main": 200, "pilot": 20}
 
+MAX_TOKENS = 1024        # room for hidden reasoning (Haiku 5.5 truncated to empty at 32)
 SPEND_CAP_USD = 8.00     # user's hard limit is $10; stop at $8
 
 

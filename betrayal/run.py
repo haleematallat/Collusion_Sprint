@@ -85,8 +85,7 @@ async def run(args):
     if not args.mock:
         use_openrouter_key()
         p_in, p_out = price(args.model)
-        max_out = 32 if args.kind == "behavior" else 200
-        per_call = max(len(t["messages"][0]["content"]) + len(t["messages"][1]["content"]) for t in trials) / 3 * p_in + max_out * p_out
+        per_call = max(len(t["messages"][0]["content"]) + len(t["messages"][1]["content"]) for t in trials) / 3 * p_in + C.MAX_TOKENS * p_out
         est_total = per_call * len(todo) * 1.3  # 30% for parse retries and tokenizer slack
         start_usage = key_usage()
         print(f"key usage so far ${start_usage:.4f}; {len(todo)} calls, worst-case estimate ${est_total:.4f}; cap ${args.max_usd:.2f}")
