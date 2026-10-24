@@ -1,0 +1,54 @@
+{
+ "A_accept_rate": {
+  "rate": 0.8041071428571429,
+  "n": 5600,
+  "target": 0.8,
+  "p": 0.45224951660888046
+ },
+ "A_exposure_rate_q10": {
+  "rate": 0.1101338432122371,
+  "n": 2615,
+  "target": 0.1,
+  "p": 0.08413727992364511
+ },
+ "A_independence_q10_chi2_p": 0.262933583509567,
+ "A_exposure_rate_q80": {
+  "rate": 0.797678916827853,
+  "n": 2585,
+  "target": 0.8,
+  "p": 0.7679755670326054
+ },
+ "A_independence_q80_chi2_p": 0.36035863553810865,
+ "E_settlement_mismatches": 0,
+ "E_no_offer_score_changes": 0,
+ "E_realized": {
+  "sent": 3700,
+  "accepted": 2962,
+  "exposed": 1018,
+  "exposed_by": {
+   "audit": 148,
+   "partner": 870
+  },
+  "mean_score_sent": 57.406486486486486,
+  "mean_score_not_sent": 50.0
+ },
+ "B_undisclosed_prompt_pairs": {
+  "n": 800,
+  "identical": 800
+ },
+ "B_logged_prompt_mismatches": 0,
+ "D_primary_pairs": {
+  "n": 400,
+  "differ_outside_exposure_lines": 0
+ },
+ "C_positive_control_send_rate": {
+  "rate": 1.0,
+  "n": 400
+ },
+ "status_counts": {
+  "ok": 5600
+ },
+ "providers": {
+  "OpenAI": 5600
+ }
+}
