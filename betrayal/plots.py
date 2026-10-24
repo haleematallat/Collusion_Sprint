@@ -26,7 +26,7 @@ def _bars(ax, groups, series, df):
     ax.set_xticks(x, groups)
     ax.set_ylim(0, 1)
     ax.set_ylabel("P(SEND_OFFER)")
-    ax.legend(frameon=False, fontsize=8)
+    ax.legend(frameon=False, fontsize=8, loc="upper center", bbox_to_anchor=(0.5, -0.2), ncol=2)
 
 
 def plot_all(df, res, out):
@@ -75,4 +75,19 @@ def plot_calibration(diag, out):
     ax.legend(frameon=False, fontsize=8)
     fig.tight_layout()
     fig.savefig(out / "fig_calibration.png", dpi=300, bbox_inches="tight")
+    plt.close(fig)
+
+
+def plot_models(dfs, out):
+    """dfs: {model label: behavior DataFrame}. Partner vs audit in the 4 matched disclosed cells, per model."""
+    plt.style.use("seaborn-v0_8-whitegrid")
+    qf = [(10, 0), (10, 20), (80, 0), (80, 20)]
+    groups = [f"q={q}%\nF={F}" for q, F in qf]
+    fig, ax = plt.subplots(1, len(dfs), figsize=(5 * len(dfs), 3.6), sharey=True)
+    for a, (name, df) in zip(np.atleast_1d(ax), dfs.items()):
+        _bars(a, groups, [("partner may report", [f"partner_D_q{q}_F{F}" for q, F in qf], {"color": "#4C72B0"}),
+                          ("automated audit may detect", [f"audit_D_q{q}_F{F}" for q, F in qf], {"color": "#DD8452"})], df)
+        a.set_title(name, fontsize=10)
+    fig.tight_layout()
+    fig.savefig(out / "fig_source_models.png", dpi=300, bbox_inches="tight")
     plt.close(fig)
