@@ -3,7 +3,7 @@
 **[Author names and affiliations — to be filled in by the team]**
 
 Apart AI Collusion Research Sprint, 23–25 October 2026 · Track 1 (markets and collusion), with relevance to Track 3
-Code and data: https://github.com/haleematallat/Collusion_Sprint/tree/claude/funny-volta-kb1gxn · Preregistrations: `prereg.md` (`f957093`), `prereg_v2.md` (`a0eab95`), `prereg_v3b.md` (`0852581`); gate criteria `af8dca3`, `d93a5d4`
+Code and data: https://github.com/haleematallat/Collusion_Sprint · Preregistrations: `prereg.md` (`f957093`), `prereg_v2.md` (`a0eab95`), `prereg_v3b.md` (`0852581`); gate criteria `af8dca3`, `d93a5d4`
 
 ## Abstract
 
