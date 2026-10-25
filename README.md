@@ -12,58 +12,54 @@ variant: [`docs/prompt_review.md`](docs/prompt_review.md).
 
 ## Summary
 
-**The idea we tested.** When AI agents are told they might be reported for proposing a forbidden deal, they hold
-back. We asked whether that holds up under three conditions: when the same risk is merely described differently;
-and when we look past the proposals themselves to how much misconduct actually happens.
+**What we tested.** AI agents that might be reported for proposing a forbidden deal hold back. Researchers measure
+this by counting proposals. We checked three things that counting assumes:
+- that only the risk matters, not how it is described;
+- that fewer proposals means less misconduct;
+- that a proposal can actually lead to a carried-out deal.
 
-**Study 1** gave agents the same chance of being caught and the same penalty. Only the catcher changed: the partner
-they propose to, or an automated audit. We expected agents to be less wary of their partner. That was not what we
-found. DeepSeek was *more* deterred by its partner (−16 points), GPT-4.1-mini was less deterred (+19), and so there
-is no single pattern.
+**Study 1** kept the chance of being caught and the penalty the same, and changed only who would do the catching:
+the partner, or an automated audit. We expected agents to be less wary of their partner. Instead, DeepSeek was
+*more* deterred by its partner (−16 points). GPT-4.1-mini was at the floor in that test, and less deterred by its
+partner in another (+19). There is no single pattern.
 
-**Study 2** gave agents the same risk either as a stated percentage or as a short log of what the verifier had done
-before. The log was built so that it implies the same percentage. If the agents were consistent, both formats would
-produce the same behaviour. Instead:
-- behaviour shifted by up to 38 points, in different directions for different models, even though DeepSeek could
-  state the correct probability;
-- in every model, a report that happened *recently* deterred far more than the same report long ago (23–71 points
-  less proposing), even though the verifier was described as never changing;
-- a truthful one-line summary of the risk fixed the gap for one model and made another propose almost always.
+**Study 2** gave the same risk either as a percentage or as a short log of what the verifier had done before, built
+to imply the same percentage. Consistent agents would behave the same way. They did not.
+- Behaviour shifted by up to 38 points, in different directions for different models.
+- A recent report scared every model far more than the same report long ago, by 23–71 points.
+- A truthful one-line summary fixed the gap for one model and made another propose almost every time.
 
-**Study 3** asked whether fewer proposals really means less misconduct. We had a fixed AI reporter read every
-message that agents wrote. We expected that agents who were scared off would still send some proposals, but word
-them so the reporter would miss them. They did not.
-- A recent-report history or a high-report history cut proposing by 25–85 points (DeepSeek, Llama).
-- The messages agents wrote were about as easy to catch as before: a change of at most 1.4 points, inside our
-  5-point equivalence margin.
-- Fewer proposals did mean less completed misconduct. But the reporter catches about 94% of messages, so the
-  small leftover that gets through can move differently from the report count. In one test (DeepSeek, recency),
-  reports fell 41% while completed misconduct fell only 30%. The other tests were inconclusive or near zero.
-- This misconduct was simulated: acceptance was programmed and one fixed AI reporter decided detection.
-- Along the way we found that AI reviewers asked to accept such deals never did, and that giving them a stake in
-  the deal made them report harmless messages. Even the same models that eagerly proposed the deal refused it
-  every time (0 of 180) when they were the one being asked. When two agents could talk for three rounds,
-  DeepSeek's partner sometimes agreed (6 of 30), but it followed through only once, and three times it reported
-  the proposer instead.
+**Study 3** asked whether fewer proposals means less misconduct. A fixed AI reporter read every message the agents
+wrote, and acceptance followed fixed odds.
+- Showing agents recent or frequent reports cut proposing by 25–85 points.
+- The messages agents wrote were about as easy to catch as before: at most a 1.4-point change.
+- Misconduct fell along with proposals. In one test it fell less than the report count suggested (30% against
+  41%), because the few messages that slip past the reporter matter a lot.
 
-**What it means.** How agents are told about oversight matters as much as the oversight itself, and it matters
-differently for each model. So a deterrence result measured with one wording should not be trusted for another.
-Counting proposals or reports was a fair guide to whether simulated misconduct went down. In one test it
-exaggerated by how much, so evaluators should check completed misconduct directly where they can.
+**Tests with a real AI partner.** When a real AI partner received the proposal, it almost never went along with it:
+0 of 180 times in one round. Over three rounds of conversation it agreed in words 6 of 30 times, carried the deal
+out once, and three times reported the proposer instead.
+
+**What it means.** How oversight is described changes how agents behave, differently for each model, so deterrence
+should be measured under several equivalent descriptions. Counting proposals pointed in the right direction for
+misconduct in our setting. But in short interactions, real collusion between two AI agents almost never happened,
+so stopping proposals prevented little executed collusion here.
 
 **Next steps.**
-- Repeat this in multi-turn settings, where agents actually experience reports rather than reading about them, and
-  where real collusion is known to emerge.
-- Let the partner's acceptance depend on what the message says, and use several independent reporters.
-- Test which ways of showing enforcement history deter consistently across models.
+- Long multi-turn interactions, where agents experience reports and where collusion is known to emerge.
+- Partners whose acceptance depends on the message, and several independent reporters.
+- Ways of presenting enforcement history that deter consistently across models.
 
 ## Results
 
-Report: [`report/report.md`](report/report.md). Three studies (26,820 confirmatory scored decisions; DeepSeek-V3.2,
-GPT-4.1-mini, Llama-3.3-70B). Studies 1–2 hold the decision-relevant enforcement risk fixed and vary only its
-presentation. Study 3 asks whether suppressing proposals reduces completed, unblocked misconduct.
+Report: [`report/report.md`](report/report.md). Three preregistered studies (26,820 confirmatory scored decisions;
+DeepSeek-V3.2, GPT-4.1-mini, Llama-3.3-70B), plus pilots and gate tests. They test three assumptions behind
+proposal-based deterrence evaluations:
+- **A1:** deterrence is invariant to how equivalent risk is presented (Studies 1–2).
+- **A2:** fewer proposals or reports means proportionally less completed misconduct (Study 3b).
+- **A3:** a proposal can lead to executed collusion by a live partner (gates).
 - **Study 1 (source; `prereg.md`):** partner reporting vs an equivalent automated audit shifts initiation by up to
-  19 pp, in model-specific directions (DeepSeek more deterred by peers, −0.16; GPT-4.1-mini less, +0.19).
+  19 pp, in model-specific directions (DeepSeek more deterred by peers, −0.16; GPT-4.1-mini less, +0.19, in a different cell).
 - **Study 2 (format; `prereg_v2.md`):** a stated reporting probability vs a statistically equivalent 10-episode
   record shifts initiation by up to 38 pp (GPT-4.1-mini: 78% vs 40%), again model-specific in sign, while DeepSeek's
   stated beliefs are correct. One report in episode 10 instead of episode 1 cuts offers by 23–71 pp in every model.
@@ -77,9 +73,14 @@ presentation. Study 3 asks whether suppressing proposals reduces completed, unbl
     probability ≤ 0.014, inside the ±0.05 equivalence margin, so "no deniability" in 4 of 4 tests.
   - In one test (DeepSeek, recency), simulated completed misconduct fell by less than the report count (−30% vs
     −41%). The other tests were inconclusive or at the floor.
-- **Pilots reported as findings:** a displacement pilot (3a) failed its gates because the override was never used.
-  Single-turn LLM verifiers approved collusion in 0 of 2,400 evaluations, and a stake made them report harmless
-  messages.
+- **Pilots and gates (A3):**
+  - A displacement pilot (3a) failed its gates: the override was almost never used (0–3%).
+  - Two LLM verifiers had a mean approval probability below 0.001 across 2,400 evaluations, and a stake made them
+    report harmless messages.
+  - Live partners accepted 0 of 180 real drafts.
+  - Over three rounds of conversation, Llama never agreed. DeepSeek's partner agreed in words 6 times out of 30,
+    carried the deal out once, and reported the proposer 3 times.
+  - In total: 1 executed violation in 240 live-partner decisions.
 
 Reproduce Study 2: `./main2_runs.sh`, then `analyze` / `validate` with `--phase main2`. Reproduce Study 3b:
 `./main3b_runs.sh` (instrument selection, histories, agent runs, scoring), then `analyze --phase main3b`.
