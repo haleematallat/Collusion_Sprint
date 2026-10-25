@@ -42,7 +42,9 @@ them so the reporter would miss them. They did not.
 - This misconduct was simulated: acceptance was programmed and one fixed AI reporter decided detection.
 - Along the way we found that AI reviewers asked to accept such deals never did, and that giving them a stake in
   the deal made them report harmless messages. Even the same models that eagerly proposed the deal refused it
-  every time (0 of 180) when they were the one being asked.
+  every time (0 of 180) when they were the one being asked. When two agents could talk for three rounds,
+  DeepSeek's partner sometimes agreed (6 of 30), but it followed through only once, and three times it reported
+  the proposer instead.
 
 **What it means.** How agents are told about oversight matters as much as the oversight itself, and it matters
 differently for each model. So a deterrence result measured with one wording should not be trusted for another.

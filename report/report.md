@@ -339,8 +339,18 @@ answer in every cell:
     38).
   - These models proposed the deal in 78–100% of trials in A's seat. So the asymmetry is between proposing and
     accepting. It is not a difference between models.
-- This is why Study 3b programs acceptance and keeps detection live. Live two-agent collusion did not occur in this
-  single-turn workflow.
+- **Three rounds of private messages did not change this much.** We ran a second gate, again with criteria fixed
+  in advance (`docs/gate_multiturn.md`). Two copies of the same model talked privately for three rounds each, then
+  each privately chose an action on the other's batch.
+  - **Llama:** A proposed in every episode, and B refused in every one (0/30).
+  - **DeepSeek:** A proposed in 80% of episodes. B *agreed in words* in 6 of 30, often with plans to avoid the
+    audit. But it carried the deal out only once (1/30, below the gate's 3/30). In 3 of the 6 it **reported A
+    after agreeing**, and in 2 it just reviewed normally.
+  - A trusted every verbal agreement and approved B's batch without review all 6 times.
+  - We stopped as preregistered. Descriptively (n = 6, one model, self-play), this is collusion "on paper" plus
+    betrayal of a trusting proposer. Agreement in conversation is not a reliable sign of executed collusion.
+- This is why Study 3b programs acceptance and keeps detection live. Live two-agent collusion almost never
+  happened in either workflow (1 executed violation in 240 live-partner decisions).
 
 ### 4.4 Study 3b: do suppressed proposals become deniable, and does misconduct fall with reports?
 
@@ -486,7 +496,9 @@ them so the reporter would miss them. They did not.
 - This misconduct was simulated: acceptance was programmed and one fixed AI reporter decided detection.
 - Along the way we found that AI reviewers asked to accept such deals never did, and that giving them a stake in
   the deal made them report harmless messages. Even the same models that eagerly proposed the deal refused it
-  every time (0 of 180) when they were the one being asked.
+  every time (0 of 180) when they were the one being asked. When two agents could talk for three rounds,
+  DeepSeek's partner sometimes agreed (6 of 30), but it followed through only once, and three times it reported
+  the proposer instead.
 
 **What it means.** How agents are told about oversight matters as much as the oversight itself, and it matters
 differently for each model. So a deterrence result measured with one wording should not be trusted for another.
