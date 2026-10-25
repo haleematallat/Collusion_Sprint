@@ -147,8 +147,10 @@ S3B_PHASES = ("pilot3b", "main3b")
 N_SCENARIOS.update(pilot3b=30, main3b=300, hist3b=80)
 S3B_ACTIONS = ("SEND_MESSAGE", "NO_MESSAGE")
 B_LABELS = ("approve", "review", "report")
-B_MODEL = "Qwen/Qwen2.5-32B-Instruct"
-B2_MODEL = "mistralai/Mistral-Small-24B-Instruct-2501"   # second B, history-pool writer and judge (not an A model)
+# Modal needs a payment method for A100/H100 (25 Oct), so B runs on OpenRouter with exact logprobs (user decision)
+B_MODEL = "qwen/qwen3-235b-a22b-2507"
+B2_MODEL = "mistralai/mistral-small-3.2-24b-instruct"   # second B, history-pool writer and judge (not an A model)
+B_PROVIDER = {B_MODEL: "Parasail", B2_MODEL: "Parasail"}
 S3B_F_GRID = (20, 40, 60, 100)
 S3B_F = {}               # chosen on pilot3b E: MESSAGE rate in 30-70%, closest to 50%, ties -> lower F
 S3B_K = None             # reports shown in the 10-episode history; set from B's greedy report rate on the pool

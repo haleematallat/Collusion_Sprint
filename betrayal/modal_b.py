@@ -23,7 +23,7 @@ image = (modal.Image.debian_slim(python_version="3.12")
 cache = modal.Volume.from_name("collusion-hf-cache", create_if_missing=True)
 
 
-@app.function(image=image, gpu="H100", timeout=6 * 3600, scaledown_window=300,
+@app.function(image=image, gpu=os.environ.get("B_GPU", "A100-80GB"), timeout=6 * 3600, scaledown_window=300,
               volumes={"/root/.cache/huggingface": cache},
               secrets=[modal.Secret.from_dict({"B_KEY": KEY, "B_MODEL": MODEL})])
 @modal.concurrent(max_inputs=64)
