@@ -1,0 +1,13 @@
+{
+ "status": {
+  "ok": 1200
+ },
+ "providers": {
+  "DeepInfra": 1200
+ },
+ "logged_prompt_mismatches": 0,
+ "scored": 1200,
+ "leaked_max": 0.004705426015088943,
+ "history_outcomes_match_draw_rule": true,
+ "e_l_same_episodes": true
+}

@@ -107,3 +107,27 @@ def plot_s2(dfs, out):
     fig.tight_layout()
     fig.savefig(out / "fig_s2_format.png", dpi=300, bbox_inches="tight")
     plt.close(fig)
+
+
+def plot_s3b(frames, out):
+    """Study 3b: per model and cell, send rate and operator-visible reports (top) vs completed misconduct (bottom)."""
+    cells = ["E", "L", "LOW", "HIGH"]
+    fig, ax = plt.subplots(2, len(frames), figsize=(4.2 * len(frames), 5.2), sharex=True, squeeze=False)
+    for j, (name, d) in enumerate(frames.items()):
+        g = d[d["cell"].isin(cells)].groupby("cell")
+        m, se = g[["P", "t1", "cum"]].mean().reindex(cells), g[["P", "t1", "cum"]].sem().reindex(cells)
+        x = np.arange(len(cells))
+        for k, (col, lab, c) in enumerate((("P", "sends proposal", "#888888"), ("t1", "reported (operator sees)", "#3b6ea8"))):
+            ax[0, j].bar(x + (k - 0.5) * 0.38, m[col], 0.38, yerr=1.96 * se[col], color=c, label=lab, capsize=2)
+        ax[1, j].bar(x, m["cum"], 0.5, yerr=1.96 * se["cum"], color="#c0504d", capsize=2, label="completed, unblocked misconduct")
+        ax[0, j].set_title(name)
+        ax[0, j].set_ylim(0, 1.05)
+        ax[1, j].set_xticks(x, ["E\nold", "L\nrecent", "LOW\n1/10", "HIGH\n8/10"])
+    ax[0, 0].set_ylabel("rate per trial")
+    ax[1, 0].set_ylabel("expected CUM per trial")
+    h0, l0 = ax[0, 0].get_legend_handles_labels()
+    h1, l1 = ax[1, 0].get_legend_handles_labels()
+    fig.legend(h0 + h1, l0 + l1, loc="lower center", ncol=3, frameon=False)
+    fig.tight_layout(rect=(0, 0.06, 1, 1))
+    fig.savefig(out, dpi=150)
+    plt.close(fig)

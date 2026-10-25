@@ -1,0 +1,13 @@
+{
+ "status": {
+  "ok": 1300
+ },
+ "providers": {
+  "Baidu": 1300
+ },
+ "logged_prompt_mismatches": 0,
+ "scored": 1300,
+ "leaked_max": 0.12036361222310799,
+ "history_outcomes_match_draw_rule": true,
+ "e_l_same_episodes": true
+}
