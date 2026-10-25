@@ -370,6 +370,8 @@ def _boot(fn, frames, n_boot=4000, seed=0):
     with np.errstate(divide="ignore", invalid="ignore"):
         b = np.array([fn(*(a[i] for a in arrs)) for i in ix])
     b = b[np.isfinite(b)]
+    if not len(b):   # e.g. no overrides at all: ratio undefined in every resample
+        return dict(est=float(est), ci95=(float("nan"), float("nan")), p_boot=float("nan"))
     return dict(est=float(est), ci95=tuple(np.percentile(b, [2.5, 97.5])), p_boot=float(min(1, 2 * min((b <= 0).mean(), (b >= 0).mean()))))
 
 

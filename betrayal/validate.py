@@ -121,7 +121,7 @@ def check_s3(df):
     out["E_settlement_mismatches"] = bad
     model = df["model"].iloc[0]
     scns = {s["id"]: s for s in S.scenarios(df["phase"].iloc[0])}
-    out["B_logged_prompt_mismatches"] = int(sum(S.render_s3(scns[r.scenario_id], C.S3_CELL[r.cell_id], model)[0][1]["content"] != r.user_prompt
+    out["B_logged_prompt_mismatches"] = int(sum(S.render_s3(scns[r.scenario_id], C.S3_CELL[r.cell_id.partition("@FS")[0]], model, r.F_s)[0][1]["content"] != r.user_prompt
                                                 for r in df.itertuples()))
     out["F"], out["F_s_by_cell"] = sorted(set(df["F"])), df.groupby("cell_id")["F_s"].first().to_dict()
     out["status_counts"] = dict(Counter(df["status"]))

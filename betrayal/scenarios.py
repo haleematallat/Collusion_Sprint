@@ -145,9 +145,10 @@ def render_s2(scn, cell, F, kind="behavior"):
 S3_ORDERS = list(itertools.permutations(C.S3_ACTIONS))
 
 
-def render_s3(scn, cell, model):
-    """Study-3a prompt: Study-2 record context inside the MESSAGE block, plus OVERRIDE and REVIEW blocks."""
-    F, F_s = C.S3_F[model], C.s3_fs(model, cell)
+def render_s3(scn, cell, model, F_s=None):
+    """Study-3a prompt: Study-2 record context inside the MESSAGE block, plus OVERRIDE and REVIEW blocks.
+    F_s overrides the configured override penalty (pilot re-check of the F_s rule)."""
+    F, F_s = C.S3_F[model], F_s if F_s is not None else C.s3_fs(model, cell)
     v = dict(scn, base=C.BASE_SCORE, bonus=C.BONUS, p_accept=round(C.P_ACCEPT * 100), F=F, F_s=F_s,
              d=round(cell.d * 100), q=round(C.S2_Q[cell.risk] * 100))
     rec_cell = C.S2Cell(cell.id, cell.risk, "record", "none", False, cell.pos, "new")

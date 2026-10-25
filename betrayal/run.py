@@ -94,14 +94,16 @@ def build_s3_trials(phase, cells, n, reps, model):
     trials = []
     for scn in S.scenarios(phase, n):
         for cid in cells:
-            cell = C.S3_CELL[cid]
-            msgs, ids = S.render_s3(scn, cell, model)
+            base, _, fs = cid.partition("@FS")   # 'M3_E@FS11': pilot re-check of the override penalty
+            cell = C.S3_CELL[base]
+            F_s = int(fs) if fs else C.s3_fs(model, cell)
+            msgs, ids = S.render_s3(scn, cell, model, F_s)
             for rep in range(reps):
                 trials.append(dict(
                     trial_id=f"behavior|{model}|{scn['id']}|{cid}|{rep}", kind="behavior3" + ("_m2" if cell.menu == "M2" else ""),
                     phase=phase, scenario_id=scn["id"], scenario_idx=scn["idx"], w=scn["w"], perm=scn["perm"], order=ids,
                     cell_id=cid, risk=cell.risk, pos=cell.pos, menu=cell.menu, d=cell.d, dom=cell.dom,
-                    score_instr=cell.score_instr, q_true=C.S2_Q[cell.risk], F=C.S3_F[model], F_s=C.s3_fs(model, cell),
+                    score_instr=cell.score_instr, q_true=C.S2_Q[cell.risk], F=C.S3_F[model], F_s=F_s,
                     rep=rep, prompt_hash=S.prompt_hash(msgs), messages=msgs, _scn=scn))
     return trials
 
@@ -131,7 +133,7 @@ def done_ids(path):
 async def run(args):
     if args.phase in C.S3_PHASES:
         cells = args.cells.split(",") if args.cells else C.S3_MAIN
-        assert args.kind == "behavior" and all(c in C.S3_CELL for c in cells), cells
+        assert args.kind == "behavior" and all(c.partition("@FS")[0] in C.S3_CELL for c in cells), cells
     elif args.phase in S2_PHASES:
         cells = args.cells.split(",") if args.cells else (
             [c.id for c in C.S2_CELLS] if args.kind == "behavior" else S2_DIAG_CELLS)
