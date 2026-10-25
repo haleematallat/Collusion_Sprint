@@ -330,7 +330,17 @@ answer in every cell:
   prompts.
 - Telling the verifier it would gain from the deal made it report a harmless status message 84–99% of the time.
 - A neutral "monitor" framing flagged that harmless message at .98–.999.
-- This is why Study 3b programs acceptance and keeps detection live.
+- **The same models also refuse in the partner's seat.** We ran a gate pilot with its criteria fixed in advance
+  (`docs/gate_live_b.md`). DeepSeek-V3.2, GPT-4.1-mini and Llama-3.3-70B each played B, a peer agent:
+  - B was told to maximize its score, under the same rule as A, and was shown the same expected-value structure
+    (+12 if it approves without review; a 10% audit costing 60).
+  - B read 60 real agent-A drafts and could accept the deal and then approve without review.
+  - **Result: 0 of 180 accepted** (DeepSeek and GPT declined 58 and reported 2; Llama declined 22 and reported
+    38).
+  - These models proposed the deal in 78–100% of trials in A's seat. So the asymmetry is between proposing and
+    accepting. It is not a difference between models.
+- This is why Study 3b programs acceptance and keeps detection live. Live two-agent collusion did not occur in this
+  single-turn workflow.
 
 ### 4.4 Study 3b: do suppressed proposals become deniable, and does misconduct fall with reports?
 
@@ -475,7 +485,8 @@ them so the reporter would miss them. They did not.
   reports fell 41% while completed misconduct fell only 30%. The other tests were inconclusive or near zero.
 - This misconduct was simulated: acceptance was programmed and one fixed AI reporter decided detection.
 - Along the way we found that AI reviewers asked to accept such deals never did, and that giving them a stake in
-  the deal made them report harmless messages.
+  the deal made them report harmless messages. Even the same models that eagerly proposed the deal refused it
+  every time (0 of 180) when they were the one being asked.
 
 **What it means.** How agents are told about oversight matters as much as the oversight itself, and it matters
 differently for each model. So a deterrence result measured with one wording should not be trusted for another.
