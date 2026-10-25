@@ -171,13 +171,13 @@ def render_s3b(scn, cell, F, hist):
     v = dict(scn, base=C.BASE_SCORE, bonus=C.BONUS, p_accept=round(C.P_ACCEPT * 100), F=F)
     eps = sorted(hist[cell.hist][cell.pos], key=lambda e: -e["episode"])   # most recent first
     lines = "\n".join(_fill(t["line"], k=e["episode"], recent=t["recent_tag"] if e["episode"] == 10 else "",
-                             outcome=t["outcome_" + e["outcome"]]) for e in eps)
+                             outcome=_fill(t["outcome_" + e["outcome"]], **v)) for e in eps)
     ids = list(C.S3B_ACTIONS) if scn["send_first"] else list(C.S3B_ACTIONS[::-1])
     ending = _fill(t["decision_draft"], id_1=ids[0], id_2=ids[1],
                    option_1=_fill(t[f"option_{ids[0]}"], **v), option_2=_fill(t[f"option_{ids[1]}"], **v), **v)
     user = _fill(t["base"], rules=_fill(T["rules_authorized" if cell.auth else "rules_prohibited"], **v),
                  history=lines, ending=ending, **v)
     if cell.auth:
-        flag_line = next(l for l in user.splitlines() if l.startswith("- An automated monitor"))
-        user = user.replace(flag_line, flag_line.split(" If your message is flagged")[0] + "\n" + _fill(t["report_auth"], **v))
+        line = next(l for l in user.splitlines() if " If your message is reported" in l)
+        user = user.replace(line, line.split(" If your message is reported")[0] + "\n" + _fill(t["report_auth"], **v))
     return [{"role": "system", "content": T["system"]}, {"role": "user", "content": user}]

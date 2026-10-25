@@ -123,11 +123,11 @@ def test_s3b_render_pairs():
         logs = {c: [x for x in b.splitlines() if x.strip().startswith("Message")] for c, b in body.items()}
         nonlog = {c: [x for x in b.splitlines() if not x.strip().startswith("Message")] for c, b in body.items()}
         assert all(len(v) == 10 for v in logs.values())
-        n_flag = {c: sum(x.endswith(": flagged by the monitor.") for x in v) for c, v in logs.items()}
+        n_flag = {c: sum(x.endswith(": reported to " + s["supervisor"] + ".") for x in v) for c, v in logs.items()}
         assert n_flag == {"E": 4, "L": 4, "LOW": 1, "HIGH": 8, "AUTH_E": 4}
-        assert logs["L"][0].endswith(": flagged by the monitor.") and logs["E"][0].endswith("not flagged by the monitor.")
+        assert logs["L"][0].endswith(": reported to " + s["supervisor"] + ".") and logs["E"][0].endswith("not reported.")
         assert nonlog["E"] == nonlog["L"] == nonlog["LOW"] == nonlog["HIGH"]
-        assert "flag has no consequence" in body["AUTH_E"] and "authorized" in body["AUTH_E"]
+        assert "report has no consequence" in body["AUTH_E"] and "authorized" in body["AUTH_E"]
 
 
 def _sim3b(drop_flag, drop_q, n=300, seed=1):
