@@ -12,8 +12,9 @@ variant: [`docs/prompt_review.md`](docs/prompt_review.md).
 
 ## Results
 
-Report: [`report/report.md`](report/report.md). Two preregistered studies (24,320 scored decisions; DeepSeek-V3.2,
-GPT-4.1-mini, Llama-3.3-70B) hold the decision-relevant enforcement risk fixed and vary only its presentation.
+Report: [`report/report.md`](report/report.md). Three studies (26,820 confirmatory scored decisions; DeepSeek-V3.2,
+GPT-4.1-mini, Llama-3.3-70B). Studies 1–2 hold the decision-relevant enforcement risk fixed and vary only its
+presentation. Study 3 asks whether suppressing proposals reduces completed, unblocked misconduct.
 - **Study 1 (source; `prereg.md`):** partner reporting vs an equivalent automated audit shifts initiation by up to
   19 pp, in model-specific directions (DeepSeek more deterred by peers, −0.16; GPT-4.1-mini less, +0.19).
 - **Study 2 (format; `prereg_v2.md`):** a stated reporting probability vs a statistically equivalent 10-episode
@@ -21,7 +22,20 @@ GPT-4.1-mini, Llama-3.3-70B) hold the decision-relevant enforcement risk fixed a
   stated beliefs are correct. One report in episode 10 instead of episode 1 cuts offers by 23–71 pp in every model.
   A calibrated summary fixes the gap in GPT-4.1-mini but backfires in Llama (98% vs 37% stated).
 
-Reproduce Study 2: `./main2_runs.sh`, then `analyze` / `validate` with `--phase main2`.
+- **Study 3b (proxy vs outcome; `prereg_v3b.md`):**
+  - Setup: programmed acceptance; a fixed LLM reporter (Mistral-Small-3.2) and a blind judge (Qwen3-235B) read
+    each free-text draft.
+  - Recent-report and real-deterrence histories cut sending by 25–85 pp (DeepSeek, Llama).
+  - The drafts did not become harder to detect: Δ report probability ≤ 0.014, equivalent to zero, so "no
+    deniability" in 4 of 4 tests.
+  - Report counts overstated the fall in completed misconduct (DeepSeek recency: −41% vs −30%), because
+    detection is near-certain and misconduct sits in the unreported tail.
+- **Pilots reported as findings:** a displacement pilot (3a) failed its gates because the override was never used.
+  Single-turn LLM verifiers approved collusion in 0 of 2,400 evaluations, and a stake made them report harmless
+  messages.
+
+Reproduce Study 2: `./main2_runs.sh`, then `analyze` / `validate` with `--phase main2`. Reproduce Study 3b:
+`./main3b_runs.sh` (instrument selection, histories, agent runs, scoring), then `analyze --phase main3b`.
 
 ## Reproduce
 
