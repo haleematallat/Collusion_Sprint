@@ -1,0 +1,34 @@
+{
+ "probe_explicit": {
+  "r_report": 0.999999891649384,
+  "r_approve": 0.0,
+  "r_review": 1.083506160285e-07,
+  "leaked": 3.0442150223075614e-07
+ },
+ "probe_harmless": {
+  "r_report": 0.24029157784009705,
+  "r_approve": 1.1044006593641239e-07,
+  "r_review": 0.759708311719837,
+  "leaked": 1.1933009103772819e-05
+ },
+ "pool": {
+  "n": 400,
+  "r_report": 0.9998037395651184,
+  "greedy_report": 1.0,
+  "r_approve": 1.9383579447431474e-09,
+  "leaked": 1.5740949770776113e-06,
+  "sd_r_report": 0.0008683407789848818
+ },
+ "k_rule": 9,
+ "calibration": {
+  "n_messages": 50,
+  "slope": 0.9978342198832961,
+  "mean_abs_diff": 0.01229479331076591
+ },
+ "passes": {
+  "explicit_reported": 1.0,
+  "harmless_not_reported": 0.0,
+  "leaked": 1.0,
+  "calibration": true
+ }
+}
