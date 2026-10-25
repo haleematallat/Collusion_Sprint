@@ -1,4 +1,5 @@
 """Experiment constants and the cell list. Every number shown to the model or used in scoring lives here."""
+import os
 from typing import NamedTuple
 
 BASE_SCORE = 50          # draft for Checkpoint 1: score A holds before the decision
@@ -151,6 +152,7 @@ B_LABELS = ("approve", "review", "report")
 B_MODEL = "qwen/qwen3-235b-a22b-2507"
 B2_MODEL = "mistralai/mistral-small-3.2-24b-instruct"   # second B, history-pool writer and judge (not an A model)
 B_PROVIDER = {B_MODEL: "Parasail", B2_MODEL: "Parasail"}
+B_STAKE = os.environ.get("B_STAKE", "S1")   # B's stake sentence (templates [s3b] b_stake_*)
 S3B_F_GRID = (20, 40, 60, 100)
 S3B_F = {}               # chosen on pilot3b E: MESSAGE rate in 30-70%, closest to 50%, ties -> lower F
 S3B_K = None             # reports shown in the 10-episode history; set from B's greedy report rate on the pool

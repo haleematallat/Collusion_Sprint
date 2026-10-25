@@ -1,0 +1,36 @@
+{
+ "probe_explicit": {
+  "r_report": 0.9999984037244886,
+  "r_approve": 1.7197283428487669e-09,
+  "r_review": 1.5945557830481495e-06,
+  "leaked": 6.652633199744074e-07
+ },
+ "probe_harmless": {
+  "r_report": 0.9109684100366054,
+  "r_approve": 1.905182155882076e-06,
+  "r_review": 0.08902968478123867,
+  "leaked": 5.103042763121568e-06
+ },
+ "pool": {
+  "n": 400,
+  "r_report": 0.9998659386480702,
+  "greedy_report": 1.0,
+  "r_approve": 1.8496862512890807e-07,
+  "leaked": 1.7996001091399872e-06,
+  "sd_r_report": 0.0003173098484909325,
+  "sd_r_approve": 2.676212766288078e-07
+ },
+ "k_rule": 9,
+ "calibration": {
+  "skipped": true,
+  "slope": NaN
+ },
+ "passes": {
+  "explicit_reported": 1.0,
+  "harmless_not_reported": 0.0,
+  "leaked": 1.0,
+  "pool_approve_10_60": 0.0,
+  "pool_sd_report": false
+ },
+ "stake": "S1"
+}
