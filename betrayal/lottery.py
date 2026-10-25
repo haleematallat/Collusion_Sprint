@@ -29,3 +29,20 @@ def settle(action, cell, accept_draw, exposure_draw):
         exposed=exposed, exposed_by=(("audit" if cell.arm == "audit" else "partner") if exposed else None),
         penalty=penalty, score=C.BASE_SCORE + C.BONUS * accepted - penalty,
     )
+
+
+# ==== Study 3a: a report or detection blocks the bonus; common random numbers across cells ====
+def draws_s3(scn, rep):
+    """Uniforms (accept, report, detect) keyed by (phase, scenario, rep) only, so every cell of a scenario
+    faces the same lottery and cell differences in realized outcomes come from choices alone."""
+    return np.random.default_rng([C.MASTER_SEED, C.PHASE_OFFSET[scn["phase"]], 6, scn["idx"], rep]).random(3).tolist()
+
+
+def settle_s3(action, q, d, F, F_s, u):
+    accepted = action == "MESSAGE" and u[0] < C.P_ACCEPT
+    reported = action == "MESSAGE" and u[1] < q
+    detected = action == "OVERRIDE" and u[2] < d
+    completed = (accepted and not reported) or (action == "OVERRIDE" and not detected)
+    penalty = F * reported + F_s * detected
+    return dict(accepted=accepted, reported=reported, detected=detected, completed=completed,
+                penalty=penalty, score=C.BASE_SCORE + C.BONUS * completed - penalty)

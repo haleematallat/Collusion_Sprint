@@ -1,6 +1,7 @@
 """Seeded scenario generation and prompt rendering. A scenario fixes all surface text; a cell only swaps
 the rules / exposure overlay, so within-scenario contrasts isolate the manipulated factor."""
 import hashlib
+import itertools
 import tomllib
 from pathlib import Path
 from string import Template
@@ -31,6 +32,11 @@ def _scenarios(phase, n):
     for wv in (1, 2):
         idx = np.flatnonzero(w == wv)
         send_first[idx] = np.random.default_rng([C.MASTER_SEED, off, 4, wv]).permutation(np.arange(len(idx)) % 2) == 0
+    perm = np.zeros(n, int)  # Study 3: one of the 6 option orders, balanced within each wording
+    for wv in (1, 2):
+        idx = np.flatnonzero(w == wv)
+        perm[idx] = np.random.default_rng([C.MASTER_SEED, off, 8, wv]).permutation(np.arange(len(idx)) % 6)
+    tasks = T["s3"]["tasks"] if phase in C.S3_PHASES else T["pools"]["tasks"]
     out = []
     for i in range(n):
         r = np.random.default_rng([C.MASTER_SEED, off, 1, i])
@@ -41,11 +47,12 @@ def _scenarios(phase, n):
         out.append(dict(
             id=f"{phase}-{i:03d}", idx=i, phase=phase, w=int(w[i]),
             org=T["pools"]["orgs"][r.integers(len(T["pools"]["orgs"]))],
-            task=T["pools"]["tasks"][r.integers(len(T["pools"]["tasks"]))],
+            task=tasks[r.integers(len(tasks))],
             supervisor=sup, Supervisor=sup[0].upper() + sup[1:],
             a_name=f"Agent {a}", b_name=f"Verifier {b}",
             send_first=bool(send_first[i]),
             hidden_q=C.Q_HIGH if r.random() < 0.5 else C.Q_LOW,  # neutral cell's partner type; never rendered
+            perm=int(perm[i]),
         ))
     return out
 
@@ -132,3 +139,25 @@ def render_s2(scn, cell, F, kind="behavior"):
         raise ValueError(kind)
     user = _fill(T["base"], rules=_fill(rules, **v), exposure=exposure.replace("$", "$$"), ending=ending, **v)
     return [{"role": "system", "content": T["system"]}, {"role": "user", "content": user}]
+
+
+# ==== Study 3a: three routes, programmed B ====
+S3_ORDERS = list(itertools.permutations(C.S3_ACTIONS))
+
+
+def render_s3(scn, cell, model):
+    """Study-3a prompt: Study-2 record context inside the MESSAGE block, plus OVERRIDE and REVIEW blocks."""
+    F, F_s = C.S3_F[model], C.s3_fs(model, cell)
+    v = dict(scn, base=C.BASE_SCORE, bonus=C.BONUS, p_accept=round(C.P_ACCEPT * 100), F=F, F_s=F_s,
+             d=round(cell.d * 100), q=round(C.S2_Q[cell.risk] * 100))
+    rec_cell = C.S2Cell(cell.id, cell.risk, "record", "none", False, cell.pos, "new")
+    info = _record_info(scn, rec_cell, T["exposure"]["partner"][str(scn["w"])], T["record"][str(scn["w"])], v)
+    t = T["s3"][str(scn["w"])]
+    ids = [a for a in S3_ORDERS[scn["perm"]] if cell.menu == "M3" or a != "OVERRIDE"]
+    blocks = "\n\n".join(_fill(t[a].replace("$info", info.replace("$", "$$")), **v) for a in ids)
+    if cell.menu == "M2":
+        blocks += "\n\n" + T["s3"]["no_override"]
+    user = _fill(T["s3"]["base"], objective=T["s3"]["objective_score" if cell.score_instr else "objective_none"],
+                 rules=_fill(T["s3"]["rules"], **v), blocks=blocks.replace("$", "$$"),
+                 ids=", ".join(ids[:-1]) + " or " + ids[-1], ids_or="|".join(ids), **v)
+    return [{"role": "system", "content": T["system"]}, {"role": "user", "content": user}], ids

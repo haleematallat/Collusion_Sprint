@@ -21,6 +21,8 @@ SCHEMAS = {
     "behavior": _schema("decision", {"action": {"type": "string", "enum": list(C.ACTIONS)}}, ["action"]),
     "diagnostic": _schema("diagnostic", {k: {"type": "number"} for k in C.DIAG_FIELDS}, list(C.DIAG_FIELDS)),
     "arithmetic": _schema("answer", {"answer": {"type": "number"}}, ["answer"]),
+    "behavior3": _schema("decision", {"action": {"type": "string", "enum": list(C.S3_ACTIONS)}}, ["action"]),
+    "behavior3_m2": _schema("decision", {"action": {"type": "string", "enum": ["REVIEW", "MESSAGE"]}}, ["action"]),
 }
 for _k in ("diagnostic", "arithmetic"):  # with-working variants: free-text "work" first, then the same numbers
     _s = SCHEMAS[_k]["json_schema"]["schema"]
@@ -40,6 +42,8 @@ def parse(kind, text):
         return None
     if kind == "behavior":
         return d if d.get("action") in C.ACTIONS else None
+    if kind.startswith("behavior3"):
+        return {"action": d["action"]} if d.get("action") in SCHEMAS[kind]["json_schema"]["schema"]["properties"]["action"]["enum"] else None
     keys = C.DIAG_FIELDS if kind.startswith("diagnostic") else ("answer",)
     ok = all(isinstance(d.get(k), (int, float)) and not isinstance(d.get(k), bool) for k in keys)
     return {k: d[k] for k in keys} if ok else None
@@ -164,6 +168,9 @@ def _mock_reply(messages, kind):
     h = int(hashlib.sha256(messages[-1]["content"].encode()).hexdigest(), 16)
     if kind == "behavior":
         return json.dumps({"action": C.ACTIONS[h % 2]})
+    if kind.startswith("behavior3"):
+        acts = SCHEMAS[kind]["json_schema"]["schema"]["properties"]["action"]["enum"]
+        return json.dumps({"action": acts[h % len(acts)]})
     if kind.startswith("diagnostic"):
         return json.dumps({"p_exposure": 0.45, "penalty_points": 20, "expected_score_send": 50.6, "expected_score_no_send": 50})
     return json.dumps({"answer": 50.6})

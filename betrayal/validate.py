@@ -68,7 +68,7 @@ def main():
     a = p.parse_args()
     slug = a.model.replace("/", "__")
     df = load(ROOT / "data" / a.phase / slug / "behavior.jsonl")
-    res = check_s2(df) if a.phase in ("pilot2", "main2") else check(df)
+    res = check_s3(df) if a.phase in C.S3_PHASES else check_s2(df) if a.phase in ("pilot2", "main2") else check(df)
     out = ROOT / "results" / a.phase / slug
     out.mkdir(parents=True, exist_ok=True)
     (out / "validation.json").write_text(json.dumps(res, indent=1, default=float))
@@ -105,6 +105,27 @@ def check_s2(df):
     out["status_counts"] = dict(Counter(df["status"]))
     out["providers"] = dict(Counter(df["provider"]))
     out["F_by_risk"] = {k: sorted(set(v)) for k, v in df.groupby("risk")["F"]}
+    return out
+
+
+
+def check_s3(df):
+    """Study 3a checks: lottery rates, common random numbers, settlement, logged prompts, statuses, providers."""
+    out = {}
+    u = np.array(df.drop_duplicates(["scenario_id", "rep"])["u"].tolist())   # one lottery per (scenario, rep)
+    for j, (name, p) in enumerate((("accept", C.P_ACCEPT), ("report_q10", C.Q_LOW), ("detect", C.S3_D))):
+        k = int((u[:, j] < p).sum())
+        out[f"A_{name}_rate"] = dict(rate=k / len(u), n=len(u), p=stats.binomtest(k, len(u), p).pvalue)
+    out["A_common_random_numbers"] = bool((df.groupby(["scenario_id", "rep"])["u"].apply(lambda s: len({tuple(x) for x in s})) == 1).all())
+    bad = sum(any(getattr(r, k) != v for k, v in L.settle_s3(r.action, r.q_true, r.d, r.F, r.F_s, r.u).items()) for r in df.itertuples())
+    out["E_settlement_mismatches"] = bad
+    model = df["model"].iloc[0]
+    scns = {s["id"]: s for s in S.scenarios(df["phase"].iloc[0])}
+    out["B_logged_prompt_mismatches"] = int(sum(S.render_s3(scns[r.scenario_id], C.S3_CELL[r.cell_id], model)[0][1]["content"] != r.user_prompt
+                                                for r in df.itertuples()))
+    out["F"], out["F_s_by_cell"] = sorted(set(df["F"])), df.groupby("cell_id")["F_s"].first().to_dict()
+    out["status_counts"] = dict(Counter(df["status"]))
+    out["providers"] = dict(Counter(df["provider"]))
     return out
 
 

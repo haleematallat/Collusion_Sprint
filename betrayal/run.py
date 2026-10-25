@@ -43,6 +43,8 @@ def build_trials(kind, phase, cells, n, reps, model):
         return trials
     if phase in S2_PHASES:
         return build_s2_trials(kind, phase, cells, n, reps, model)
+    if phase in C.S3_PHASES:
+        return build_s3_trials(phase, cells, n, reps, model)
     cell_idx = {c.id: i for i, c in enumerate(C.CELLS)}
     for scn in S.scenarios(phase, n):
         for cid in cells:
@@ -88,6 +90,22 @@ def build_s2_trials(kind, phase, cells, n, reps, model):
     return trials
 
 
+def build_s3_trials(phase, cells, n, reps, model):
+    trials = []
+    for scn in S.scenarios(phase, n):
+        for cid in cells:
+            cell = C.S3_CELL[cid]
+            msgs, ids = S.render_s3(scn, cell, model)
+            for rep in range(reps):
+                trials.append(dict(
+                    trial_id=f"behavior|{model}|{scn['id']}|{cid}|{rep}", kind="behavior3" + ("_m2" if cell.menu == "M2" else ""),
+                    phase=phase, scenario_id=scn["id"], scenario_idx=scn["idx"], w=scn["w"], perm=scn["perm"], order=ids,
+                    cell_id=cid, risk=cell.risk, pos=cell.pos, menu=cell.menu, d=cell.d, dom=cell.dom,
+                    score_instr=cell.score_instr, q_true=C.S2_Q[cell.risk], F=C.S3_F[model], F_s=C.s3_fs(model, cell),
+                    rep=rep, prompt_hash=S.prompt_hash(msgs), messages=msgs, _scn=scn))
+    return trials
+
+
 def price(model):
     """(input, output) USD per token from OpenRouter's public catalog."""
     with urllib.request.urlopen(f"{OPENROUTER}/models", timeout=30) as r:
@@ -111,7 +129,10 @@ def done_ids(path):
 
 
 async def run(args):
-    if args.phase in S2_PHASES:
+    if args.phase in C.S3_PHASES:
+        cells = args.cells.split(",") if args.cells else C.S3_MAIN
+        assert args.kind == "behavior" and all(c in C.S3_CELL for c in cells), cells
+    elif args.phase in S2_PHASES:
         cells = args.cells.split(",") if args.cells else (
             [c.id for c in C.S2_CELLS] if args.kind == "behavior" else S2_DIAG_CELLS)
         assert all(s2_cell(c, args.model) for c in cells), cells
@@ -160,7 +181,11 @@ async def run(args):
         rec = {k: v for k, v in t.items() if k not in ("messages", "_scn", "_cell")}
         rec["user_prompt"] = t["messages"][1]["content"]
         rec.update(res, ts=time.time(), model=args.model)
-        if t["kind"] == "behavior":
+        if t["kind"].startswith("behavior3"):
+            action = res["parsed"]["action"] if res["status"] == "ok" else None
+            u = L.draws_s3(t["_scn"], t["rep"])
+            rec.update(action=action, u=u, **L.settle_s3(action, t["q_true"], t["d"], t["F"], t["F_s"], u))
+        elif t["kind"] == "behavior":
             action = res["parsed"]["action"] if res["status"] == "ok" else None
             acc, exp = L.draws(t["_scn"], t["cell_idx"], t["rep"], t["q_true"])
             rec.update(action=action, accept_draw=acc, exposure_draw=exp, **L.settle(action, t.get("_cell") or C.CELL[t["cell_id"]], acc, exp))
