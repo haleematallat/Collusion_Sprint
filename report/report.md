@@ -1,4 +1,4 @@
-# Same Risk, Different Collusion: Equivalent Enforcement Information Shifts LLM Agents' Collusion Initiation, and Suppressed Proposals Are Not Rephrased to Evade Reporting
+# Same Risk, Different Collusion: Equivalent Enforcement Information Shifts LLM Agents' Collusion Initiation, but Deterred Agents Do Not Write Less Detectable Proposals
 
 **[Author names and affiliations — to be filled in by the team]**
 
@@ -24,21 +24,27 @@ Lotteries are executed and scored.
   direction depended on the model.
 - One report in episode 10 rather than episode 1 cut offers by 23–71 points in every model, although the
   verifier's tendency was stated to be fixed.
-- DeepSeek stated the correct probabilities, so these are weighting effects.
+- DeepSeek stated the correct probabilities, so the shifts are not explained by misstated beliefs.
 - A truthful calibrated summary fixed the gap in one model and backfired in another.
 
 **Study 3 (proposals vs completed misconduct).** Acceptance was programmed. A fixed LLM reporter read each
 free-text proposal, and a blind judge checked that it really proposed the deal.
 - A recent-report history and a real-deterrence history suppressed sending by 25–85 points (DeepSeek, Llama).
-- The proposals agents still wrote did not become harder to detect. Report probability changed by at most
-  −0.014, equivalent to zero within ±0.05, so there was no "deniability".
-- Report counts tracked completed misconduct in direction. For DeepSeek's recency cue, reports fell 41% while
-  completed misconduct fell 30%. This comes from a small rise in the rare unreported tail.
+- The drafts agents wrote did not become materially harder to detect. Scored on all drafts, sent or not, the
+  reporter's report probability changed by at most −0.014, inside the preregistered ±0.05 equivalence margin, so
+  there was no "deniability". Because only about 6% of drafts escape the reporter, even a one-point change matters
+  for the outcome.
+- Completed misconduct fell with the suppression. In one test, DeepSeek's recency cue, it fell by significantly
+  less than the report count: 30% against 41%. The other DeepSeek test was inconclusive, and Llama nearly stopped
+  sending.
+- The misconduct is simulated: acceptance is programmed, a judge checks that the proposal is clear, and one fixed
+  AI reporter decides detection. This is not autonomous agents negotiating and carrying out collusion.
 - Along the way we found that LLM verifiers never accepted collusion in 2,400 single-turn evaluations, and that
   giving them a stake made them report harmless messages.
 
-**Takeaway.** Deterrence measured under one presentation does not transfer to another. In this setting proposal
-suppression is real, not rephrasing, but proportional report counts slightly overstate it.
+**Takeaway.** Deterrence measured under one presentation does not transfer to another. In our setting,
+suppression reduced how often agents proposed, not how detectably they wrote. Whether report counts overstate the
+fall in misconduct was clear in only one of our tests.
 
 ## 1. Introduction
 
@@ -75,14 +81,15 @@ the model's stated beliefs are correct. The direction of the shift depends on th
    is exact, prompts are byte-level minimal pairs, and a Bayesian benchmark gives a known right answer in every
    cell.
 2. **Evidence that LLM deterrence is not presentation-invariant.** The source effect reaches up to 19 points, the
-   format effect up to 38, and the recency effect up to 71. All are model-specific in direction, while beliefs are
-   correct.
+   format effect up to 38, and the recency effect up to 71. All are model-specific in direction, while stated
+   beliefs are correct.
 3. **A tested low-cost intervention with a cautionary result.** Calibrated summaries close most of the format gap in
    one model, are ineffective or harmful in the others, and never harm authorized cooperation.
 4. **A proxy-validity test of deterrence.**
-   - The suppression is real: there is no rephrasing to evade reporting.
-   - Report counts nonetheless overstate the reduction in completed misconduct, because that outcome lives in the
-     rare unreported tail.
+   - Deterrence reduced sending. It did not make drafts measurably harder to detect: changes stayed inside the ±0.05
+     equivalence margin.
+   - In one test, completed misconduct fell by significantly less than the report count. The rest were
+     inconclusive or at the floor.
    - Reported alongside: two instrument findings (LLM verifiers never accept collusion; stakes make them
      over-report) and a failed displacement pilot.
 
@@ -113,8 +120,15 @@ the model's stated beliefs are correct. The direction of the shift depends on th
 - In decisions from experience, LLMs underweight rare events and show strong recency, reacting mainly on the trial
   after a rare outcome (Horowitz & Plonsky, 2025). That work has no described-probability condition, no agents and
   no oversight.
-- **Gap:** we found no work comparing *equivalent* enforcement information across presentations, for collusion or
-  for any other misbehaviour.
+- **Closest to our Study 2:** Ge, Zhang & Vorobeychik (2026) compare described prospects with experienced histories
+  in 20 LLMs.
+  - Conversational models show a large description–history gap and are sensitive to order and framing.
+  - Reasoning models stay close to the expected-payoff benchmark.
+  - Our Study 2 is consistent with their conversational-model result. Our contribution is narrower: the same gap
+    for *enforcement* information in a collusion decision, with posterior-matched records and executed
+    lotteries.
+- **Gap:** we found no work comparing *equivalent enforcement* information across presentations for collusion or
+  other misbehaviour. Description–history gaps in general risky choice are already documented (Ge et al., 2026).
 
 **Proxies vs outcomes.**
 - Training against a chain-of-thought monitor reduced *detected* reward hacking while hidden hacking continued
@@ -264,11 +278,13 @@ zero refusals, parse failures or unresolved API errors.
   - Every model shows a consequential gap at one or both risk levels, but the signs disagree.
   - The criterion is **not met**. The gaps are large and model-specific in direction.
 
-**Beliefs are correct, so the gap is in weighting.** DeepSeek's diagnostic forks returned the Bayesian answer in
-every cell:
+**Stated beliefs are correct, so the gap is not a belief error.** DeepSeek's diagnostic forks returned the Bayesian
+answer in every cell:
 - The mean forecast was 0.100–0.111 for S10, R1 and R1+summary, and 0.800–0.801 for S80, R8 and R8+summary.
 - 95–100% of forecasts were within ±0.01, and 92–99% of expected-score computations were correct.
 - Yet its behaviour differed between S80 and R8 by 14 points.
+- This rules out a misstated belief as the explanation. It does not show what computation drives the choice: the
+  forks are separate calls, so a correct stated answer does not prove the decision used it.
 
 **Calibrated summary (preregistered correction test).**
 - **GPT-4.1-mini: it works.**
@@ -334,18 +350,21 @@ every cell:
 **What happened.**
 - **Both suppressors cut sending strongly in both models.** GPT-4.1-mini showed no suppression in the pilot
   (+.23 and .00), so it was excluded before the main run by the preregistered gate.
-- **The drafts did not become harder to detect.** In every model × suppressor cell, the change in report
-  probability lay inside ±0.05: the largest was −0.014. The judge rated essentially every draft as a clear
-  proposal.
-  - Deterrence changed **whether** agents sent, not **how** they phrased.
-  - The draft-level result is a tight null. It holds on scenarios that sent in both arms (DeepSeek) and under the
-    hardened reporter.
-- **Reports were a faithful but slightly inflated proxy.**
+- **The drafts did not become materially harder to detect.** The primary analysis scores every generated draft,
+  sent or not.
+  - In every model × suppressor cell, the change in report probability lay inside the preregistered ±0.05 margin:
+    the largest was −0.014. The judge rated essentially every draft as a clear proposal.
+  - **DeepSeek:** the result holds on scenarios that sent in both cells.
+  - **Llama:** too few scenarios sent in both cells for that check (insufficient data for recency, inconclusive
+    for real deterrence).
+  - The result also holds under the hardened reporter.
+  - Small changes can still matter. DeepSeek's report probability fell by about one point. Because only about 6%
+    of drafts escape the reporter, that point matters for the outcome (next bullet).
+- **Reports tracked misconduct in direction; the size of the fall differed in one test.**
   - Agents' drafts were reported 93–96% of the time, against 51% for the pool messages. Completed misconduct
     therefore lives in the small unreported tail.
   - A one-point drop in report probability is invisible in the report count. It is a ~15–20% rise in that tail.
-  - For DeepSeek's recency cue, reports fell 41% but completed misconduct only 30%. The proportional proxy
-    overstated the reduction by about a quarter (D = −0.18, CI excludes 0).
+  - For DeepSeek's recency cue, reports fell 41% but completed misconduct only 30% (D = −0.18, CI excludes 0).
   - The real-deterrence contrast points the same way (D = −0.16), but its CI includes 0.
   - Llama's D rests on 3 sends in HIGH and is not interpretable.
 - **The "fix" failed its collateral check.**
@@ -375,8 +394,9 @@ enforcement information shifted collusion initiation by amounts as large as chan
 - timing of a single report: 23–71 points;
 - giving the same probability as a summary of a record rather than stating it directly: up to 61 points.
 
-These effects occurred while DeepSeek stated the correct probabilities and expected values, so they reflect how
-information is weighted in the decision, not misunderstanding. They are not consistent in direction across models.
+These effects occurred while DeepSeek stated the correct probabilities and expected values in separate diagnostic
+calls. So they are not explained by misstated beliefs, although our data cannot identify the internal mechanism.
+They are not consistent in direction across models.
 
 **Exploratory pattern (not preregistered).**
 - At high risk the penalty was only 2 points, so offering gained about +8 in expectation. Even so, models offered
@@ -398,24 +418,29 @@ information is weighted in the decision, not misunderstanding. They are not cons
    and caused no collateral harm, but it pushed Llama to 98% initiation. Information-based anti-collusion measures
    need per-model validation before deployment.
 
-4. **Fewer proposals do mean less misconduct here, but not proportionally (Study 3b).** Suppressed agents did not
-   rephrase to evade a fixed LLM reporter. Because detection is near-certain, completed misconduct sits in the
-   unreported tail, and report counts overstated its fall by about a quarter (DeepSeek). Evaluations should
-   estimate completed misconduct directly, with a fixed outcome instrument, rather than scaling report counts.
+4. **Fewer proposals meant less simulated misconduct here (Study 3b).**
+   - Deterred agents did not write measurably less detectable drafts for a fixed LLM reporter.
+   - Because detection was near-certain, completed misconduct sits in the small unreported tail. In one of our
+     tests (DeepSeek, recency) it fell significantly less than the report count. The other tests were
+     inconclusive or at the floor, so this is not established as a general property of anti-collusion
+     evaluations.
+   - The practical lesson is narrow: when detection is near-certain, estimate the escaped tail directly rather
+     than scaling report counts.
 5. **Two cautions about LLMs as enforcement instruments.**
    - Single-turn LLM verifiers never accepted collusion. That contrasts with the 94% collusion seen over long
      horizons (Shi et al., 2026), which suggests the time horizon of an evaluation shapes what it can observe.
    - Telling the verifier it had something to gain, or hardening its rule, made it report legitimate messages.
 
 **Evidence level, judged honestly.**
-- Execution: preregistered, validated, 24,320 scored decisions, zero failures.
+- Execution: preregistered, validated, 26,820 confirmatory scored decisions (Studies 1–2: 24,320; Study 3b: 2,500), zero failures.
 - Primary hypotheses: the original betrayal-blindness hypothesis was not supported (Study 1). The consistent-sign
   format and correction criteria were not met (Study 2).
 - The robust, decision-relevant result is non-invariance: large, model-specific presentation effects with correct
-  beliefs, and strong temporal recency in every model.
+  stated beliefs, and strong temporal recency in every model.
 - Study 3b:
   - The preregistered H3 is a clear "no deniability" in 4 of 4 model × suppressor tests.
-  - Proxy inflation (D) is a derived quantity, significant in one test.
+  - Proxy inflation (D) is a derived quantity, significant in one of three interpretable tests.
+  - Completed misconduct is simulated: programmed acceptance, a clarity judge, and one fixed reporter.
   - No second reporter passed its gates, so the result rests on one reporter model.
   - The 3a displacement test did not get past its pilot.
 
@@ -443,17 +468,19 @@ produce the same behaviour. Instead:
 message that agents wrote. We expected that agents who were scared off would still send some proposals, but word
 them so the reporter would miss them. They did not.
 - A recent-report history or a high-report history cut proposing by 25–85 points (DeepSeek, Llama).
-- The messages that were still sent were just as easy to catch as before (a change of at most 1.4 points).
-- Fewer proposals did mean less completed misconduct. But because the reporter catches about 94% of messages, what
-  gets through is a small leftover, and that leftover shrank less than the report count did. For DeepSeek, reports
-  fell 41% while completed misconduct fell only 30%.
+- The messages agents wrote were about as easy to catch as before: a change of at most 1.4 points, inside our
+  5-point equivalence margin.
+- Fewer proposals did mean less completed misconduct. But the reporter catches about 94% of messages, so the
+  small leftover that gets through can move differently from the report count. In one test (DeepSeek, recency),
+  reports fell 41% while completed misconduct fell only 30%. The other tests were inconclusive or near zero.
+- This misconduct was simulated: acceptance was programmed and one fixed AI reporter decided detection.
 - Along the way we found that AI reviewers asked to accept such deals never did, and that giving them a stake in
   the deal made them report harmless messages.
 
 **What it means.** How agents are told about oversight matters as much as the oversight itself, and it matters
 differently for each model. So a deterrence result measured with one wording should not be trusted for another.
-Counting proposals or reports is a fair guide to whether misconduct goes down, but it exaggerates by how much.
-Evaluators should measure completed misconduct directly.
+Counting proposals or reports was a fair guide to whether simulated misconduct went down. In one test it
+exaggerated by how much, so evaluators should check completed misconduct directly where they can.
 
 **Next steps.**
 - Repeat this in multi-turn settings, where agents actually experience reports rather than reading about them, and
@@ -467,6 +494,7 @@ Evaluators should measure completed misconduct directly.
 - Bigoni, M., Fridolfsson, S.-O., Le Coq, C., & Spagnolo, G. (2012). Fines, leniency, and rewards in antitrust. *RAND Journal of Economics*, 43(2), 368–390.
 - Fish, S., Gonczarowski, Y. A., & Shorrer, R. I. (2024). Algorithmic collusion by large language models. arXiv:2404.00806.
 - Greenblatt, R., et al. (2024). Alignment faking in large language models. arXiv:2412.14093.
+- Ge, L., Zhang, Y., & Vorobeychik, Y. (2026). Mind the (DH) Gap! A contrast in risky choices between reasoning and conversational LLMs. In *Proceedings of ACL 2026 (Long Papers)*, pp. 10503–10525. https://aclanthology.org/2026.acl-long.479/
 - Horowitz, M., & Plonsky, O. (2025). LLMs in decisions from experience. arXiv:2503.10248.
 - Lee, J. Y. (2026). LLM leniency and reward experiment. SSRN 7426061.
 - Miller, E. (2024). Adding error bars to evals: A statistical approach to language model evaluations. arXiv:2411.00640.

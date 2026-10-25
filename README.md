@@ -34,17 +34,19 @@ produce the same behaviour. Instead:
 message that agents wrote. We expected that agents who were scared off would still send some proposals, but word
 them so the reporter would miss them. They did not.
 - A recent-report history or a high-report history cut proposing by 25–85 points (DeepSeek, Llama).
-- The messages that were still sent were just as easy to catch as before (a change of at most 1.4 points).
-- Fewer proposals did mean less completed misconduct. But because the reporter catches about 94% of messages, what
-  gets through is a small leftover, and that leftover shrank less than the report count did. For DeepSeek, reports
-  fell 41% while completed misconduct fell only 30%.
+- The messages agents wrote were about as easy to catch as before: a change of at most 1.4 points, inside our
+  5-point equivalence margin.
+- Fewer proposals did mean less completed misconduct. But the reporter catches about 94% of messages, so the
+  small leftover that gets through can move differently from the report count. In one test (DeepSeek, recency),
+  reports fell 41% while completed misconduct fell only 30%. The other tests were inconclusive or near zero.
+- This misconduct was simulated: acceptance was programmed and one fixed AI reporter decided detection.
 - Along the way we found that AI reviewers asked to accept such deals never did, and that giving them a stake in
   the deal made them report harmless messages.
 
 **What it means.** How agents are told about oversight matters as much as the oversight itself, and it matters
 differently for each model. So a deterrence result measured with one wording should not be trusted for another.
-Counting proposals or reports is a fair guide to whether misconduct goes down, but it exaggerates by how much.
-Evaluators should measure completed misconduct directly.
+Counting proposals or reports was a fair guide to whether simulated misconduct went down. In one test it
+exaggerated by how much, so evaluators should check completed misconduct directly where they can.
 
 **Next steps.**
 - Repeat this in multi-turn settings, where agents actually experience reports rather than reading about them, and
@@ -68,10 +70,10 @@ presentation. Study 3 asks whether suppressing proposals reduces completed, unbl
   - Setup: programmed acceptance; a fixed LLM reporter (Mistral-Small-3.2) and a blind judge (Qwen3-235B) read
     each free-text draft.
   - Recent-report and real-deterrence histories cut sending by 25–85 pp (DeepSeek, Llama).
-  - The drafts did not become harder to detect: Δ report probability ≤ 0.014, equivalent to zero, so "no
-    deniability" in 4 of 4 tests.
-  - Report counts overstated the fall in completed misconduct (DeepSeek recency: −41% vs −30%), because
-    detection is near-certain and misconduct sits in the unreported tail.
+  - Drafts (scored whether or not they were sent) did not become materially harder to detect: Δ report
+    probability ≤ 0.014, inside the ±0.05 equivalence margin, so "no deniability" in 4 of 4 tests.
+  - In one test (DeepSeek, recency), simulated completed misconduct fell by less than the report count (−30% vs
+    −41%). The other tests were inconclusive or at the floor.
 - **Pilots reported as findings:** a displacement pilot (3a) failed its gates because the override was never used.
   Single-turn LLM verifiers approved collusion in 0 of 2,400 evaluations, and a stake made them report harmless
   messages.
