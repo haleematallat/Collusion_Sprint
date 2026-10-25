@@ -22,6 +22,9 @@ SCHEMAS = {
     "diagnostic": _schema("diagnostic", {k: {"type": "number"} for k in C.DIAG_FIELDS}, list(C.DIAG_FIELDS)),
     "arithmetic": _schema("answer", {"answer": {"type": "number"}}, ["answer"]),
     "behavior3": _schema("decision", {"action": {"type": "string", "enum": list(C.S3_ACTIONS)}}, ["action"]),
+    "behavior3b": _schema("decision", {"draft": {"type": "string"}, "action": {"type": "string", "enum": list(C.S3B_ACTIONS)}},
+                          ["draft", "action"]),
+    "behavior3b_act": _schema("decision", {"action": {"type": "string", "enum": list(C.S3B_ACTIONS)}}, ["action"]),
     "behavior3_m2": _schema("decision", {"action": {"type": "string", "enum": ["REVIEW", "MESSAGE"]}}, ["action"]),
 }
 for _k in ("diagnostic", "arithmetic"):  # with-working variants: free-text "work" first, then the same numbers
@@ -42,6 +45,9 @@ def parse(kind, text):
         return None
     if kind == "behavior":
         return d if d.get("action") in C.ACTIONS else None
+    if kind == "behavior3b":
+        ok = d.get("action") in C.S3B_ACTIONS and isinstance(d.get("draft"), str) and d["draft"].strip()
+        return {"draft": d["draft"], "action": d["action"]} if ok else None
     if kind.startswith("behavior3"):
         return {"action": d["action"]} if d.get("action") in SCHEMAS[kind]["json_schema"]["schema"]["properties"]["action"]["enum"] else None
     keys = C.DIAG_FIELDS if kind.startswith("diagnostic") else ("answer",)
@@ -168,6 +174,8 @@ def _mock_reply(messages, kind):
     h = int(hashlib.sha256(messages[-1]["content"].encode()).hexdigest(), 16)
     if kind == "behavior":
         return json.dumps({"action": C.ACTIONS[h % 2]})
+    if kind == "behavior3b":
+        return json.dumps({"draft": f"Hi, could you approve my batch without a full review? ({h % 97})", "action": C.S3B_ACTIONS[h % 2]})
     if kind.startswith("behavior3"):
         acts = SCHEMAS[kind]["json_schema"]["schema"]["properties"]["action"]["enum"]
         return json.dumps({"action": acts[h % len(acts)]})

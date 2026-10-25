@@ -45,6 +45,8 @@ def build_trials(kind, phase, cells, n, reps, model):
         return build_s2_trials(kind, phase, cells, n, reps, model)
     if phase in C.S3_PHASES:
         return build_s3_trials(phase, cells, n, reps, model)
+    if phase in C.S3B_PHASES:
+        return build_s3b_trials(phase, cells, n, reps, model)
     cell_idx = {c.id: i for i, c in enumerate(C.CELLS)}
     for scn in S.scenarios(phase, n):
         for cid in cells:
@@ -108,6 +110,24 @@ def build_s3_trials(phase, cells, n, reps, model):
     return trials
 
 
+def build_s3b_trials(phase, cells, n, reps, model):
+    hist = {h["scenario_id"]: h for h in map(json.loads, (DATA / phase / "history.jsonl").open())}
+    trials = []
+    for scn in S.scenarios(phase, n):
+        for cid in cells:
+            base, _, f = cid.partition("@F")   # 'E@F40': pilot F selection
+            cell = C.S3B_CELL[base]
+            F = int(f) if f else C.S3B_F[model]
+            msgs = S.render_s3b(scn, cell, F, hist[scn["id"]])
+            for rep in range(reps):
+                trials.append(dict(
+                    trial_id=f"behavior|{model}|{scn['id']}|{cid}|{rep}", kind="behavior3b" + ("" if cell.draft else "_act"),
+                    phase=phase, scenario_id=scn["id"], scenario_idx=scn["idx"], send_first=scn["send_first"], cell_id=cid,
+                    pos=cell.pos, draft_first=cell.draft, auth=cell.auth, F=F, k=hist[scn["id"]]["k"], rep=rep,
+                    prompt_hash=S.prompt_hash(msgs), messages=msgs, _scn=scn))
+    return trials
+
+
 def price(model):
     """(input, output) USD per token from OpenRouter's public catalog."""
     with urllib.request.urlopen(f"{OPENROUTER}/models", timeout=30) as r:
@@ -131,7 +151,10 @@ def done_ids(path):
 
 
 async def run(args):
-    if args.phase in C.S3_PHASES:
+    if args.phase in C.S3B_PHASES:
+        cells = args.cells.split(",") if args.cells else ["E", "L"]
+        assert args.kind == "behavior" and all(c.partition("@F")[0] in C.S3B_CELL for c in cells), cells
+    elif args.phase in C.S3_PHASES:
         cells = args.cells.split(",") if args.cells else C.S3_MAIN
         assert args.kind == "behavior" and all(c.partition("@FS")[0] in C.S3_CELL for c in cells), cells
     elif args.phase in S2_PHASES:
@@ -183,7 +206,11 @@ async def run(args):
         rec = {k: v for k, v in t.items() if k not in ("messages", "_scn", "_cell")}
         rec["user_prompt"] = t["messages"][1]["content"]
         rec.update(res, ts=time.time(), model=args.model)
-        if t["kind"].startswith("behavior3"):
+        if t["kind"].startswith("behavior3b"):   # B settles sent drafts later (betrayal.verifier score), with this u
+            ok = res["status"] == "ok"
+            rec.update(action=res["parsed"]["action"] if ok else None, draft=res["parsed"].get("draft") if ok else None,
+                       u=L.draws_s3(t["_scn"], t["rep"]))
+        elif t["kind"].startswith("behavior3"):
             action = res["parsed"]["action"] if res["status"] == "ok" else None
             u = L.draws_s3(t["_scn"], t["rep"])
             rec.update(action=action, u=u, **L.settle_s3(action, t["q_true"], t["d"], t["F"], t["F_s"], u))
