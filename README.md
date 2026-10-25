@@ -12,32 +12,28 @@ variant: [`docs/prompt_review.md`](docs/prompt_review.md).
 
 ## Summary
 
-Evaluations of AI collusion often tell an agent about an enforcement risk and count how often it proposes
-prohibited coordination. We examine two assumptions behind this practice and one external-validity question:
-- **A1:** measured deterrence does not depend on how matched risk information is presented.
-- **A2:** fewer proposals or reports means proportionally less completed misconduct.
-- **Q3:** proposal rates predict executed collusion between two agents.
+Collusion evaluations usually tell an AI agent about an enforcement risk and count how often it proposes a
+prohibited deal. We show that this count depends heavily on how the risk is described.
 
-We use one experimental framework: a scored verification task with executed lotteries, run as three separately
-preregistered blocks plus feasibility tests. The models are DeepSeek-V3.2, GPT-4.1-mini and Llama-3.3-70B, with
-26,820 confirmatory decisions.
+The study covers three models (DeepSeek-V3.2, GPT-4.1-mini, Llama-3.3-70B) and 26,820 scored decisions across three
+preregistered blocks. Matched descriptions of the same risk moved proposal rates by:
+- up to 19 points, depending on who might report;
+- up to 38 points, for a stated rate versus an equivalent record;
+- up to 71 points, depending on whether a single past report was recent or old.
 
-**A1 does not hold.** With stated monetary exposure held fixed:
-- the source of exposure moved proposal rates by up to 19 points;
-- a stated rate versus a record with the same posterior moved them by up to 38;
-- the timing of a single report moved them by 23–71.
+The directions differed by model, and DeepSeek stated the correct probabilities when asked separately.
+A truthful one-line summary of the risk fixed the gap in one model and pushed another to 98% proposals.
 
-Directions were model-specific, despite accurate probability answers in separate calls.
+We then asked whether fewer proposals means less misconduct. Histories of recent or frequent reports cut proposing
+by 25–85 points. Agents did not respond by writing harder-to-detect messages: a fixed LLM reporter's report rate
+changed by at most 1.4 points. Simulated misconduct fell in every comparison, though in one case by less than
+reports suggested (30% vs 41%).
 
-**A2 holds in direction but not fully in proportion.**
-- History cues cut sending by 25–85 points.
-- Drafts did not become harder to detect (changes within a 5-point equivalence margin).
-- Simulated misconduct fell in every comparison, but in one it fell less than reports did (−30% vs −41%).
+Finally, proposals rarely turned into completed deals in our workflows. Live LLM partners accepted 0 of 180
+presented drafts. Sixty three-round conversations produced one simulated violation, and partners sometimes agreed
+and then reported the proposer.
 
-**Q3: proposals rarely became executed collusion in these workflows.** Live recipients accepted none of 180
-presented drafts, and 60 three-round conversations produced one executed violation.
-
-Deterrence should be measured across matched presentations, and proposal-based proxies checked against outcomes.
+Deterrence should be measured across matched descriptions, and proposal counts checked against outcomes.
 
 ## Results
 
