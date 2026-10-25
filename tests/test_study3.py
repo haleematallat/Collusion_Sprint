@@ -105,46 +105,43 @@ def test_label_recovery(pat, expected):
     assert A.s3_analyze(_sim(*pat))["primary"]["label"] == expected
 
 
-# ---- Study 3b: rendering with a (synthetic) real-history record ----
-def _hist(k=3):
-    outs = ["approve", "review", "approve", "review", "approve", "approve", "review"][: 10 - k]
-    rep = [dict(outcome="report")] * k
-    non = [dict(outcome=o) for o in outs]
-    return {"k": k, "early": [dict(e, episode=j + 1) for j, e in enumerate(rep + non)],
-            "late": [dict(e, episode=j + 1) for j, e in enumerate(non + rep)]}
+# ---- Study 3b (v11): rendering with a synthetic history record, and H3 label recovery ----
+def _hist(k=4):
+    ep = lambda o: dict(outcome=o)
+    rec = {"early": [dict(ep("flag" if j < k else "pass"), episode=j + 1) for j in range(10)],
+           "late": [dict(ep("flag" if j >= 10 - k else "pass"), episode=j + 1) for j in range(10)]}
+    return {"k": k, "recency": rec, "low": {"random": [dict(ep("flag" if j == 3 else "pass"), episode=j + 1) for j in range(10)]},
+            "high": {"random": [dict(ep("pass" if j in (2, 6) else "flag"), episode=j + 1) for j in range(10)]}}
 
 
 def test_s3b_render_pairs():
     for s in S.scenarios("pilot3b"):
         h = _hist()
-        e, l = (S.render_s3b(s, C.S3B_CELL[c], 40, h)[1]["content"] for c in ("E", "L"))
-        ea = S.render_s3b(s, C.S3B_CELL["E_act"], 40, h)[1]["content"]
-        au = S.render_s3b(s, C.S3B_CELL["AUTH_E"], 40, h)[1]["content"]
-        for body in (e, l, ea, au):
-            assert "$" not in body and s["id"] not in body and "pilot" not in body
-        de = [x for x in e.splitlines() if x.strip().startswith("Episode")]
-        dl = [x for x in l.splitlines() if x.strip().startswith("Episode")]
-        assert len(de) == len(dl) == 10 and sum("reported" in x for x in de) == sum("reported" in x for x in dl) == 3
-        assert "reported" in dl[0] and "reported" not in de[0]           # L: most recent episode reported
-        assert [x for x in e.splitlines() if not x.strip().startswith("Episode")] == \
-               [x for x in l.splitlines() if not x.strip().startswith("Episode")]
-        assert '"draft"' in e and '"draft"' not in ea and "authorized" in au and "no points are deducted" in au
+        body = {c.id: S.render_s3b(s, c, 40, h)[1]["content"] for c in C.S3B_CELLS}
+        for b in body.values():
+            assert "$" not in b and s["id"] not in b and "pilot" not in b and '"draft"' in b
+        logs = {c: [x for x in b.splitlines() if x.strip().startswith("Message")] for c, b in body.items()}
+        nonlog = {c: [x for x in b.splitlines() if not x.strip().startswith("Message")] for c, b in body.items()}
+        assert all(len(v) == 10 for v in logs.values())
+        n_flag = {c: sum(x.endswith(": flagged by the monitor.") for x in v) for c, v in logs.items()}
+        assert n_flag == {"E": 4, "L": 4, "LOW": 1, "HIGH": 8, "AUTH_E": 4}
+        assert logs["L"][0].endswith(": flagged by the monitor.") and logs["E"][0].endswith("not flagged by the monitor.")
+        assert nonlog["E"] == nonlog["L"] == nonlog["LOW"] == nonlog["HIGH"]
+        assert "flag has no consequence" in body["AUTH_E"] and "authorized" in body["AUTH_E"]
 
 
-def _sim3b(drop_report, drop_approve, n=300, seed=1):
+def _sim3b(drop_flag, drop_q, n=300, seed=1):
     r = np.random.default_rng(seed)
     rows = []
     for i in range(n):
-        base_rep, base_app = r.uniform(0.3, 0.6), r.uniform(0.1, 0.3)
-        for cid, (dr, da) in (("E", (0, 0)), ("L", (drop_report, drop_approve))):
-            rep = np.clip(base_rep - dr + r.normal(0, 0.1), 0, 1)
-            app = np.clip(base_app - da + r.normal(0, 0.05), 0, 1 - rep)
-            rows.append(dict(scenario_id=i, cell_id=cid, plain_report=rep, plain_approve=app, plain_review=1 - rep - app,
-                             P=float(r.random() < (0.6 if cid == "E" else 0.3))))
+        f0, q0 = r.uniform(0.3, 0.6), r.uniform(0.7, 0.95)
+        for cid, (df_, dq) in (("E", (0, 0)), ("L", (drop_flag, drop_q))):
+            rows.append(dict(scenario_id=i, cell=cid, r_flag=np.clip(f0 - df_ + r.normal(0, 0.1), 0, 1),
+                             q_prop=np.clip(q0 - dq + r.normal(0, 0.03), 0, 1)))
     return pd.DataFrame(rows)
 
 
-@pytest.mark.parametrize("dr,da,expected", [(0.15, 0.0, "deniability"), (0.15, 0.08, "weaker asks"),
-                                            (0.0, 0.0, "no deniability (equivalent)")])
-def test_s3b_h3_recovery(dr, da, expected):
-    assert A.s3b_h3(_sim3b(dr, -0.0 if da == 0 else da))["label"] == expected
+@pytest.mark.parametrize("df_,dq,expected", [(0.15, 0.0, "deniability"), (0.15, 0.08, "weaker asks"),
+                                             (0.0, 0.0, "no deniability (equivalent)")])
+def test_s3b_h3_recovery(df_, dq, expected):
+    assert A.s3b_h3(_sim3b(df_, dq), "E", "L")["label"] == expected

@@ -121,9 +121,9 @@ def build_s3b_trials(phase, cells, n, reps, model):
             msgs = S.render_s3b(scn, cell, F, hist[scn["id"]])
             for rep in range(reps):
                 trials.append(dict(
-                    trial_id=f"behavior|{model}|{scn['id']}|{cid}|{rep}", kind="behavior3b" + ("" if cell.draft else "_act"),
+                    trial_id=f"behavior|{model}|{scn['id']}|{cid}|{rep}", kind="behavior3b",
                     phase=phase, scenario_id=scn["id"], scenario_idx=scn["idx"], send_first=scn["send_first"], cell_id=cid,
-                    pos=cell.pos, draft_first=cell.draft, auth=cell.auth, F=F, k=hist[scn["id"]]["k"], rep=rep,
+                    hist=cell.hist, pos=cell.pos, auth=cell.auth, F=F, k=hist[scn["id"]]["k"], rep=rep,
                     prompt_hash=S.prompt_hash(msgs), messages=msgs, _scn=scn))
     return trials
 
@@ -206,7 +206,7 @@ async def run(args):
         rec = {k: v for k, v in t.items() if k not in ("messages", "_scn", "_cell")}
         rec["user_prompt"] = t["messages"][1]["content"]
         rec.update(res, ts=time.time(), model=args.model)
-        if t["kind"].startswith("behavior3b"):   # B settles sent drafts later (betrayal.verifier score), with this u
+        if t["kind"].startswith("behavior3b"):   # the monitor and judge settle sent drafts later (verifier score), with this u
             ok = res["status"] == "ok"
             rec.update(action=res["parsed"]["action"] if ok else None, draft=res["parsed"].get("draft") if ok else None,
                        u=L.draws_s3(t["_scn"], t["rep"]))
