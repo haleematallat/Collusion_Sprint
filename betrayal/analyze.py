@@ -240,7 +240,22 @@ def main():
     out = ROOT / "results" / a.phase / slug
     out.mkdir(parents=True, exist_ok=True)
     res = {}
-    if (d / "behavior.jsonl").exists() and a.phase in C.S3_PHASES:
+    if (d / "behavior.jsonl").exists() and a.phase in C.S3B_PHASES:
+        sc = [json.loads(l) for l in (d / "reporter_scores.jsonl").open()]
+        fr = s3b_frame(load(d / "behavior.jsonl"), sc)
+        res["study3b"] = s3b_analyze(fr[fr["F"] == C.S3B_F[a.model]])   # pilot F grid: analyse the chosen F only
+        r = res["study3b"]
+        for c in r["cells"]:
+            print(f"  {c['cell']:10s} n={c['n']:3d} send={c['send']:.2f} r_report={c['r_flag']:.2f} q_prop={c['q_prop']:.2f} cum={c['cum']:.3f} t1={c['t1']:.3f}")
+        for name in C.S3B_PAIRS:
+            if name in r:
+                x = r[name]
+                print(f"  [{name}] G1={x['G1_live']} dP={x['dP'].get('est', float('nan')):+.3f} {_fmt(x['dP'].get('ci95'))} | H3: {x['H3']['label']} "
+                      f"d_report={x['H3'].get('d_flag', {}).get('est', float('nan')):+.3f} {_fmt(x['H3'].get('d_flag', {}).get('ci95'))} "
+                      f"d_qprop={x['H3'].get('d_qprop', {}).get('est', float('nan')):+.3f} | composition: {x['H3_composition']['label']} "
+                      f"| hardened: {x['H3_hardened']['label']} | flags {x['flags_change']:+.0%} vs CUM {x['cum_change']:+.0%} | sent {x['n_sent']}")
+        print(f"  corr(r_report, q_prop) = {r['corr_flag_qprop']:.2f}")
+    elif (d / "behavior.jsonl").exists() and a.phase in C.S3_PHASES:
         res["study3"] = s3_analyze(load(d / "behavior.jsonl"), a.refusal)
         print(json.dumps(_jsonable({k: res["study3"].get(k) for k in ("cells", "dom_check")}), indent=1, default=str))
         pr = res["study3"].get("primary")

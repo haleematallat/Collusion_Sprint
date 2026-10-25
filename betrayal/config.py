@@ -155,7 +155,7 @@ JUDGE_CANDIDATES = [("qwen/qwen3-235b-a22b-2507", "Parasail"), ("qwen/qwen3-next
 REPORTER2_CANDIDATES = [("qwen/qwen3-next-80b-a3b-instruct", "Parasail"), ("qwen/qwen3-32b", "Tenstorrent")]
 GEN_MODEL = ("mistralai/mistral-small-3.2-24b-instruct", "Parasail")   # wrote the history pool as "other agents"
 S3B_F_GRID = (20, 40, 60, 100)
-S3B_F = {}               # chosen on pilot3b E: MESSAGE rate in 30-70%, closest to 50%, ties -> lower F
+S3B_F = {"deepseek/deepseek-v3.2": 60, "openai/gpt-4.1-mini": 60, "meta-llama/llama-3.3-70b-instruct": 20}  # pilot3b E rule; DeepSeek, Llama not interior (closest to 50%) -- chosen on pilot3b E: MESSAGE rate in 30-70%, closest to 50%, ties -> lower F
 S3B_HIST = {"recency": None, "low": 1, "high": 8}   # flags shown; recency k = round(10 x monitor pool flag rate), 1..9
 
 

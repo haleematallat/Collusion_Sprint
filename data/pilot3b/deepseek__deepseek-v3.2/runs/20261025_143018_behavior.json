@@ -1,0 +1,42 @@
+{
+ "args": {
+  "kind": "behavior",
+  "phase": "pilot3b",
+  "model": "deepseek/deepseek-v3.2",
+  "cells": "L@F60,LOW@F60,HIGH@F60",
+  "n": null,
+  "reps": 1,
+  "temperature": 1.0,
+  "provider": "Baidu",
+  "concurrency": 16,
+  "max_usd": 9.5,
+  "mock": false
+ },
+ "cells": [
+  "L@F60",
+  "LOW@F60",
+  "HIGH@F60"
+ ],
+ "n_trials": 90,
+ "n_todo": 90,
+ "start_usage": 7.085342942,
+ "est_total": 0.015866456800166972,
+ "started": 1792938605.3195014,
+ "git": "ae743c70efbfbeaa702b2d3a496209b81e05315a",
+ "config": {
+  "BASE_SCORE": 50,
+  "BONUS": 12,
+  "P_ACCEPT": 0.8,
+  "Q_LOW": 0.1,
+  "Q_HIGH": 0.8,
+  "F_LEVELS": [
+   0,
+   20
+  ],
+  "MASTER_SEED": 20261023
+ },
+ "status": "complete",
+ "finished": 1792938618.6086864,
+ "run_spend": 0.013561212000000001,
+ "end_usage": 7.088126682
+}

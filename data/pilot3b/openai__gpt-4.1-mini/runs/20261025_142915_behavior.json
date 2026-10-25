@@ -1,0 +1,43 @@
+{
+ "args": {
+  "kind": "behavior",
+  "phase": "pilot3b",
+  "model": "openai/gpt-4.1-mini",
+  "cells": "E@F20,E@F40,E@F60,E@F100",
+  "n": null,
+  "reps": 1,
+  "temperature": 1.0,
+  "provider": "OpenAI",
+  "concurrency": 16,
+  "max_usd": 9.5,
+  "mock": false
+ },
+ "cells": [
+  "E@F20",
+  "E@F40",
+  "E@F60",
+  "E@F100"
+ ],
+ "n_trials": 120,
+ "n_todo": 120,
+ "start_usage": 7.03147763,
+ "est_total": 0.03905456427480916,
+ "started": 1792938545.9110453,
+ "git": "ae743c70efbfbeaa702b2d3a496209b81e05315a",
+ "config": {
+  "BASE_SCORE": 50,
+  "BONUS": 12,
+  "P_ACCEPT": 0.8,
+  "Q_LOW": 0.1,
+  "Q_HIGH": 0.8,
+  "F_LEVELS": [
+   0,
+   20
+  ],
+  "MASTER_SEED": 20261023
+ },
+ "status": "complete",
+ "finished": 1792938555.4211874,
+ "run_spend": 0.04214239999999999,
+ "end_usage": 7.03147763
+}
