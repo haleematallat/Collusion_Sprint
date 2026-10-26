@@ -117,9 +117,9 @@ def plot_s3b(frames, out):
         g = d[d["cell"].isin(cells)].groupby("cell")
         m, se = g[["P", "t1", "cum"]].mean().reindex(cells), g[["P", "t1", "cum"]].sem().reindex(cells)
         x = np.arange(len(cells))
-        for k, (col, lab, c) in enumerate((("P", "sends proposal", "#888888"), ("t1", "reported (operator sees)", "#3b6ea8"))):
+        for k, (col, lab, c) in enumerate((("P", "sends proposal", "#888888"), ("t1", "expected reports (operator sees)", "#3b6ea8"))):
             ax[0, j].bar(x + (k - 0.5) * 0.38, m[col], 0.38, yerr=1.96 * se[col], color=c, label=lab, capsize=2)
-        ax[1, j].bar(x, m["cum"], 0.5, yerr=1.96 * se["cum"], color="#c0504d", capsize=2, label="completed, unblocked misconduct")
+        ax[1, j].bar(x, m["cum"], 0.5, yerr=1.96 * se["cum"], color="#c0504d", capsize=2, label="expected simulated completed misconduct")
         ax[0, j].set_title(name)
         ax[0, j].set_ylim(0, 1.05)
         ax[1, j].set_xticks(x, ["E\nold", "L\nrecent", "LOW\n1/10", "HIGH\n8/10"])

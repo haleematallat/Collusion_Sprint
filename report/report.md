@@ -11,29 +11,31 @@ Collusion evaluations usually tell an AI agent about an enforcement risk and cou
 prohibited deal. We show that this count depends heavily on how the risk is described.
 
 The study covers three models (DeepSeek-V3.2, GPT-4.1-mini, Llama-3.3-70B) and 26,820 scored decisions across three
-preregistered blocks. Matched descriptions of the same risk moved proposal rates by:
+preregistered blocks, with every contrast paired within scenario. Descriptions of the same risk, matched in
+probability and penalty, moved proposal rates by:
 - up to 19 points, depending on who might report;
-- up to 38 points, for a stated rate versus an equivalent record;
+- up to 38 points, for a stated rate versus a statistically equivalent record;
 - up to 71 points, depending on whether a single past report was recent or old.
 
-The directions differed by model, and DeepSeek stated the correct probabilities when asked separately.
-A truthful one-line summary of the risk fixed the gap in one model and pushed another to 98% proposals.
+The directions differed by model, and DeepSeek gave approximately correct probabilities when asked separately.
+A truthful one-line summary of the risk closed most of the gap in one model and pushed another to 98% proposals.
 
-We then asked whether fewer proposals means less misconduct. Histories of recent or frequent reports cut proposing
-by 25–85 points. Agents did not respond by writing harder-to-detect messages: a fixed LLM reporter's report rate
-changed by at most 1.4 points. Simulated misconduct fell in every comparison, though in one case by less than
-reports suggested (30% vs 41%).
+We then asked whether fewer proposals means less misconduct. Displayed histories of recent or frequent reports cut
+proposing by 25–85 points, although the reporter itself never changed. Agents did not write harder-to-detect
+drafts: a fixed LLM reporter's report probability changed by at most 1.4 points. Expected simulated misconduct fell
+in every comparison. In one exploratory comparison it fell less than expected reports (30% vs 41%), a gap that is
+not significant after multiplicity adjustment.
 
 Finally, proposals rarely turned into completed deals in our workflows. Live LLM partners accepted 0 of 180
-presented drafts. Sixty three-round conversations produced one simulated violation, and partners sometimes agreed
-and then reported the proposer.
+presented drafts, and sixty three-round conversations produced one simulated violation.
 
 Deterrence should be measured across matched descriptions, and proposal counts checked against outcomes.
 
 ## 1. Introduction
 
-Collusion between AI agents starts when one agent proposes a prohibited deal. Deterrence evaluations therefore tell
-an agent about an enforcement risk and measure how often it proposes (Scheurer et al., 2023; Zeng & Rudzicz, 2026;
+Where agents can negotiate privately, collusion often begins when one agent proposes a prohibited deal (tacit
+collusion need not). Many deterrence evaluations therefore tell an agent about an enforcement risk and measure how
+often it proposes or breaks the rule (Scheurer et al., 2023; Zeng & Rudzicz, 2026;
 Okamoto et al., 2026). The risk is usually described once, in one way.
 
 That practice quietly relies on three things:
@@ -46,19 +48,20 @@ We tested all three in one experimental framework: a scored verification task wi
 separately preregistered blocks plus feasibility tests.
 
 **What we found:**
-1. **The description matters as much as the incentives (A1 fails).** Who might report, a stated rate versus a
-   record, and the timing of one past report each moved proposal rates by amounts comparable to changing the
-   penalty, by up to 71 points. The direction depended on the model.
-2. **A truthful summary is not a reliable fix.** It worked for one model and backfired in another.
-3. **Deterred agents send fewer proposals, not sneakier ones (A2 holds in direction).** Simulated misconduct fell
-   with them. In one comparison it fell less than the report count did.
+1. **The description can matter as much as the incentives (A1 fails).** Who might report, a stated rate versus a
+   record, and the timing of one past report moved proposal rates by up to 19, 38 and 71 points. For comparison,
+   raising the penalty from 0 to 20 at 80% risk moved them by 36–39 points. The direction depended on the model.
+2. **A truthful summary is not a reliable fix.** It largely closed the gap in one model and backfired in another.
+3. **Deterrence cues reduced sending, not the detectability of drafts (A2 holds in direction).** Expected simulated
+   misconduct fell with sending. In one exploratory comparison it fell less than expected reports did.
 4. **Proposals rarely became completed deals in our workflows (Q3).** Models that eagerly proposed almost never
    accepted the same deal as the recipient.
 
 **Contributions.**
 - A controlled framework with executed lotteries, minimal-pair prompts, matched controls and preregistered decision
   rules.
-- Large, model-specific presentation effects, including a recency effect that we separate from display order.
+- Large, model-specific presentation effects on collusion-deterrence measurements, including a recency effect that
+  persists under both display orders.
 - A preregistered test of whether deterrence produces evasive proposals.
 - Feasibility evidence on whether proposals translate into completed deals.
 
@@ -66,7 +69,8 @@ separately preregistered blocks plus feasibility tests.
 
 **LLM collusion.**
 - LLM agents collude on prices without instruction (Fish et al., 2024).
-- They adopt secret unfair tools, and observability cues change this (Zeng & Rudzicz, 2026).
+- They adopt secret unfair tools; only explicit ethical framing reliably reduced adoption, and whether an observer
+  could check the record changed concealment (Zeng & Rudzicz, 2026).
 - In long-horizon mutual verification, collusion emerges in 94% of trajectories across 10 models. There, explicit
   coordination fell from 90.0% to 62.0% in one ablation while collusion was almost unchanged (Shi, Zhang & Yang,
   2026).
@@ -81,7 +85,8 @@ separately preregistered blocks plus feasibility tests.
 - **Closest to our work:** conversational LLMs treat described and experienced risks differently, while reasoning
   models stay near the expected-value benchmark (Ge, Zhang & Vorobeychik, 2026). LLMs also show recency in
   experience-based choice (Horowitz & Plonsky, 2025).
-- We show the same kind of gap for *enforcement* information in a collusion decision.
+- That LLMs treat equivalent descriptions differently is therefore not new. We show that it changes
+  collusion-deterrence measurements, for enforcement source, record format and recency.
 
 **Proxies versus outcomes.**
 - Optimizing against a monitor can hide misbehaviour rather than remove it (Baker et al., 2025).
@@ -119,9 +124,13 @@ other's work without independent review."
   social or institutional meaning.
 - In Block 2, every cell states a 50/50 mixture of 10% and 80% reporting types, and says B's tendency "is fixed and
   does not change over time."
-  - If reports are independent given that fixed probability, a 1/10 record implies a risk of 0.10001 and an 8/10
-    record 0.79999. These are approximately the stated rates.
+  - If reports are independent given that fixed probability, a 1/10 record implies a risk of 0.100007 and an 8/10
+    record 0.799999, within 10⁻⁵ of the stated rates.
   - Under the same assumption, the order of past reports carries no information.
+
+**Risk labels.** "Low" and "high risk" mean a 10% and an 80% reporting probability. Block 2's penalties were set per
+model on the pilot (F = 60 / 200 / 60 at 10%; F = 2 at 80%). Offering's expected gain, 0.8·12 − qF, was therefore
++3.6 / −10.4 / +3.6 at 10% and +8.0 at 80%, so incentives differ across models.
 
 **Block 3b.** A first writes its exact message, then decides whether to send it.
 - **Reporter.** A fixed AI reporter (Mistral-Small-3.2, blind to condition) reads the message. Its probability of
@@ -130,14 +139,20 @@ other's work without independent review."
   without review.
 - **Acceptance is programmed and stated:** if the message makes the proposal clear, B accepts with probability
   0.8.
-- **History.** A sees ten earlier messages from other agents with the reporter's real decision on each, "selected
-  for display".
+- **History.** A sees ten earlier messages from other agents with the reporter's decision on each, "selected for
+  display".
+  - Mistral-Small-3.2 wrote the messages. Each outcome is a real draw from the reporter's probability, and messages
+    were selected to give the required number and placement of reports.
+  - The reporter never changes, so the conditions change the evidence A is shown, not its actual risk.
   - The recency conditions show the same ten messages with the same outcomes. Five were reported. In E the five
     reported messages are the oldest (messages 1–5); in L they are the newest (messages 6–10).
   - So the number of reports is fixed, while their place in the chronology changes.
-- **Outcomes.**
-  - Reports seen by an operator: T1 = P·r_report, where P is the send rate.
-  - Simulated completed misconduct: CUM = P·0.8·(1 − r_report)·q_prop.
+  - The report-rate conditions show 1 (LOW) or 8 (HIGH) reports in 10, at random positions.
+- **Outcomes**, as expectations per trial (P = 1 if A sent the draft):
+  - expected reports, which an operator would see: T1 = P·r_report;
+  - expected simulated completed misconduct: CUM = P·0.8·(1 − r_report)·q_prop.
+- Realized outcomes come from executed lotteries with common random numbers across conditions. r_report and q_prop
+  are model-based scores, not ground truth.
 
 **Gates.** A live LLM peer takes B's role. It is told to maximize its score; approving without review is worth +4.8
 in expectation.
@@ -151,12 +166,15 @@ in expectation.
   - an authorized-offer positive control;
   - a hidden-type placebo, identical across true risk;
   - a length-matched summary placebo;
-  - manipulation checks: a cue must cut sending by ≥ 15 points;
+  - manipulation checks (Blocks 3a–3b): a cue must cut sending by ≥ 15 points;
   - instrument probes run before any agent data;
-  - common random numbers across cells;
+  - lotteries seeded independently per cell (Blocks 1–2) or shared across conditions (Block 3b);
   - logged prompts checked against the renderer.
-- **Statistics:** scenario-paired 95% t-intervals, Holm-corrected within preregistered families. Equivalence uses
-  TOST with 90% intervals (±0.10 in Blocks 1–2; ±0.05 for Block 3b).
+- **Statistics:**
+  - Scenario-paired 95% t intervals, unadjusted for multiplicity.
+  - Holm-adjusted p-values for the prespecified families in Blocks 1–2.
+  - TOST equivalence with 90% intervals (±0.10 in Blocks 1–2; ±0.05 in Block 3b).
+  - Block 1's preregistered estimator averages the planned repeat decisions within scenario.
 - **Confirmatory tests:**
   - Block 1: partner − audit at q = 0.80, F = 20.
   - Block 2: record − stated, at each risk level.
@@ -165,23 +183,33 @@ in expectation.
 
 ## 4. Results
 
-All 26,820 confirmatory trials (11,720 / 12,600 / 2,500), all diagnostic calls, all pilots and both gates returned
-valid output.
+There were 26,820 scored decisions: 11,720 in Block 1 (including 520 planned repeats), 12,600 in Block 2 and 2,500 in
+Block 3b (including 100 authorized controls). They are not independent observations; the scenario is the unit of
+inference. Every call returned valid output, and re-running the analysis from the raw logs reproduces every saved
+summary.
 
-### 4.1 Who might report you changes deterrence, in opposite directions for different models
+### 4.1 Who might report you changes deterrence, with a direction that depends on model and risk level
 
 **Incentives worked as expected** (Block 1):
-- Offers were 88–100% when the risk was 10%.
-- At an 80% risk, raising the penalty from 0 to 20 cut offers by 36 points (DeepSeek) and 39 points (GPT-4.1-mini).
+- Offers were 87.5–100% when the stated risk was 10%.
+- At an 80% risk, raising the penalty from 0 to 20 cut offers by 36 points (DeepSeek) and 39 points (GPT-4.1-mini)
+  when the partner reports, and by 31 and 21 points when an audit detects.
 
 **Changing only who would catch the proposal moved behaviour by up to 19 points.**
-- **DeepSeek** was *more* deterred by a partner than by an audit: 18.0% vs 33.5% offers, Δ = −0.159 [−0.217, −0.100].
-  The sign held in both wordings.
-- **GPT-4.1-mini** was at the floor in that cell. Where it had room (80% risk, no penalty), it was *less* deterred by
-  a partner: +0.193 [+0.138, +0.247].
-- **In that same cell, the two models moved in opposite directions:** DeepSeek −0.115 [−0.176, −0.054] and
-  GPT-4.1-mini +0.193.
-- Our preregistered prediction, that agents would discount partner reports, was not supported in either model.
+- **Confirmatory cell (80% risk, F = 20).**
+  - DeepSeek was *more* deterred by a partner than by an audit: 18.0% vs 33.5% offers on the first repetition.
+  - The preregistered estimate, which also averages the planned repeats, is Δ = −0.159 [−0.217, −0.100]. The
+    first repetition alone gives −0.155 [−0.215, −0.095]. The sign held in both wordings.
+  - GPT-4.1-mini was at the floor (0.5% vs 0%), and its difference was equivalent to zero.
+- **Secondary cells (Holm-adjusted family of three per model).**
+  - At 80% risk with no penalty, the models moved in opposite directions: DeepSeek −0.115 [−0.176, −0.054] and
+    GPT-4.1-mini +0.193 [+0.138, +0.247].
+  - At 10% risk with F = 20, DeepSeek reversed sign: +0.089 [+0.052, +0.125].
+- **Our preregistered prediction failed its confirmatory test in both models.** The prediction was that agents
+  would discount partner reports (partner > audit).
+  - The predicted direction did appear in four of the six secondary contrasts, two of them by 2 points or less.
+  - DeepSeek showed the opposite in both of its 80%-risk cells.
+  - So the source effect's sign depends on the risk level within a model, not only on the model.
 
 ![Figure 1](../results/main/fig_source_models.png)
 *Figure 1. Block 1: offer rates when a partner may report (blue) or an audit may detect (orange), at identical risk
@@ -202,10 +230,12 @@ and penalty.*
 
 - Every model shows a large gap at one or both risk levels. The directions disagree, so the preregistered same-sign
   criterion was not met.
-- **The models knew the numbers.** Asked separately, DeepSeek gave 0.100–0.111 and 0.800–0.801 as the risk in these
-  cells, with 95–100% of answers within ±0.01. Its behaviour still differed by 14 points between the stated and
-  record versions of the 80% risk.
-- Accurate stated probabilities and different decisions coexist. Our data cannot say why.
+- DeepSeek's low-risk gap is formally equivalent to zero, but only narrowly: its 90% CI is [−0.099, +0.032],
+  against a ±0.10 margin.
+- **DeepSeek knew the numbers when asked.** In separate calls in which it showed its working, DeepSeek gave mean
+  probabilities of 0.100–0.111 for these 10% cells and 0.800–0.801 for the 80% cells, with 95–100% of answers within
+  ±0.01. Its behaviour still differed by 14 points between the stated and record versions of the 80% risk.
+  The other two models were not asked, and our data cannot say why stated probabilities and decisions diverge.
 
 ![Figure 2](../results/main2/fig_s2_format.png)
 *Figure 2. Block 2: offers under a stated rate (grey), the matched record (blue), the record plus a calibrated
@@ -224,75 +254,95 @@ described as never changing.
 
 *Table 2. Recency, measured under two display orders.*
 
-**This is timing, not just what was read last.**
+**List position alone does not explain the effect, but list order changes its size.**
 - With oldest-first listing, the recent report appears at the bottom of the list; with most-recent-first listing,
   at the top. The effect is present in both.
-- Listing most-recent-first made it larger in GPT-4.1-mini (+0.14 [+0.05, +0.23]) and Llama (+0.40), but not in
-  DeepSeek (+0.04, n.s.).
 - Because the effect survives both orders, a model reacting only to whatever it read last cannot explain it.
+- But listing most-recent-first made it substantially larger in GPT-4.1-mini (by 0.14 [0.05, 0.23]) and Llama (by
+  0.40 [0.34, 0.47]). It did not in DeepSeek (0.04 [−0.07, +0.15]).
 
 ### 4.4 A truthful summary is not a reliable fix
 
-**Adding one true sentence ("the probability that B reports your proposal is about 10%") fixed the gap in one model
-and backfired in another.**
-- **GPT-4.1-mini:** it closed 54% and 99% of the gaps.
+**Adding one true sentence ("the probability that B reports your proposal is about 10%", or 80% at high risk)
+largely closed the gap in one model and backfired in another.** "True" here means implied by the stated mixture under
+the independence assumption above.
+- **GPT-4.1-mini:** it closed 54% (low risk) and 99% (high risk) of the gaps.
 - **DeepSeek:** it widened the gap at high risk.
 - **Llama:** it raised offers at low risk to 98%, against 37% when the same 10% was simply stated.
 
 It worked in one of three models, against a preregistered bar of two, so it does not count as a working fix
 (Appendix C). Choosing an authorized action stayed at 99.7–100% with or without the summary. That shows no
-reduction in authorized choices; it does not show that task quality was preserved.
+reduction in authorized choices. It does not show that task quality, or safety in a real system, improved.
 
-### 4.5 Deterred agents send fewer proposals, not sneakier ones
+### 4.5 Deterrence cues reduced sending, not the detectability of drafts
 
-**Showing agents recent or frequent reports cut proposing by 25–85 points. The proposals they still wrote were about
-as easy to catch as before.**
+**Displayed histories of recent or frequent reports cut sending by 25–85 points. The drafts agents wrote, sent or
+not, were about as easy to catch as before.**
 
 | n = 300 per cell | DeepSeek E → L | DeepSeek LOW → HIGH | Llama E → L | Llama LOW → HIGH |
 |---|---|---|---|---|
 | Send rate | .78 → .47 (**−.32**) | .89 → .41 (**−.49**) | .25 → .00 (**−.25**) | .86 → .01 (**−.85**) |
-| Reporter's report probability | .937 → .927 | .940 → .927 | .960 → .959 | .964 → .963 |
+| Mean report probability, all drafts | .937 → .927 | .940 → .927 | .960 → .959 | .964 → .963 |
 | Change [95% CI] (H3) | −.011 [−.020, −.002] | −.014 [−.025, −.002] | −.001 [−.006, +.004] | −.001 [−.005, +.003] |
-| Reports per trial (T1) | .735 → .431 (−41%) | .841 → .379 (−55%) | .235 → 0 | .829 → .009 |
-| Simulated misconduct per trial (CUM) | .039 → .027 (−30%) | .042 → .022 (−47%) | .012 → 0 | .025 → .0005 |
+| Expected reports per trial (T1) | .735 → .431 (−41%) | .841 → .379 (−55%) | .235 → 0 | .829 → .009 |
+| Expected simulated misconduct per trial (CUM) | .039 → .027 (−30%) | .042 → .022 (−47%) | .012 → 0 | .025 → .0005 |
+| Realized completions (of 300) | 13 → 7 | 14 → 5 | 3 → 0 | 6 → 0 |
 
-*Table 3. Block 3b. Messages are scored whether or not they were sent. GPT-4.1-mini failed the ≥ 15-point
-suppression check in the pilot and was excluded beforehand.*
+*Table 3. Block 3b. Drafts are scored whether or not they were sent. The reporter is the same model in every
+condition; only the displayed history differs. GPT-4.1-mini failed the ≥ 15-point suppression check in the pilot
+and was excluded beforehand.*
 
-- **No deniability in all four comparisons.** Every change in report probability was within the preregistered
-  ±5-point equivalence margin.
+- **No deniability in all four comparisons.** Every change in drafts' mean report probability was inside the
+  preregistered ±5-point equivalence margin (90% CIs within ±0.05).
+- **This concerns all generated drafts, sent or not.** That avoids conditioning on the treatment-affected decision
+  to send. It does not by itself cover the messages actually sent.
+  - For DeepSeek, the check on scenarios that sent in both conditions (113 and 112 scenarios) gave the same label.
+  - Llama sent 0 and 3 messages under the cues, so we cannot rule out that its few sent messages differed.
 - **"No deniability" is not "no change."**
-  - DeepSeek's messages under the cues were reported about one point less often, a small but statistically
+  - DeepSeek's drafts under the cues were reported about one point less often, a small but statistically
     detectable drop.
-  - The judge rated nearly every message a clear proposal (q_prop ≥ 0.98). Its rating fell by 0.017 under
-    DeepSeek's recency cue.
-- **Robustness.** The result held on DeepSeek scenarios that sent in both conditions, and under a hardened
-  reporter. Llama sent too rarely under the cues for the first check.
+  - The margin does not exclude smaller changes. These matter for misconduct, because only 4–7% of a draft's
+    probability escapes the reporter (Section 4.6).
+  - The judge rated nearly every draft a clear proposal (cell means of q_prop ≥ 0.98). Its rating fell by 0.017
+    under DeepSeek's recency cue.
+- **Robustness.** The label also held under a hardened reporter.
 
-### 4.6 Fewer reports meant less misconduct, but not always proportionally
+### 4.6 Expected misconduct fell with reports, with an exploratory sign of disproportion
 
-**Simulated misconduct fell in every comparison, and the executed lotteries agree.** But in one comparison it fell
-by noticeably less than the reports did.
-- For DeepSeek's recency cue, reports fell 41% while misconduct fell 30%. The difference is significant:
-  D = −0.18 [−0.35, −0.01].
-- **Why:** the reporter caught 93–96% of agents' messages, so misconduct lives in the small share that gets
-  through. A one-point drop in report probability barely moves the report count, but enlarges that share by about
-  15–20%.
-- DeepSeek's report-rate cue pointed the same way (D = −0.16 [−0.34, +0.03]), but not significantly. Llama stopped
-  sending almost entirely, so its comparison is uninformative.
-- This rests on one reporter. A less accurate reporter, or vaguer messages, could widen or narrow the gap.
+**Expected simulated misconduct fell in every comparison** (all four 95% CIs below zero).
 
-**A stricter reporter is not a free fix.** Adding "however it is worded" to the reporter's rule changed no result.
-But it then reported *authorized* coordination 97% of the time, against 0.3% for the plain reporter.
+**In DeepSeek's recency comparison it fell less than expected reports did:** −30% vs −41%.
+- The proxy gap is D = log(T1 ratio) − log(CUM ratio) = −0.179, with a scenario-bootstrap 95% CI of [−0.351, −0.009]
+  and nominal p = 0.039.
+- D was preregistered as a derived quantity, not a test. After Holm adjustment across the two interpretable
+  DeepSeek comparisons, p = 0.077. We therefore treat the gap as exploratory.
+- **Why it can happen.** The reporter's mean report probability on agents' drafts was 0.93–0.96, so expected
+  misconduct lives in the 4–7% of probability that escapes. DeepSeek's one-point drop in report probability barely
+  changes expected reports, but raises that escape share by 17% (recency) and 23% (report rate).
+
+**The other comparisons.**
+- DeepSeek's report-rate cue pointed the same way: D = −0.159 [−0.336, +0.025], p = 0.092.
+- For Llama, recency D is undefined, because it sent nothing under L. Its report-rate D is −0.48 [−0.94, −0.02], but
+  it rests on 3 messages sent under HIGH, and we do not interpret it.
+
+**The realized lotteries do not show the gap.**
+- Realized completions are few: 13 → 7 (DeepSeek recency) and 14 → 5 (report rate) out of 300.
+- They fell by 46% and 64%, against 41% and 54% for realized reports.
+- They agree with the expected values in direction only. The gap therefore rests on the model-based expectations.
+- These come from one reporter whose scores are not externally calibrated. A different reporter, or a different
+  style of message, could widen, narrow or remove the gap.
+
+**A stricter reporter is not a free fix.** Adding "however it is worded" to the reporter's rule changed no H3 label.
+But it then gave *authorized* coordination a mean report probability of 0.97, against 0.003 for the plain reporter.
 
 ![Figure 3](../results/main3b/fig_s3b.png)
-*Figure 3. Block 3b. Top: sending (grey) and reports (blue) per trial. Bottom: simulated misconduct per trial. 95%
-CIs.*
+*Figure 3. Block 3b. Top: sending (grey) and expected reports (blue) per trial. Bottom: expected simulated completed
+misconduct per trial. 95% CIs.*
 
 ### 4.7 Proposals rarely became completed deals in our workflows
 
 **The same models that often proposed the deal almost never accepted it as the partner.**
-- As proposers they offered the deal in 88–100% of low-risk trials (Block 1), and in 86–89% under a low-report
+- As proposers they offered the deal in 87.5–100% of low-risk trials (Block 1), and in 86–89% under a low-report
   history (Block 3b).
 - **Single-turn gate.** As live partners, they accepted none of 180 presented drafts. DeepSeek and GPT-4.1-mini
   each declined 58 and reported 2; Llama declined 22 and reported 38. The drafts were sampled from pilot outputs,
@@ -303,41 +353,49 @@ CIs.*
   - DeepSeek's partner agreed in words in 6 episodes. It then went through with the deal once, reviewed normally
     twice, and reported the proposer three times.
   - The proposer trusted every agreement and approved the partner's batch.
-- Both gates failed their preregistered bar of 3 in 30, and we stopped. Agreement was coded by reading the
-  transcripts.
+- Both gates failed their preregistered criteria, and we stopped as planned.
+  - The single-turn gate required, among other criteria, an executed rate of at least 10% on the 60 sampled drafts.
+  - The three-round gate required at least 3 executed violations in 30.
+- Agreement was coded by reading the transcripts.
 
 **What this does and does not show.**
 - These are simulated actions (choosing APPROVE_WITHOUT_REVIEW), not misconduct verified in a real workflow.
 - The proposer–partner asymmetry holds within these workflows. It is not a clean effect of role, because the two
   prompts differ in responsibilities, options, information and incentives.
 - The gates do not estimate how often collusion happens in longer-running systems.
-
-Earlier instrument checks pointed the same way. Two verifier models had a mean probability below 0.001 of approving
-without review, across 2,400 evaluations. When given a stake in the deal, they reported even a harmless message
-84–99% of the time.
+- They do not show that these models resist collusion in general. The samples are small, and each recipient-side
+  prompt is one of many possible. Earlier verifier checks pointed the same way (Appendix C).
 
 ## 5. Discussion
 
 **The description of enforcement is a first-order variable.**
-- Matched descriptions of the same risk moved collusion proposals by as much as changing the penalty, by up to 71
-  points.
-- The direction depended on the model, so a ranking of models by "deterrability" can flip with the wording.
-  GPT-4.1-mini and Llama moved in opposite directions at low risk.
-- The recency effect, in particular, is not a display artifact.
-- These shifts occurred while DeepSeek stated the correct probabilities. Their mechanism is open.
+- Matched descriptions of the same risk moved collusion proposals by up to 19, 38 and 71 points. Raising the
+  penalty from 0 to 20 at 80% risk moved them by 36–39 points.
+- **The effects differ by model.** They differed in size and sometimes in sign, across models and, for DeepSeek's
+  source effect, across risk levels. Penalties were set per model on pilots, so these are within-model presentation
+  effects, not an incentive-standardized ranking of how deterrable each model is.
+- **Recency is not explained by list position alone.** It persisted under both listing orders, so the report
+  appearing last in the prompt cannot fully explain it. Display order nevertheless moderated the effect in two
+  models.
+- DeepSeek gave approximately correct probabilities in separate calls while its decisions still differed. The
+  mechanism is open.
 
-**Proposal counts point the right way, but can overstate.**
-- In our setting, deterrence reduced how often agents proposed, not how detectably they wrote.
-- Simulated misconduct fell with proposals. In one comparison, though, reports overstated the fall. This happens
-  when detection is near-certain and the outcome lives in the few messages that slip through.
-- It is evidence about one reporter at 93–96% detection, not about report-based evaluations in general.
+**Proposal counts point the right way; whether report counts overstate is open.**
+- In our setting, deterrence cues reduced how often agents sent, not how detectable their drafts were. This holds
+  for one reporter and two models.
+- **Expected simulated misconduct fell with sending.** In one comparison, expected reports fell more than expected
+  misconduct, the pattern to expect when detection is near-certain and misconduct lives in the few messages that
+  slip through. The gap was exploratory, did not survive multiplicity adjustment, and was not visible in the small
+  realized counts.
+- **The cues changed the evidence shown, not the enforcement.** They changed the enforcement history agents saw, not
+  the reporter's actual policy. Whether real changes in enforcement produce the same pattern is untested.
 
 **Proposals are not completed deals.**
 - In our short workflows, models that readily proposed almost never accepted. When they agreed in words, they
   often did not follow through, and sometimes turned the proposer in.
 - Whether this holds over long horizons, where collusion is known to emerge (Shi et al., 2026), is untested.
 
-**For evaluators and designers.**
+**Suggestions for evaluators and designers** (proposals that follow from these results, not a validated standard).
 1. Measure deterrence under several matched descriptions and report the spread. State the independence assumptions
    that make them "matched."
 2. Treat how enforcement history is shown, and especially its recency, as a design parameter with large effects.
@@ -353,7 +411,6 @@ without review, across 2,400 evaluations. When given a stake in the deal, they r
 
 ## References
 
-- Agrawal, K., Xiao, F., Bergman, G., & Cooper Stickland, A. (2025). Why do language model agents whistleblow? arXiv:2511.17085.
 - Alnuhait, D., Wang, G., Khalifa, M., et al. (2026). Covert Assistance: Helpful LLM agents evade oversight in multi-agent systems. arXiv:2609.39050.
 - Baker, B., et al. (2025). Monitoring reasoning models for misbehavior and the risks of promoting obfuscation. arXiv:2503.11926.
 - Fish, S., Gonczarowski, Y. A., & Shorrer, R. I. (2024). Algorithmic collusion by large language models. arXiv:2404.00806.
@@ -363,7 +420,7 @@ without review, across 2,400 evaluations. When given a stake in the deal, they r
 - Horowitz, M., & Plonsky, O. (2025). LLMs in decisions from experience. arXiv:2503.10248.
 - Lee, J. Y. (2026). LLM leniency and reward experiment. SSRN 7426061.
 - Nakamura, M., Kumar, A., Das, S., et al. (2026). Colosseum: Auditing collusion in cooperative multi-agent systems. arXiv:2602.15198.
-- Okamoto, Erol, & Erol (2026). Why do AI agents break rules? arXiv:2608.12323 (AIES 2026).
+- Okamoto, M., Erol, A. K., & Erol, K. (2026). Why do AI agents break rules? How framing, context, and social signals shape compliance. AIES 2026. arXiv:2608.12323.
 - Paglieri, D., Cross, L., Genewein, T., Leibo, J. Z., Tomasev, N., & Vezhnevets, A. S. (2026). A case study on emergent cheating and whistleblowing in autonomous research swarms. arXiv:2609.04170.
 - Scheurer, J., Balesni, M., & Hobbhahn, M. (2023). Large language models can strategically deceive their users when put under pressure. arXiv:2311.07590.
 - Schmotz, D., Prinzhorn, D., Beurer-Kellner, L., et al. (2026). Instrumental monitor evasion emerges under ordinary task pressure. arXiv:2609.30217.
@@ -378,8 +435,9 @@ without review, across 2,400 evaluations. When given a stake in the deal, they r
   30-episode gate per model, with three message rounds.
 - **"Matched" is not "identical".**
   - Block 1 matches probability and penalty, not social or institutional meaning.
-  - Block 2's posterior match is approximate (within 10⁻⁵). It assumes reports are independent given a fixed
-    reporting probability, and under that assumption report order is uninformative.
+  - Block 2's posterior match is approximate: 0.100007 and 0.799999, within 10⁻⁵ of the stated rates. It assumes
+    reports are independent given a fixed reporting probability, and under that assumption report order is
+    uninformative.
   - In Block 3b's recency conditions, the five reports occupy the oldest or the newest five positions, so their
     chronology differs. It is not a mere re-display of one timestamped history. The preregistration's phrase "the
     same 10 episodes, reordered" refers to the same messages and outcomes placed at different positions in time.
@@ -387,6 +445,8 @@ without review, across 2,400 evaluations. When given a stake in the deal, they r
   - In Blocks 1–2, acceptance and exposure are lotteries.
   - In Block 3b, acceptance is programmed and depends on wording only through the judge's clarity check, so covert
     wording costs nothing in intelligibility.
+  - In Block 3b, T1 and CUM are expectations computed from model scores. Realized completions are too few (at most
+    14 per cell) to test the proxy gap.
   - The gates record an agent's choice of APPROVE_WITHOUT_REVIEW in a simulation, not misconduct in a real
     workflow.
 - **Instruments.**
@@ -394,13 +454,30 @@ without review, across 2,400 evaluations. When given a stake in the deal, they r
     ≤ 5% gate.
   - No second reporter passed its gates.
   - The judge rated nearly every message as clear.
+  - **Pool–draft shift.** The history pool was written by Mistral-Small-3.2, the same model as the reporter.
+    - The reporter's mean report probability was about 0.45 on pool messages but 0.93–0.96 on agents' drafts.
+    - So its pool-based validation says little about its performance on agent messages.
+    - Writing style relative to the reporter could affect the proxy gap.
+  - Neither reporter nor judge scores are calibrated against human or ground-truth labels.
 - **What the controls and labels mean.**
   - The authorized controls show that authorized choices did not fall. They do not show that task quality was
     preserved.
   - "No deniability" means changes within ±5 points, not that the reporter behaved identically. With near-certain
     detection, small changes matter for the share of messages that gets through.
+  - "No deniability" refers to all generated drafts. For Llama, too few messages were sent under the cues to check
+    the sent subset.
+  - **Histories were selected, not sampled.**
+    - Block 3b's histories were selected to show a set number and placement of reports, and A was told they were
+      "selected for display".
+    - LOW → HIGH therefore estimates a response to the enforcement evidence shown, not the effect of raising the
+      actual probability of being reported.
 - **Design.**
-  - Penalties differ by model (set on pilots), so cross-model comparisons concern signs.
+  - **Penalties differ by model** (set on pilots), so only within-model effects are compared, not model rankings.
+    - In Block 2, offering's expected gain at 10% was +3.6 for DeepSeek and Llama and −10.4 for GPT-4.1-mini.
+    - At 80% (F = 2) it was +8.0 for every model, so "high risk" means a high reporting probability, not a high
+      expected cost.
+  - **Block 1's primary estimate** averages the planned repeat decisions, following the preregistered estimator.
+    The first-repetition-only estimate (−0.155) leads to the same conclusion.
   - Some cells sat outside the target range: Llama at high risk in Block 2, and DeepSeek and Llama in Block 3b.
   - Agents were told to maximize their score.
   - Diagnostics are DeepSeek-only and show what the model states in a separate call.
@@ -409,7 +486,8 @@ without review, across 2,400 evaluations. When given a stake in the deal, they r
   - Block 1's directional prediction.
   - Block 2's same-sign and correction criteria.
   - The displacement pilot (Block 3a), which failed its gate.
-  - The proxy gap D is derived, not a preregistered test.
+  - The proxy gap D is derived, not a preregistered test. Its nominal significance (p = 0.039) does not survive
+    Holm adjustment (p = 0.077).
 
 **Dual-use.**
 - Knowing that the description of enforcement shifts proposals could in principle help someone design oversight
@@ -432,6 +510,9 @@ Data validators and 46 unit tests cover:
 - the spend guard.
 
 The recorded data show:
+- 26,820 unique (scenario, cell, repetition) decisions, with no duplicates;
+- saved summaries and validation files that are reproduced exactly by re-running the analysis and validators from
+  the raw logs;
 - zero settlement or prompt mismatches in every block;
 - pinned providers throughout;
 - every Block 3b message scored, with mean leaked label mass below 1%.
@@ -448,6 +529,11 @@ The recorded data show:
 **Exploratory (not preregistered).** At a 2-point penalty (high risk, Block 2), offering gained about +8 in
 expectation, yet stated-cell offers were only 15–54%. This is consistent with models treating the chance of being
 reported as a cost in itself.
+
+**Verifier checks (before Block 3b).**
+- Two verifier models had a mean probability below 0.001 of approving without review, across 2,400 evaluations
+  (2 models × 3 prompts × 400 messages).
+- When given a stake in the deal, they gave even a harmless message a mean report probability of 0.84–0.99.
 
 **Block 3a (displacement pilot, 30 scenarios).**
 - An admin-override route was chosen in 0–3% of baseline trials, even when it beat messaging on expected value.

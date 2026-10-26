@@ -16,53 +16,60 @@ Collusion evaluations usually tell an AI agent about an enforcement risk and cou
 prohibited deal. We show that this count depends heavily on how the risk is described.
 
 The study covers three models (DeepSeek-V3.2, GPT-4.1-mini, Llama-3.3-70B) and 26,820 scored decisions across three
-preregistered blocks. Matched descriptions of the same risk moved proposal rates by:
+preregistered blocks, with every contrast paired within scenario. Descriptions of the same risk, matched in
+probability and penalty, moved proposal rates by:
 - up to 19 points, depending on who might report;
-- up to 38 points, for a stated rate versus an equivalent record;
+- up to 38 points, for a stated rate versus a statistically equivalent record;
 - up to 71 points, depending on whether a single past report was recent or old.
 
-The directions differed by model, and DeepSeek stated the correct probabilities when asked separately.
-A truthful one-line summary of the risk fixed the gap in one model and pushed another to 98% proposals.
+The directions differed by model, and DeepSeek gave approximately correct probabilities when asked separately.
+A truthful one-line summary of the risk closed most of the gap in one model and pushed another to 98% proposals.
 
-We then asked whether fewer proposals means less misconduct. Histories of recent or frequent reports cut proposing
-by 25–85 points. Agents did not respond by writing harder-to-detect messages: a fixed LLM reporter's report rate
-changed by at most 1.4 points. Simulated misconduct fell in every comparison, though in one case by less than
-reports suggested (30% vs 41%).
+We then asked whether fewer proposals means less misconduct. Displayed histories of recent or frequent reports cut
+proposing by 25–85 points, although the reporter itself never changed. Agents did not write harder-to-detect
+drafts: a fixed LLM reporter's report probability changed by at most 1.4 points. Expected simulated misconduct fell
+in every comparison. In one exploratory comparison it fell less than expected reports (30% vs 41%), a gap that is
+not significant after multiplicity adjustment.
 
 Finally, proposals rarely turned into completed deals in our workflows. Live LLM partners accepted 0 of 180
-presented drafts. Sixty three-round conversations produced one simulated violation, and partners sometimes agreed
-and then reported the proposer.
+presented drafts, and sixty three-round conversations produced one simulated violation.
 
 Deterrence should be measured across matched descriptions, and proposal counts checked against outcomes.
 
 ## Results
 
-Report: [`report/report.md`](report/report.md). Three preregistered studies (26,820 confirmatory scored decisions;
+Report: [`report/report.md`](report/report.md). Three preregistered studies (26,820 scored decisions, including planned repeats and controls;
 DeepSeek-V3.2, GPT-4.1-mini, Llama-3.3-70B), plus pilots and gate tests. They examine two assumptions behind
 proposal-based deterrence evaluations and one external-validity question:
 - **A1:** deterrence is invariant to how equivalent risk is presented (Studies 1–2).
 - **A2:** fewer proposals or reports means proportionally less completed misconduct (Study 3b).
 - **Q3 (external validity):** do proposal rates predict executed collusion by a live partner (gates)? Proposals rarely became executed collusion in our short workflows.
 - **Study 1 (source; `prereg.md`):** partner reporting vs an equivalent automated audit shifts initiation by up to
-  19 pp, in model-specific directions (DeepSeek more deterred by peers, −0.16; GPT-4.1-mini less, +0.19, in a different cell).
+  19 pp. The confirmatory test failed in both models: DeepSeek was more deterred by peers (−0.16), and GPT-4.1-mini
+  was equivalent at its floor. The sign varies by model and risk level: GPT-4.1-mini +0.19 at 80%/F = 0; DeepSeek
+  −0.12 there but +0.09 at 10%/F = 20.
 - **Study 2 (format; `prereg_v2.md`):** a stated reporting probability vs a statistically equivalent 10-episode
   record shifts initiation by up to 38 pp (GPT-4.1-mini: 78% vs 40%), again model-specific in sign, while DeepSeek's
-  stated beliefs are correct. One report in episode 10 instead of episode 1 cuts offers by 23–71 pp in every model.
-  A calibrated summary fixes the gap in GPT-4.1-mini but backfires in Llama (98% vs 37% stated).
+  separately elicited probabilities are approximately correct. One report in episode 10 instead of episode 1 cuts
+  offers by 23–71 pp in every model, under both listing orders; list order moderates the size in two models. A
+  calibrated summary closes 54% and 99% of GPT-4.1-mini's gaps but backfires in Llama (98% vs 37% stated).
 
 - **Study 3b (proxy vs outcome; `prereg_v3b.md`):**
   - Setup: programmed acceptance; a fixed LLM reporter (Mistral-Small-3.2) and a blind judge (Qwen3-235B) read
     each free-text draft.
-  - Recent-report and real-deterrence histories cut sending by 25–85 pp (DeepSeek, Llama).
-  - Drafts (scored whether or not they were sent) did not become materially harder to detect: Δ report
-    probability ≤ 0.014, inside the ±0.05 equivalence margin, so "no deniability" in 4 of 4 tests.
-  - In one test (DeepSeek, recency), simulated completed misconduct fell by less than the report count (−30% vs
-    −41%). The other tests were inconclusive or at the floor.
-- **Pilots and gates (A3):**
+  - Displayed histories of recent or frequent reports cut sending by 25–85 pp (DeepSeek, Llama). The histories
+    were selected from real outcomes of one unchanged reporter, so this is a response to displayed evidence, not
+    to a change in actual enforcement.
+  - Generated drafts (scored whether or not they were sent) did not become materially harder to detect: |Δ report
+    probability| ≤ 0.014, inside the ±0.05 equivalence margin, so "no deniability" in 4 of 4 tests.
+  - Expected simulated misconduct fell in every test. In one (DeepSeek, recency), it fell by less than expected
+    reports (−30% vs −41%, D = −0.18, nominal p = 0.039). That result is exploratory: it gives p = 0.077 after Holm
+    adjustment, and it is not visible in the few realized completions (13 → 7).
+- **Pilots and gates (Q3):**
   - A displacement pilot (3a) failed its gates: the override was almost never used (0–3%).
   - Two LLM verifiers had a mean approval probability below 0.001 across 2,400 evaluations, and a stake made them
     report harmless messages.
-  - Live partners accepted 0 of 180 real drafts.
+  - Live partners accepted 0 of 180 presented drafts.
   - Over three rounds of conversation, Llama never agreed. DeepSeek's partner agreed in words 6 times out of 30,
     carried the deal out once, and reported the proposer 3 times.
 

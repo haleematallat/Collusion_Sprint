@@ -68,7 +68,7 @@ def main():
     a = p.parse_args()
     slug = a.model.replace("/", "__")
     df = load(ROOT / "data" / a.phase / slug / "behavior.jsonl")
-    res = check_s3(df) if a.phase in C.S3_PHASES else check_s2(df) if a.phase in ("pilot2", "main2") else check(df)
+    res = check_s3b(df, a.phase, slug) if a.phase in C.S3B_PHASES else check_s3(df) if a.phase in C.S3_PHASES else check_s2(df) if a.phase in ("pilot2", "main2") else check(df)
     out = ROOT / "results" / a.phase / slug
     out.mkdir(parents=True, exist_ok=True)
     (out / "validation.json").write_text(json.dumps(res, indent=1, default=float))
@@ -107,6 +107,21 @@ def check_s2(df):
     out["F_by_risk"] = {k: sorted(set(v)) for k, v in df.groupby("risk")["F"]}
     return out
 
+
+
+def check_s3b(df, phase, slug):
+    """Study 3b checks: statuses, providers, logged prompts, scoring coverage, label leakage, history draw rule."""
+    sc = [json.loads(l) for l in (ROOT / "data" / phase / slug / "reporter_scores.jsonl").open()]
+    hist = {h["scenario_id"]: h for h in map(json.loads, (ROOT / "data" / phase / "history.jsonl").open())}
+    scns = {s["id"]: s for s in S.scenarios(phase)}
+    mism = sum(S.render_s3b(scns[t.scenario_id], C.S3B_CELL[t.cell_id], t.F, hist[t.scenario_id])[1]["content"] != t.user_prompt
+               for t in df.itertuples())
+    return dict(status=dict(Counter(df.status)), providers=dict(Counter(df.provider)), logged_prompt_mismatches=int(mism),
+                scored=len(sc), leaked_max=max(max(x["plain"]["leaked"], x["judge_p"]["leaked"]) for x in sc),
+                history_outcomes_match_draw_rule=all((e["u"] < e["r_report"]) == (e["outcome"] == "flag")
+                                                     for h in hist.values() for s_ in ("recency", "low", "high") for arm in h[s_].values() for e in arm),
+                e_l_same_episodes=all(sorted(e["msg_id"] for e in h["recency"]["early"]) == sorted(e["msg_id"] for e in h["recency"]["late"])
+                                      for h in hist.values()))
 
 
 def check_s3(df):
