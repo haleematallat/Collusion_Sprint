@@ -7,61 +7,50 @@ Code and data: https://github.com/haleematallat/Collusion_Sprint · Preregistrat
 
 ## Abstract
 
-Proposal-based evaluations of AI-agent collusion deterrence measure how often an agent initiates prohibited
-coordination under a stated enforcement risk. We show this measure depends heavily on how the risk is described.
+Collusion-deterrence evaluations usually state an enforcement risk to an AI agent and count how often it proposes a
+prohibited deal. They implicitly treat the agent as responding to the odds alone. We test whether the same odds,
+described differently, produce the same deals.
 
-We study three models (DeepSeek-V3.2, GPT-4.1-mini, Llama-3.3-70B) in 26,820 scored decisions across three
-preregistered blocks. Descriptions of the same risk, matched in probability and penalty, moved proposal rates by:
-- up to 19 points (16 with a penalty), depending on who might report;
-- up to 38 points, for a stated rate versus a statistically equivalent record;
-- up to 71 points, depending on whether a single past report was recent or old.
+In a scored verification task with executed lotteries, we ran three preregistered blocks with DeepSeek-V3.2,
+GPT-4.1-mini and Llama-3.3-70B (26,820 scored decisions). Holding probability and penalty fixed, we varied only
+the description. Proposal rates moved by up to 19 points when a partner rather than an audit might report, by up to
+38 points when "10%" became "1 report in 10", and by up to 71 points when a single past report was recent rather
+than old. Directions differed by model, and DeepSeek still stated the correct probabilities when asked separately. A
+truthful one-line risk summary closed most of the gap in one model but pushed another to 98% proposals.
 
-Directions differed by model, although DeepSeek stated approximately correct probabilities in separate calls. A truthful
-one-line risk summary closed most of the gap in one model and pushed another to 98% proposals.
+Deterred agents sent fewer proposals but did not make them harder to detect: a fixed LLM reporter's report
+probability changed by at most 1.4 points. Expected simulated misconduct fell with sending, though proportionally
+less than expected reports, an exploratory gap that does not survive multiplicity correction. Proposals also rarely
+became completed deals: live partners accepted 0 of 180 drafts and carried out 1 of 60 three-round conversations.
 
-Displayed histories of recent or frequent reports cut proposing by 25–85 points, although the reporter never
-changed. Drafts did not become materially harder to detect: a fixed LLM reporter's report probability changed by at
-most 1.4 points. Expected simulated misconduct fell in every comparison, though proportionally less than expected
-reports (e.g. 30% vs 41%); no such gap survives multiplicity adjustment.
-
-Proposals rarely became completed deals: live LLM partners accepted 0 of 180 presented drafts, and in sixty
-three-round conversations the recipient carried out the deal once.
-
-Deterrence should be measured across matched descriptions, and proposal counts checked against outcomes.
+Deterrence measured under one risk description is therefore fragile. Evaluators should test matched descriptions
+and check proposal counts against outcomes.
 
 ## 1. Introduction
 
-Where agents can negotiate privately, collusion often begins when one agent proposes a prohibited deal (tacit
-collusion need not). Proposal-based deterrence evaluations therefore state an enforcement risk and measure how often
-the agent proposes, or more generally breaks the rule (Scheurer et al., 2023; Zeng & Rudzicz, 2026;
-Okamoto et al., 2026). The risk is usually described once, in one way.
+When AI agents can negotiate privately, collusion often starts with one agent proposing a prohibited deal (tacit
+collusion need not). Deterrence evaluations therefore tell an agent about an enforcement risk and measure how often
+it proposes or breaks the rule (Scheurer et al., 2023; Zeng & Rudzicz, 2026; Okamoto et al., 2026). The risk is
+usually described once, in one way. That practice rests on three things:
+- **A1.** Only the odds matter, not how they are described.
+- **A2.** Fewer proposals, or fewer reports, mean proportionally less misconduct.
+- **Q3.** Proposals lead to completed deals (an external-validity question rather than an assumption).
 
-That practice quietly relies on three things:
-- **A1.** The description does not matter, only the risk.
-- **A2.** Fewer proposals, or fewer reports, means proportionally less misconduct.
-- **Q3.** Proposals lead to completed deals. This is an external-validity question rather than an assumption every
-  evaluation makes.
+We test all three in one framework: a scored verification task with truthfully stated payoffs and executed
+lotteries, run as three separately preregistered blocks plus two feasibility gates.
 
-We tested all three in one experimental framework: a scored verification task with executed lotteries, run as three
-separately preregistered blocks plus feasibility tests.
-
-**What we found:**
-1. **The description can matter as much as the incentives (A1 fails).** Who might report, a stated rate versus a
-   record, and the timing of one past report moved proposal rates by up to 19, 38 and 71 points. For comparison,
-   raising the penalty from 0 to 20 at 80% risk moved them by 21–39 points. The direction depended on the model,
-   and sometimes on the risk level.
+**What we found.**
+1. **Same odds, different deals (A1 fails).** Who might report, a stated rate versus a matched record, and the timing
+   of one past report moved proposal rates by up to 19, 38 and 71 points. Raising the penalty from 0 to 20 at 80%
+   risk moved them by 21–39 points. Directions depended on the model, and sometimes on the risk level.
 2. **A truthful summary is not a reliable fix.** It largely closed the gap in one model and backfired in another.
-3. **Deterrence cues reduced sending, with no material change in drafts' detectability (A2 holds in direction).**
-   Expected simulated misconduct fell with sending, though proportionally less than expected reports in all three
-   comparisons where this is defined (exploratory; none significant after adjustment).
-4. **Proposals rarely became completed deals in our workflows (Q3).** Models that eagerly proposed almost never
-   accepted the same deal as the recipient.
+3. **Deterred agents sent fewer proposals, not sneakier ones (A2 holds in direction).** Expected misconduct fell with
+   sending, though proportionally less than expected reports (exploratory).
+4. **Proposals rarely became completed deals (Q3).** Models that readily proposed almost never accepted as partners.
 
-**Contributions:**
-- a controlled framework with executed lotteries, minimal-pair prompts and preregistered decision rules;
-- large, model-specific presentation effects on deterrence measurements;
-- a preregistered test of whether deterrence produces evasive proposals;
-- feasibility evidence on whether proposals become completed deals.
+**Contributions:** a controlled framework with minimal-pair prompts and preregistered decision rules; large,
+model-specific presentation effects on deterrence measurements; a preregistered test of whether deterrence produces
+evasive proposals; and feasibility evidence on whether proposals become completed deals.
 
 ## 2. Related work
 
@@ -411,6 +400,16 @@ realized counts. And the cues changed the enforcement history agents saw, not th
 - Long multi-turn interactions in which agents experience enforcement.
 - Partners whose acceptance depends on the message.
 - Several independent reporters.
+
+## 6. Conclusion
+
+The same odds did not produce the same deals. Describing an identical enforcement risk in a different way moved
+collusion proposals by as much as, or more than, changing the penalty, in directions that differed by model, even
+when the model could state the correct probability. Deterrence cues reduced how often agents proposed rather than
+making their proposals harder to catch, and in our short workflows proposals rarely became completed deals. A
+deterrence score measured under a single risk description is therefore a property of that description as much as of
+the model. Evaluations should report results across matched descriptions, state the assumptions that make them
+matched, and check proposal counts against what actually gets carried out.
 
 ## LLM Usage Statement
 
