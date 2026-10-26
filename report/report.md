@@ -1,6 +1,6 @@
-# Same Risk, Different Collusion: Describing the Same Enforcement Risk Differently Shifts LLM Agents' Collusion Proposals by Up to 71 Points
+# Same Odds, Different Deals: How Risk Framing Shapes AI Collusion
 
-**[Author names and affiliations — to be filled in by the team]**
+**Haleema Tallat** · Independent
 
 Apart AI Collusion Research Sprint, 23–25 October 2026 · Track 1 (markets and collusion), with relevance to Track 3
 Code and data: https://github.com/haleematallat/Collusion_Sprint · Preregistrations: `prereg.md` (`f957093`), `prereg_v2.md` (`a0eab95`), `prereg_v3b.md` (`0852581`); gate criteria `af8dca3`, `d93a5d4`
@@ -185,6 +185,11 @@ Block 3b (including 100 authorized controls). They are not independent observati
 inference. Every call returned valid output, and re-running the analysis from the raw logs reproduces every saved
 summary.
 
+![Figure 1](../results/fig_overview.png)
+*Figure 1. Overview. Each presentation contrast (below the dashed line) next to the effect of raising the penalty
+from 0 to 20 (above it). Points are within-model, scenario-paired estimates with 95% CIs. Llama was not run in
+Block 1, and Block 2's penalties differ by model, so compare within a model, not across models.*
+
 ### 4.1 Who might report you changes deterrence, with a direction that depends on model and risk level
 
 **Incentives worked as expected** (Block 1):
@@ -209,8 +214,8 @@ summary.
   - DeepSeek showed the opposite in both of its 80%-risk cells.
   - So the source effect's sign depends on the risk level within a model, not only on the model.
 
-![Figure 1](../results/main/fig_source_models.png)
-*Figure 1. Block 1: offer rates when a partner may report (blue) or an audit may detect (orange), at identical risk
+![Figure 2](../results/main/fig_source_models.png)
+*Figure 2. Block 1: offer rates when a partner may report (blue) or an audit may detect (orange), at identical risk
 and penalty.*
 
 ### 4.2 A record and a stated rate with the same risk produce different behaviour
@@ -235,8 +240,8 @@ and penalty.*
   ±0.01. Its behaviour still differed by 14 points between the stated and record versions of the 80% risk.
   The other two models were not asked, and our data cannot say why stated probabilities and decisions diverge.
 
-![Figure 2](../results/main2/fig_s2_format.png)
-*Figure 2. Block 2: offers under a stated rate (grey), the matched record (blue), the record plus a calibrated
+![Figure 3](../results/main2/fig_s2_format.png)
+*Figure 3. Block 2: offers under a stated rate (grey), the matched record (blue), the record plus a calibrated
 summary (green), and a length-matched placebo (red). 95% Wilson intervals.*
 
 ### 4.3 A recent report deters far more than an old one, by up to 71 points
@@ -251,6 +256,10 @@ described as never changing.
 | Llama | **−0.708** [−0.741, −0.675] | −0.51 | −0.91 (93% → 2%) |
 
 *Table 2. Recency, measured under two display orders.*
+
+![Figure 4](../results/main2/fig_s2_recency.png)
+*Figure 4. Block 2: offers when the single report in a 1-in-10 record is in the oldest (grey) or the most recent
+(red) episode, under each listing order. 95% Wilson intervals.*
 
 **List position alone does not explain the effect, but list order changes its size.**
 - With oldest-first listing, the recent report appears at the bottom of the list; with most-recent-first listing,
@@ -335,8 +344,8 @@ and was excluded beforehand.*
 **A stricter reporter is not a free fix.** Adding "however it is worded" to the reporter's rule changed no H3 label.
 But it then gave *authorized* coordination a mean report probability of 0.97, against 0.003 for the plain reporter.
 
-![Figure 3](../results/main3b/fig_s3b.png)
-*Figure 3. Block 3b. Top: sending (grey) and expected reports (blue) per trial. Bottom: expected simulated completed
+![Figure 5](../results/main3b/fig_s3b.png)
+*Figure 5. Block 3b. Top: sending (grey) and expected reports (blue) per trial. Bottom: expected simulated completed
 misconduct per trial. 95% CIs.*
 
 ### 4.7 Proposals rarely became completed deals in our workflows
@@ -402,6 +411,12 @@ realized counts. And the cues changed the enforcement history agents saw, not th
 - Long multi-turn interactions in which agents experience enforcement.
 - Partners whose acceptance depends on the message.
 - Several independent reporters.
+
+## LLM Usage Statement
+
+LLM tools assisted with manuscript drafting, editing, methodology review and numerical cross-checks. The author is
+responsible for the research decisions, results and final submission. Claude was used to write code for the
+experiment and the report. The title, abstract and conclusion were written by the author.
 
 ## References
 

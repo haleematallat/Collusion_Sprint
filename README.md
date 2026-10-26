@@ -1,4 +1,4 @@
-# Same Risk, Different Collusion
+# Same Odds, Different Deals: How Risk Framing Shapes AI Collusion
 
 Code, data and report for our project in the Apart AI Collusion Research Sprint (23–25 October 2026). We tested
 three models: DeepSeek-V3.2, GPT-4.1-mini and Llama-3.3-70B. The full write-up is in
@@ -59,6 +59,8 @@ listed in the report's appendices.
 - `prompts/templates.toml`: every prompt text. The rendered variants are reviewed in `docs/prompt_review*.md`.
 - `data/<phase>/<model>/`: raw logs, one JSON line per trial with prompt, reply, lottery draws and settlement.
 - `results/<phase>/`: summaries, validation checks and figures.
+- Report figures, in order: `results/fig_overview.png`, `results/main/fig_source_models.png`,
+  `results/main2/fig_s2_format.png`, `results/main2/fig_s2_recency.png`, `results/main3b/fig_s3b.png`.
 - `tests/`: unit tests for the lotteries, prompt structure, analysis and spend guard.
 
 ## Reproducing
@@ -74,6 +76,7 @@ uv run python -m betrayal.live_b --max-usd 9.5      # single-turn gate
 uv run python -m betrayal.multiturn --max-usd 9.5   # three-round gate
 uv run python -m betrayal.analyze --phase main2 --model openai/gpt-4.1-mini
 uv run python -m betrayal.validate --phase main2 --model openai/gpt-4.1-mini
+uv run python -m betrayal.plots     # regenerates the five report figures
 ```
 
 The run scripts can be resumed and retry failed calls. `--mock` gives a dry run with no network calls for `run`,
