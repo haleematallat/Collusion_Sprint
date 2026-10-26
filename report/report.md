@@ -77,7 +77,6 @@ separately preregistered blocks plus feasibility tests.
   2026). We see the same kind of gap and do not claim it as new.
 
 **Enforcement and presentation.**
-- LLM reporting responds to rewards while collusion barely moves (Lee, 2026).
 - Agents that saw exploits go unpunished treated threats as a bluff (Paglieri et al., 2026).
 - Stated detection risk changes LLM misconduct (Scheurer et al., 2023).
 - Monitoring cues and prompt format shift behaviour (Greenblatt et al., 2024; Sclar et al., 2024).
@@ -107,8 +106,8 @@ other's work without independent review."
 - Temperature 1.0.
 - Answers are strict JSON with no rationale, and option order is counterbalanced.
 - Each model is pinned to one provider: DeepSeek on Baidu, GPT-4.1-mini on OpenAI, Llama on DeepInfra.
-- Every scenario (organization, task, names, wording) appears in every cell of its block, so all contrasts are
-  paired within scenario.
+- Every scenario (organization, task, names, wording) appears in every cell of its block (except Block 3b's
+  authorized control, run on 100 of the 300 scenarios), so all contrasts are paired within scenario.
 - Pilots used separate scenarios and are excluded from the analyses.
 
 | Block (question; scenarios) | What we varied | What we held fixed |
@@ -413,7 +412,6 @@ realized counts. And the cues changed the enforcement history agents saw, not th
 - Ge-Wang, C., Crosse, T., Hadad, B., IV, et al. (2026). Attack selection in agentic AI control evaluations meaningfully decreases safety. arXiv:2606.06529.
 - Greenblatt, R., et al. (2024). Alignment faking in large language models. arXiv:2412.14093.
 - Horowitz, M., & Plonsky, O. (2025). LLMs in decisions from experience. arXiv:2503.10248.
-- Lee, J. Y. (2026). LLM leniency and reward experiment. SSRN 7426061.
 - Nakamura, M., Kumar, A., Das, S., et al. (2026). Colosseum: Auditing collusion in cooperative multi-agent systems. arXiv:2602.15198.
 - Okamoto, M., Erol, A. K., & Erol, K. (2026). Why do AI agents break rules? How framing, context, and social signals shape compliance. AIES 2026. arXiv:2608.12323.
 - Paglieri, D., Cross, L., Genewein, T., Leibo, J. Z., Tomasev, N., & Vezhnevets, A. S. (2026). A case study on emergent cheating and whistleblowing in autonomous research swarms. arXiv:2609.04170.

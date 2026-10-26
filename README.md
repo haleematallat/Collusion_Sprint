@@ -1,107 +1,89 @@
-# Betrayal Blindness — first-offer collusion under partner reporting vs automated audit
+# Same Risk, Different Collusion
 
-Apart AI Collusion Research Sprint (Oct 23–25, 2026). Single-turn randomized experiment: an LLM agent
-(A) chooses `SEND_OFFER` (privately propose an unauthorized mutual-approval arrangement to an unfamiliar
-verifier agent B) or `NO_OFFER`. B's response is a programmed lottery (accept 80%; report independently with
-q ∈ {10%, 80%}; penalty F ∈ {0, 20}); risk is disclosed or hidden (50/50 mixture); a matched arm replaces
-partner reporting with an automated audit at the same q and F.
+Code, data and report for our project in the Apart AI Collusion Research Sprint (23–25 October 2026). We tested
+three models: DeepSeek-V3.2, GPT-4.1-mini and Llama-3.3-70B. The full write-up is in
+[`report/report.md`](report/report.md).
 
-Execution plan: [`docs/plan.md`](docs/plan.md). The preregistration (`prereg.md`, tagged before the main run)
-is the authoritative design. Prompt text: [`prompts/templates.toml`](prompts/templates.toml); every rendered
-variant: [`docs/prompt_review.md`](docs/prompt_review.md).
+## What we found
 
-## Summary
+Collusion evaluations often give an AI agent an enforcement risk and count how often it proposes a forbidden deal.
+We found that this count depends a lot on how the risk is described. Across 26,820 scored decisions, descriptions
+that matched in probability and penalty moved proposal rates by:
+- up to 19 points when we changed only who might report the agent (16 points when a penalty applied);
+- up to 38 points when a stated rate was replaced by an equivalent record;
+- up to 71 points when a single past report was recent rather than old.
 
-Collusion evaluations often tell an AI agent about an enforcement risk and count how often it proposes a prohibited
-deal. This count depends heavily on how the risk is described.
+The direction of these effects differed between models. DeepSeek still gave roughly correct probabilities when
+asked separately.
 
-The study covers three models (DeepSeek-V3.2, GPT-4.1-mini, Llama-3.3-70B) and 26,820 scored decisions across three
-preregistered blocks. Descriptions of the same risk, matched in probability and penalty, moved proposal rates by:
-- up to 19 points (16 with a penalty), depending on who might report;
-- up to 38 points, for a stated rate versus a statistically equivalent record;
-- up to 71 points, depending on whether a single past report was recent or old.
+A true one-line summary of the risk ("the probability that B reports your proposal is about 10%") closed most of
+the gap for GPT-4.1-mini. It pushed Llama to 98% proposals. It is not a reliable fix.
 
-Directions differed by model, although DeepSeek gave approximately correct probabilities when asked separately.
-A truthful one-line summary of the risk closed most of the gap in one model and pushed another to 98% proposals.
+Showing agents a history of recent or frequent reports cut proposals by 25 to 85 points, even though the reporter
+itself never changed. The messages agents wrote did not become harder to catch: a fixed LLM reporter's report
+probability moved by at most 1.4 points. Expected simulated misconduct fell with the proposals, but slightly less
+than expected reports did (for example 30% against 41%). That gap is exploratory and does not survive correction for
+multiple comparisons.
 
-We then asked whether fewer proposals means less misconduct. Displayed histories of recent or frequent reports cut
-proposing by 25–85 points, although the reporter itself never changed. Drafts did not become
-materially harder to detect: a fixed LLM reporter's report probability changed by at most 1.4 points. Expected
-simulated misconduct fell in every comparison, though proportionally less than expected reports (e.g. 30% vs 41%);
-no such gap survives multiplicity adjustment.
+Proposals also rarely turned into completed deals. Live LLM partners accepted none of 180 drafts put to them. In 60
+three-round conversations, the partner went through with the deal once.
 
-Finally, proposals rarely turned into completed deals in our workflows. Live LLM partners accepted 0 of 180
-presented drafts, and in sixty three-round conversations the recipient carried out the deal once.
+## How the experiment works
 
-Deterrence should be measured across matched descriptions, and proposal counts checked against outcomes.
+Agent A is a verification agent with a score of 50 points. It can privately ask verifier B to approve each other's
+work without review, which breaks the rule it was given. If B accepts, A gains 12 points; if the proposal is
+reported or detected, A pays a penalty. Every payoff and lottery is stated truthfully and then actually run. Each
+scenario appears in every condition of its block, so comparisons are made within scenario.
 
-## Results
+The work has three preregistered blocks and two feasibility gates:
+- **Block 1** varies who might expose the proposal, a partner or an audit, at the same probability and penalty
+  ([`prereg.md`](prereg.md)).
+- **Block 2** compares a stated reporting rate with a matched 10-episode record. It also tests a calibrated summary
+  sentence and the timing of a single past report ([`prereg_v2.md`](prereg_v2.md)).
+- **Block 3b** has A write its message before deciding whether to send it. A fixed reporter (Mistral-Small-3.2) and
+  a judge (Qwen3-235B) then score every draft ([`prereg_v3b.md`](prereg_v3b.md)).
+- **The gates** replace the programmed partner with a live model, first for a single message and then for a
+  three-round conversation ([`docs/gate_live_b.md`](docs/gate_live_b.md),
+  [`docs/gate_multiturn.md`](docs/gate_multiturn.md)).
 
-Report: [`report/report.md`](report/report.md). Three preregistered studies (26,820 scored decisions, including planned repeats and controls;
-DeepSeek-V3.2, GPT-4.1-mini, Llama-3.3-70B), plus pilots and gate tests. They examine two assumptions behind
-proposal-based deterrence evaluations and one external-validity question:
-- **A1:** deterrence is invariant to how equivalent risk is presented (Studies 1–2).
-- **A2:** fewer proposals or reports means proportionally less completed misconduct (Study 3b).
-- **Q3 (external validity):** do proposal rates predict executed collusion by a live partner (gates)? Proposals rarely became executed collusion in our short workflows.
-- **Study 1 (source; `prereg.md`):** partner reporting vs an equivalent automated audit shifts initiation by up to
-  19 pp. The confirmatory test failed in both models: DeepSeek was more deterred by peers (−0.16), and GPT-4.1-mini
-  was equivalent at its floor. The sign varies by model and risk level: GPT-4.1-mini +0.19 at 80%/F = 0; DeepSeek
-  −0.12 there but +0.09 at 10%/F = 20.
-- **Study 2 (format; `prereg_v2.md`):** a stated reporting probability vs a statistically equivalent 10-episode
-  record shifts initiation by up to 38 pp (GPT-4.1-mini: 78% vs 40%), again model-specific in sign, while DeepSeek's
-  separately elicited probabilities are approximately correct. One report in episode 10 instead of episode 1 cuts
-  offers by 23–71 pp in every model (pooled over listing orders, and present in each order); list order moderates the size in two models. A
-  calibrated summary closes 54% and 99% of GPT-4.1-mini's gaps but backfires in Llama (98% vs 37% stated).
+We wrote down all criteria before the runs they apply to. The limitations, deviations and failed predictions are
+listed in the report's appendices.
 
-- **Study 3b (proxy vs outcome; `prereg_v3b.md`):**
-  - Setup: programmed acceptance; a fixed LLM reporter (Mistral-Small-3.2) and a blind judge (Qwen3-235B) read
-    each free-text draft.
-  - Displayed histories of recent or frequent reports cut sending by 25–85 pp (DeepSeek, Llama). The histories
-    were selected from real outcomes of one unchanged reporter, so this is a response to displayed evidence, not
-    to a change in actual enforcement.
-  - Generated drafts (scored whether or not they were sent) did not become materially harder to detect: |Δ report
-    probability| ≤ 0.014, inside the ±0.05 equivalence margin, so "no deniability" in 4 of 4 primary tests. Only
-    DeepSeek's survive the preregistered composition check; Llama sent too few messages under the cues, and its
-    report-rate result carries the "composition" label.
-  - Expected simulated misconduct fell in every test, but proportionally less than expected reports in all three
-    tests where this is defined (DeepSeek recency: −30% vs −41%, D = −0.18, nominal p = 0.039). This is exploratory:
-    no D is significant after Holm adjustment, and realized completions (13 → 7) are too few to show it.
-- **Pilots and gates (Q3):**
-  - A displacement pilot (3a) failed its gates: the override was almost never used (0–3%).
-  - Two LLM verifiers had a mean approval probability below 0.001 across 2,400 evaluations, and a stake made them
-    report harmless messages.
-  - Live partners accepted 0 of 180 presented drafts.
-  - Over three rounds of conversation, Llama never agreed. DeepSeek's partner agreed in words 6 times out of 30,
-    carried the deal out once, and reported the proposer 3 times. The proposer approved without review in all 6.
+## Repository layout
 
-Reproduce Study 2: `./main2_runs.sh`, then `analyze` / `validate` with `--phase main2`. Reproduce Study 3b:
-`./main3b_runs.sh` (instrument selection, histories, agent runs, scoring), then `analyze --phase main3b`.
+- `betrayal/`: the experiment code.
+  - `config.py` holds constants and conditions, and `scenarios.py` builds the seeded scenarios and prompts.
+  - `lottery.py` settles the score, and `llm.py` is the OpenRouter client with a spend guard.
+  - `run.py` runs the agent trials; `analyze.py`, `validate.py` and `plots.py` produce the results.
+  - `verifier.py` contains the Block 3b reporter and judge; `live_b.py` and `multiturn.py` run the gates.
+- `prompts/templates.toml`: every prompt text. The rendered variants are reviewed in `docs/prompt_review*.md`.
+- `data/<phase>/<model>/`: raw logs, one JSON line per trial with prompt, reply, lottery draws and settlement.
+- `results/<phase>/`: summaries, validation checks and figures.
+- `tests/`: unit tests for the lotteries, prompt structure, analysis and spend guard.
 
-## Reproduce
+## Reproducing
 
 ```bash
-uv sync                                    # Python >=3.11, deps pinned in uv.lock
-uv run pytest                              # validity checks A–E, analysis recovery, spend guard
-export open_router_key=...                 # or OPENROUTER_API_KEY; never written to disk
-uv run python -m betrayal.run behavior   --phase main --model <openrouter-id>   # 12 core cells + positive control
-uv run python -m betrayal.run behavior   --phase main --model <id> --cells neutral_U_F20
-uv run python -m betrayal.run diagnostic --phase main --model <id>
-uv run python -m betrayal.run arithmetic --phase main --model <id> --reps 20
-uv run python -m betrayal.analyze --phase main --model <id> [--refusal exclude]
+uv sync                      # Python 3.11+, versions pinned in uv.lock
+uv run pytest
+export OPENROUTER_API_KEY=...
+./main_runs.sh               # Block 1
+./main2_runs.sh              # Block 2
+./main3b_runs.sh             # Block 3b: instruments, histories, agent runs, scoring
+uv run python -m betrayal.live_b --max-usd 9.5      # single-turn gate
+uv run python -m betrayal.multiturn --max-usd 9.5   # three-round gate
+uv run python -m betrayal.analyze --phase main2 --model openai/gpt-4.1-mini
+uv run python -m betrayal.validate --phase main2 --model openai/gpt-4.1-mini
 ```
-Add `--mock` to any `run`/`analyze` command for a no-network dry run. Runs are resumable and stop at a
-cumulative $8 of key usage (`--max-usd` can only lower it).
 
-## Layout
-- `betrayal/config.py` — constants and the 14 cells. `scenarios.py` — seeded scenarios and rendering.
-  `lottery.py` — partner/audit lottery and settlement (applies only on `SEND_OFFER`).
-  `llm.py` — OpenRouter call, strict JSON, refusal/parse coding, spend guard. `run.py` — runner.
-  `analyze.py` / `plots.py` — prespecified contrasts and figures.
-- `data/<phase>/<model>/` — raw JSONL per trial (prompt, raw reply, lottery draws, settlement) and run metadata.
+The run scripts can be resumed and retry failed calls. `--mock` gives a dry run with no network calls for `run`,
+`analyze` and `multiturn`. Spending stops at the cap in `betrayal/config.py` ($9.50 of key usage), and `--max-usd`
+can only lower it. The whole project cost $7.76.
 
-## Reused / preexisting code
-- `poseidon_compute` (Poseidon Research `collusion_hackathon/util`, pinned commit d585a7b) for the API client.
-- Strict-JSON-schema + prompt-fallback pattern adapted from `collusion_hackathon/llm-trust-breaking`;
+## Reused code
+
+- The API client builds on `poseidon_compute` from Poseidon Research's `collusion_hackathon` (commit `d585a7b`).
+- The strict-JSON prompting pattern is adapted from `collusion_hackathon/llm-trust-breaking`, and the
   run-metadata convention from `collusion_hackathon/llm-agent-collusion`.
-- `AGENTS.md`: coding rules vendored from [ponytail](https://github.com/DietrichGebert/ponytail) (MIT).
-- All other code was written during the sprint.
+- `AGENTS.md` holds coding rules from [ponytail](https://github.com/DietrichGebert/ponytail) (MIT).
+- Everything else was written during the sprint.
