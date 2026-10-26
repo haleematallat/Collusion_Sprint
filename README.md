@@ -6,8 +6,8 @@ three models: DeepSeek-V3.2, GPT-4.1-mini and Llama-3.3-70B. The full write-up i
 
 ## What we found
 
-Collusion evaluations often give an AI agent an enforcement risk and count how often it proposes a forbidden deal.
-We found that this count depends a lot on how the risk is described. Across 26,820 scored decisions, descriptions
+Proposal-based tests of collusion deterrence tell an AI agent about an enforcement risk and count how often it
+proposes a forbidden deal. We found that this count depends a lot on how the risk is described. Across 26,820 scored decisions, descriptions
 that matched in probability and penalty moved proposal rates by:
 - up to 19 points when we changed only who might report the agent (16 points when a penalty applied);
 - up to 38 points when a stated rate was replaced by an equivalent record;

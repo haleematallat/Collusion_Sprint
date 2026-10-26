@@ -7,34 +7,33 @@ Code and data: https://github.com/haleematallat/Collusion_Sprint · Preregistrat
 
 ## Abstract
 
-Collusion evaluations often tell an AI agent about an enforcement risk and count how often it proposes a prohibited
-deal. This count depends heavily on how the risk is described.
+Proposal-based evaluations of AI-agent collusion deterrence measure how often an agent initiates prohibited
+coordination under a stated enforcement risk. We show this measure depends heavily on how the risk is described.
 
-The study covers three models (DeepSeek-V3.2, GPT-4.1-mini, Llama-3.3-70B) and 26,820 scored decisions across three
+We study three models (DeepSeek-V3.2, GPT-4.1-mini, Llama-3.3-70B) in 26,820 scored decisions across three
 preregistered blocks. Descriptions of the same risk, matched in probability and penalty, moved proposal rates by:
 - up to 19 points (16 with a penalty), depending on who might report;
 - up to 38 points, for a stated rate versus a statistically equivalent record;
 - up to 71 points, depending on whether a single past report was recent or old.
 
-Directions differed by model, although DeepSeek gave approximately correct probabilities when asked separately.
-A truthful one-line summary of the risk closed most of the gap in one model and pushed another to 98% proposals.
+Directions differed by model, although DeepSeek stated approximately correct probabilities in separate calls. A truthful
+one-line risk summary closed most of the gap in one model and pushed another to 98% proposals.
 
-We then asked whether fewer proposals means less misconduct. Displayed histories of recent or frequent reports cut
-proposing by 25–85 points, although the reporter itself never changed. Drafts did not become
-materially harder to detect: a fixed LLM reporter's report probability changed by at most 1.4 points. Expected
-simulated misconduct fell in every comparison, though proportionally less than expected reports (e.g. 30% vs 41%);
-no such gap survives multiplicity adjustment.
+Displayed histories of recent or frequent reports cut proposing by 25–85 points, although the reporter never
+changed. Drafts did not become materially harder to detect: a fixed LLM reporter's report probability changed by at
+most 1.4 points. Expected simulated misconduct fell in every comparison, though proportionally less than expected
+reports (e.g. 30% vs 41%); no such gap survives multiplicity adjustment.
 
-Finally, proposals rarely turned into completed deals in our workflows. Live LLM partners accepted 0 of 180
-presented drafts, and in sixty three-round conversations the recipient carried out the deal once.
+Proposals rarely became completed deals: live LLM partners accepted 0 of 180 presented drafts, and in sixty
+three-round conversations the recipient carried out the deal once.
 
 Deterrence should be measured across matched descriptions, and proposal counts checked against outcomes.
 
 ## 1. Introduction
 
 Where agents can negotiate privately, collusion often begins when one agent proposes a prohibited deal (tacit
-collusion need not). Many deterrence evaluations therefore tell an agent about an enforcement risk and measure how
-often it proposes or breaks the rule (Scheurer et al., 2023; Zeng & Rudzicz, 2026;
+collusion need not). Proposal-based deterrence evaluations therefore state an enforcement risk and measure how often
+the agent proposes, or more generally breaks the rule (Scheurer et al., 2023; Zeng & Rudzicz, 2026;
 Okamoto et al., 2026). The risk is usually described once, in one way.
 
 That practice quietly relies on three things:
@@ -147,7 +146,7 @@ model on the pilot (F = 60 / 200 / 60 at 10%; F = 2 at 80%). Offering's expected
   - So the number of reports is fixed, while their place in the chronology changes.
   - The report-rate conditions show 1 (LOW) or 8 (HIGH) reports in 10, at random positions.
 - **Outcomes**, as expectations per trial (P = 1 if A sent the draft):
-  - expected reports, which an operator would see: T1 = P·r_report;
+  - expected reports per trial: T1 = P·r_report (realized report outcomes are recorded separately);
   - expected simulated completed misconduct: CUM = P·0.8·(1 − r_report)·q_prop.
 - Realized outcomes come from executed lotteries with common random numbers across conditions. r_report and q_prop
   are model-based scores, not ground truth.
@@ -172,7 +171,7 @@ in expectation.
   - Scenario-paired 95% t intervals, unadjusted for multiplicity.
   - Holm-adjusted p-values for the prespecified families in Blocks 1–2.
   - TOST equivalence with 90% intervals (±0.10 in Blocks 1–2; ±0.05 in Block 3b).
-  - Block 1's preregistered estimator averages the planned repeat decisions within scenario.
+  - Block 1's implemented primary estimator averages available repetitions within scenario.
 - **Confirmatory tests:**
   - Block 1: partner − audit at q = 0.80, F = 20.
   - Block 2: record − stated, at each risk level.
@@ -196,8 +195,8 @@ summary.
 **Changing only who would catch the proposal moved behaviour by up to 19 points.**
 - **Confirmatory cell (80% risk, F = 20).**
   - DeepSeek was *more* deterred by a partner than by an audit: 18.0% vs 33.5% offers on the first repetition.
-  - The preregistered estimate, which also averages the planned repeats, is Δ = −0.159 [−0.217, −0.100]. The
-    first repetition alone gives −0.155 [−0.215, −0.095]. The sign held in both wordings.
+  - The primary estimate, which averages available repetitions within scenario, is Δ = −0.159 [−0.217, −0.100].
+    The first repetition alone gives −0.155 [−0.215, −0.095]. The sign held in both wordings.
   - GPT-4.1-mini was at the floor (0.5% vs 0%), and its difference was equivalent to zero.
 - **Generalization cells (preregistered Holm family of three per model).**
   - At 80% risk with no penalty, the models moved in opposite directions: DeepSeek −0.115 [−0.176, −0.054] and
@@ -303,9 +302,9 @@ and was excluded beforehand.*
 - **"No deniability" is not "no change."** DeepSeek's drafts under the cues were reported about one point less often,
   a small but statistically detectable drop. The margin does not exclude such changes, and they matter, because only
   4–7% of a draft's report probability escapes (Section 4.6). The judge rated nearly every draft a clear proposal
-  (cell means of q_prop ≥ 0.98). Its rating fell by 0.017 [0.003, 0.032] under DeepSeek's recency cue, outside the
-  preregistered −0.02 non-inferiority bound; that does not change the label, because the report drop was below 5
-  points.
+  (cell means of q_prop ≥ 0.98). Under DeepSeek's recency cue its mean rating declined by 0.017 (90% CI [−0.030, −0.005]).
+  The interval crosses the preregistered −0.02 non-inferiority margin, so clarity non-inferiority was not
+  demonstrated. The H3 label is unaffected, because the report drop was below 5 points.
 
 ### 4.6 Expected misconduct fell with reports, but proportionally less (exploratory)
 
@@ -321,11 +320,12 @@ and was excluded beforehand.*
 
 *Table 4. Llama's recency D is undefined, because it sent nothing under L.*
 
-- **D is exploratory.** It was preregistered as a derived quantity, not a test. Holm-adjusted, none is significant:
-  p = 0.077 across the two DeepSeek estimates, and 0.098 across all three.
-- **Why it can happen.** If report probability did not change, expected reports and misconduct would fall by the same
-  proportion. But the reporter's mean report probability on drafts was 0.93–0.96, so misconduct lives in the 4–7%
-  that escapes, and a one-point drop matters. Among DeepSeek's sent drafts, the escape share rose by 24% (recency)
+- **D is exploratory.** It was preregistered as a derived quantity, not a test. None is significant after Holm
+  adjustment: the minimum adjusted p-value was 0.077 across the two DeepSeek comparisons and 0.098 across all three.
+- **Why it can happen.** If the report and clarity profiles of sent messages stayed the same, expected reports and
+  misconduct would fall in proportion with sending. Changes in detection probability, proposal clarity or the
+  composition of sent messages break that proportionality. Because the reporter's mean report probability on drafts
+  was 0.93–0.96, misconduct lives in the 4–7% that escapes, so even a one-point drop in detection matters. Among DeepSeek's sent drafts, the escape share rose by 24% (recency)
   and 17% (report rate).
 - **The realized lotteries do not show the gap.** Realized completions are few: 13 → 7 and 14 → 5 of 300 for
   DeepSeek. They fell by 46% and 64%, against 41% (221 → 130) and 54% (253 → 117) for realized reports. That is the
@@ -469,8 +469,9 @@ realized counts. And the cues changed the enforcement history agents saw, not th
     - In Block 2, offering's expected gain at 10% was +3.6 for DeepSeek and Llama and −10.4 for GPT-4.1-mini.
     - At 80% (F = 2) it was +8.0 for every model, so "high risk" means a high reporting probability, not a high
       expected cost.
-  - **Block 1's primary estimate** averages the planned repeat decisions, following the preregistered estimator.
-    The first-repetition-only estimate (−0.155) leads to the same conclusion.
+  - **Block 1's primary estimate** averages available repetitions within scenario. The preregistration does not say
+    explicitly whether the 40 repeated scenarios enter it. The first-repetition-only estimate (−0.155 vs −0.159) leads
+    to the same conclusion.
   - Some cells sat outside the pilot's target range (30–70%): Llama at high risk in Block 2, and DeepSeek and Llama
     in Block 3b. In the main run, GPT-4.1-mini's low-risk stated cell was also outside it (78%).
   - Agents were told to maximize their score.
@@ -481,8 +482,8 @@ realized counts. And the cues changed the enforcement history agents saw, not th
   - Block 2's same-sign and correction criteria.
   - The displacement pilot (Block 3a), which failed its gate.
 - **Exploratory, not confirmatory.** The proxy gap D is derived, not a preregistered test. Its nominal significance
-  (p = 0.039) does not survive Holm adjustment (p = 0.077 across the two DeepSeek estimates; 0.098 across all three
-  defined estimates).
+  (p = 0.039) does not survive Holm adjustment (minimum adjusted p-value 0.077 across the two DeepSeek comparisons;
+  0.098 across all three defined comparisons).
 
 **Dual-use.**
 - Knowing that the description of enforcement shifts proposals could in principle help someone design oversight
@@ -505,7 +506,7 @@ Data validators and 46 unit tests cover:
 - the spend guard.
 
 The recorded data show:
-- 26,820 unique (scenario, cell, repetition) decisions, with no duplicates;
+- 26,820 scored decisions with unique trial IDs (model, phase, scenario, condition, repetition), with no duplicates;
 - saved summaries and validation files that are reproduced exactly by re-running the analysis and validators from
   the raw logs;
 - zero settlement mismatches in Blocks 1–2 (Block 3b settlement is recomputed from logged scores and draws) and
