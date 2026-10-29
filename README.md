@@ -1,8 +1,8 @@
 # Same Odds, Different Deals: How Risk Framing Shapes AI Collusion
 
 Code, data and report for our project in the Apart AI Collusion Research Sprint (23–25 October 2026). We tested
-three models: DeepSeek-V3.2, GPT-4.1-mini and Llama-3.3-70B. The full write-up is in
-[`report/report.md`](report/report.md).
+three models: DeepSeek-V3.2, GPT-4.1-mini and Llama-3.3-70B. The full write-up will be
+uploaded to `report/`.
 
 ## What we found
 
