@@ -1,15 +1,14 @@
 # Same Odds, Different Deals: How Risk Framing Shapes AI Collusion
 
-Code, data and report for our project in the Apart AI Collusion Research Sprint (23–25 October 2026). We tested
-three models: DeepSeek-V3.2, GPT-4.1-mini and Llama-3.3-70B. The full write-up will be
-uploaded to `report/`.
+Code, data and report for my project in the Apart AI Collusion Research Sprint (23–25 October 2026). I tested
+three models: DeepSeek-V3.2, GPT-4.1-mini and Llama-3.3-70B. 
 
-## What we found
+## Results
 
 Proposal-based tests of collusion deterrence tell an AI agent about an enforcement risk and count how often it
-proposes a forbidden deal. We found that this count depends a lot on how the risk is described. Across 26,820 scored decisions, descriptions
+proposes a forbidden deal. It was found that this count depends a lot on how the risk is described. Across 26,820 scored decisions, descriptions
 that matched in probability and penalty moved proposal rates by:
-- up to 19 points when we changed only who might report the agent (16 points when a penalty applied);
+- up to 19 points when I changed only who might report the agent (16 points when a penalty applied);
 - up to 38 points when a stated rate was replaced by an equivalent record;
 - up to 71 points when a single past report was recent rather than old.
 
@@ -46,7 +45,7 @@ The work has three preregistered blocks and two feasibility gates:
   three-round conversation ([`docs/gate_live_b.md`](docs/gate_live_b.md),
   [`docs/gate_multiturn.md`](docs/gate_multiturn.md)).
 
-We wrote down all criteria before the runs they apply to. The limitations, deviations and failed predictions are
+I wrote down all criteria before the runs they apply to. The limitations, deviations and failed predictions are
 listed in the report's appendices.
 
 ## Repository layout
